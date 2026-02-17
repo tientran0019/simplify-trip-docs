@@ -1,0 +1,310 @@
+---
+title: Country API
+---
+import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
+import ReactJson from 'src/components/ObjectDisplay'
+
+<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
+
+# Api Quốc Gia
+## Api lấy danh sách Quốc gia
+Trả về danh sách Quốc gia có eSim được cung cấp bởi SimplifyTrip
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Query Parameters
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>query</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Từ khoá tìm kiếm theo tên, id,...
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>take</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+
+				Số lượng kết quả trả về cho một trang
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>skip</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+
+				Chỉ mục ban đầu để trả về kết quả.
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div className="flex gap-2 items-center py-4">
+		<div className="flex-1 text-lg">200 OK </div>
+		<code>application/json</code>
+		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+	</div>
+<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>total - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>take - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>skip - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="countryItem[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white" collapsed={true}
+	src={{
+      "name": {
+        "vi": "string",
+        "en": "string"
+      },
+      "id": "string",
+      "createdAt": "datetime",
+      "updatedAt": "datetime",
+      "continent": "datetime",
+      "thumbnail": "datetime",
+      "mcc3": "datetime",
+      "mcc": "string"
+    }} />
+			</Td>
+		</Tr>
+	</tbody>
+</Table>
+<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1 '>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/countries</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/countries`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Countries/CountryController_findAllCountries`}>Try it on Swagger</a>
+		</div>
+<CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+			.catch(err => console.error(err));
+		```
+		```php PHP
+		<?php
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, [
+			CURLOPT_URL => "https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_HTTPHEADER => [
+				"accept: application/json",
+				"content-type: application/json",
+				"authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+				"x-api-key: pk_live_xxxxxxxxxxxxxxxxxx",
+			],
+		]);
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+			echo "cURL Error #:" . $err;
+		} else {
+			echo $response;
+		}
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",);,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X GET https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0 \
+	-H "Accept: application/json" \ \
+	-H "content-type: application/json" \ \
+	-H "content-type: application/json" \
+	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
+	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
+
+```
+</CH.Code>
+
+		##### Sample Response
+<CH.Code>
+```json
+{
+  "total": 100,
+  "skip": 0,
+  "take": 10,
+  "items": [
+    {
+      {
+		"name": {
+			"vi": "Thái Lan",
+			"en": "Thailand"
+		},
+		"id": "TH",
+		"createdAt": "2025-02-08T07:47:23.630Z",
+		"updatedAt": "2025-02-08T07:47:23.630Z",
+		"continent": "Asia",
+		"mcc": "TH",
+		"mcc3": "THA",
+		"thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/flag/thailand-flag.jpg"
+	  },
+    },
+	...
+  ]
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>

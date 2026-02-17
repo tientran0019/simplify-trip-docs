@@ -1,0 +1,507 @@
+# Kiểm tra dữ liệu với signature
+
+Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Được tạo ra khi kết hợp `Checksum Key` và các trường data tương ứng với mỗi API.
+
+Mỗi khi bạn nhận được dữ liệu từ SimplifyTrip bạn nên kiểm tra signature để chắc chắn dữ liệu bạn nhận được đúng với thông tin mà hệ thống SimplifyTrip trả về.
+
+Thử nghiệm với [Trình tạo Signature](/signature-generator)
+
+#### Cách tạo signature
+
+- SimplifyTrip tạo chữ ký bằng mã xác thực tin nhắn dựa trên hàm băm [(HMAC)](https://en.wikipedia.org/wiki/HMAC), Sử dụng thuật toán [SHA-256](https://en.wikipedia.org/wiki/SHA-2) để tạo signature.
+- Data tạo signature dạng: `key1=value1&key2=value2`... (key1: tên field, value1 = giá trị của key1).
+- Dữ liệu tạo signature sắp xếp theo key thứ tự alphabet.
+- Cấu trúc: `hash_hmac("sha256", data , checksum_key)`
+
+import { Callout } from 'nextra/components'
+
+<Callout>
+  **Lưu ý** Checksum Key được tạo ra sau khi tạo Api key thành công, bạn có thể đặt lại Checksum Key bất kỳ khi nào bạn cảm thấy thông tin của mình đã bị lộ không mong muốn.
+</Callout>
+
+#### Code mẫu kiểm tra chính xác dữ liệu
+
+<CH.Code>
+```js Nodejs
+import { createHmac } from "crypto";
+
+const checksumKey = "ck_test_xxxxxxxxxxxxxxxxxxxxxxxx";
+const signature = "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03";
+const webhookData = {
+	"id": "6740ce7f9d042322159bc6401",
+	"type": "PURCHASE_ORDER_SUCCESS",
+	"sentDate": "2024-11-24T17:42:31.424Z",
+	"createdAt": "2024-11-24T17:42:31.424Z",
+	"mode": "TEST_MODE",
+	"data": {
+		"orderId": "3248417841",
+		"trackId": "06c08ae1-bfac-4f77-1213-a92f53bb15dd",
+		"status": "SUCCESS",
+		"items": [
+			{
+			"subOrderId": "674362a97cbd7ef05bc12786",
+			"subTrackId": "62137526-5b53-475f-4333-4c1e83e13a28",
+			"sku": "EAS5XY01GB04DPY",
+			"quantity": 2,
+			"type": "eSIM",
+			"status": "SUCCESS",
+			"eSims": [
+					{
+						"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+						"qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+						"iccid": "89812003916820391469",
+						"planAPN": "plus.4g",
+						"smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+						"pin": "1234",
+						"puk": "15095300",
+						"activationCode": "502F97EF09144E0C9D62FD781E256862"
+					},
+					{
+						"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+						"qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+						"iccid": "89812003916820396627",
+						"planAPN": "plus.4g",
+						"smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+						"pin": "1234",
+						"puk": "15095300",
+						"activationCode": "502F97EF09144E0C9D62FD781E253495"
+					}
+				]
+			}
+		]
+	},
+};
+
+function deepFlattenToObject(obj, prefix = '') {
+	return Object.keys(obj).reduce((acc, k) => {
+		const pre = prefix.length ? prefix + '_' : '';
+		if (typeof obj[k] === 'object' && obj[k] !== null) {
+			Object.assign(acc, deepFlattenToObject(obj[k], pre + k));
+		} else {
+			acc[pre + k] = obj[k];
+		}
+		return acc;
+	}, {});
+}
+
+function convertObjToQueryStr(object) {
+	const flatObj = deepFlattenToObject(object);
+
+	return Object.keys(flatObj)
+		.sort()
+		.filter((key) => flatObj[key] !== undefined)
+		.map((key) => {
+			let value = flatObj[key];
+			// Set empty string if null
+			if ([null, undefined, "undefined", "null"].includes(value)) {
+				value = "";
+			}
+
+			return `${key}=${value}`;
+		})
+		.join("&");
+}
+
+function isValidData(data, currentSignature, checksumKey) {
+	const dataQueryStr = convertObjToQueryStr(data);
+	const dataToSignature = createHmac("sha256", checksumKey)
+	.update(dataQueryStr)
+	.digest("hex");
+
+	return dataToSignature == currentSignature;
+}
+
+return isValidData(webhookData, signature, checksumKey);
+```
+```php PHP
+<?php
+
+require 'vendor/autoload.php'; // Ensure you have the necessary library for HMAC
+
+use \Defuse\Crypto\Crypto;
+
+$checksumKey = "ck_test_xxxxxxxxxxxxxxxxxxxxxxxx";
+$signature = "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03";
+$webhookData = [
+    "id" => "6740ce7f9d042322159bc6401",
+    "type" => "PURCHASE_ORDER_SUCCESS",
+    "sentDate" => "2024-11-24T17:42:31.424Z",
+    "createdAt" => "2024-11-24T17:42:31.424Z",
+    "mode" => "TEST_MODE",
+    "data" => [
+        "orderId" => "3248417841",
+        "trackId" => "06c08ae1-bfac-4f77-1213-a92f53bb15dd",
+        "status" => "SUCCESS",
+        "items" => [
+            [
+                "subOrderId" => "674362a97cbd7ef05bc12786",
+                "subTrackId" => "62137526-5b53-475f-4333-4c1e83e13a28",
+                "sku" => "EAS5XY01GB04DPY",
+                "quantity" => 2,
+				"type"  =>  "eSIM",
+				"status" => "SUCCESS",
+                "eSims" => [
+                    [
+                        "qrCodeImg" => "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+                        "iccid" => "89812003916820391469",
+                        "planAPN" => "plus.4g",
+                        "smdpAddress" => "SECSMSMINIAPP.EASTCOMPEACE.COM",
+                        "pin" => "1234",
+                        "puk" => "15095300",
+                        "activationCode" => "502F97EF09144E0C9D62FD781E256862"
+                    ],
+                    [
+                        "qrCodeImg" => "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+                        "iccid" => "89812003916820396627",
+                        "planAPN" => "plus.4g",
+                        "smdpAddress" => "SECSMSMINIAPP.EASTCOMPEACE.COM",
+                        "pin" => "1234",
+                        "puk" => "15095300",
+                        "activationCode" => "502F97EF09144E0C9D62FD781E253495"
+                    ]
+                ]
+            ]
+        ]
+    ]
+];
+
+function deepFlattenToObject($obj, $prefix = '') {
+    $acc = [];
+    foreach ($obj as $k => $v) {
+        $pre = $prefix ? $prefix . '_' : '';
+        if (is_array($v) || is_object($v)) {
+            $acc = array_merge($acc, deepFlattenToObject((array)$v, $pre . $k));
+        } else {
+            $acc[$pre . $k] = $v;
+        }
+    }
+    return $acc;
+}
+
+function convertObjToQueryStr($object) {
+    $flatObj = deepFlattenToObject($object);
+    ksort($flatObj);
+    $queryStr = [];
+    foreach ($flatObj as $key => $value) {
+        if ($value === null || $value === "undefined" || $value === "null") {
+            $value = "";
+        }
+        if (isset($value)) {
+            $queryStr[] = $key . '=' . $value;
+        }
+    }
+    return implode("&", $queryStr);
+}
+
+function isValidData($data, $currentSignature, $checksumKey) {
+    $dataQueryStr = convertObjToQueryStr($data);
+    $dataToSignature = hash_hmac("sha256", $dataQueryStr, $checksumKey);
+    return $dataToSignature === $currentSignature;
+}
+
+$result = isValidData($webhookData, $signature, $checksumKey);
+
+
+```
+```py Python
+import hashlib
+import urllib.parse
+
+checksum_key = "ck_test_xxxxxxxxxxxxxxxxxxxxxxxx"
+signature = "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"
+webhook_data = {
+    "id": "6740ce7f9d042322159bc6401",
+    "type": "PURCHASE_ORDER_SUCCESS",
+    "sentDate": "2024-11-24T17:42:31.424Z",
+    "createdAt": "2024-11-24T17:42:31.424Z",
+    "mode": "TEST_MODE",
+    "data": {
+        "orderId": "3248417841",
+        "trackId": "06c08ae1-bfac-4f77-1213-a92f53bb15dd",
+		"status": "SUCCESS",
+        "items": [
+            {
+                "subOrderId": "674362a97cbd7ef05bc12786",
+                "subTrackId": "62137526-5b53-475f-4333-4c1e83e13a28",
+                "sku": "EAS5XY01GB04DPY",
+                "quantity": 2,
+				"type": "eSIM",
+				"status": "SUCCESS",
+                "eSims": [
+                    {
+					"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+                        "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+                        "iccid": "89812003916820391469",
+                        "planAPN": "plus.4g",
+                        "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+                        "pin": "1234",
+                        "puk": "15095300",
+                        "activationCode": "502F97EF09144E0C9D62FD781E256862"
+                    },
+                    {
+					"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+                        "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+                        "iccid": "89812003916820396627",
+                        "planAPN": "plus.4g",
+                        "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+                        "pin": "1234",
+                        "puk": "15095300",
+                        "activationCode": "502F97EF09144E0C9D62FD781E253495"
+                    }
+                ]
+            }
+        ]
+    },
+}
+
+def deep_flatten_to_object(obj, prefix=''):
+    acc = {}
+    for k in obj:
+        pre = f"{prefix}_" if prefix else ''
+        if isinstance(obj[k], dict):
+            acc.update(deep_flatten_to_object(obj[k], pre + k))
+        else:
+            acc[pre + k] = obj[k]
+    return acc
+
+def convert_obj_to_query_str(obj):
+    flat_obj = deep_flatten_to_object(obj)
+    return '&'.join(
+        f"{key}={urllib.parse.quote(str(value) if value not in [None, "undefined", "null"] else '')}"
+        for key in sorted(flat_obj) if flat_obj[key] is not None
+    )
+
+def is_valid_data(data, current_signature, checksum_key):
+    data_query_str = convert_obj_to_query_str(data)
+    data_to_signature = hashlib.sha256(f"{data_query_str}".encode('utf-8')).hexdigest()
+    return data_to_signature == current_signature
+
+is_valid_data(webhook_data, signature, checksum_key)
+
+
+```
+```java Java
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+public class WebhookValidator {
+    private static final String CHECKSUM_KEY = "ck_test_xxxxxxxxxxxxxxxxxxxxxxxx";
+    private static final String SIGNATURE = "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03";
+
+    public static void main(String[] args) throws Exception {
+        Map<String, Object> webhookData = new HashMap<>();
+        webhookData.put("id", "6740ce7f9d042322159bc6401");
+        webhookData.put("type", "PURCHASE_ORDER_SUCCESS");
+        webhookData.put("sentDate", "2024-11-24T17:42:31.424Z");
+        webhookData.put("createdAt", "2024-11-24T17:42:31.424Z");
+        webhookData.put("mode", "TEST_MODE");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("orderId", "3248417841");
+        data.put("trackId", "06c08ae1-bfac-4f77-1213-a92f53bb15dd");
+        data.put("status", "SUCCESS");
+
+        List<Map<String, Object>> items = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put("subOrderId", "674362a97cbd7ef05bc12786");
+        item.put("subTrackId", "62137526-5b53-475f-4333-4c1e83e13a28");
+        item.put("productId", "EAS5XY01GB04DPY");
+        item.put("quantity", 2);
+        item.put("type", "eSIM");
+        item.put("status", "SUCCESS");
+
+        List<Map<String, String>> eSims = new ArrayList<>();
+        Map<String, String> eSim1 = new HashMap<>();
+        eSim1.put("qrCodeImg", "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png");
+        eSim1.put("iccid", "89812003916820391469");
+        eSim1.put("planAPN", "plus.4g");
+        eSim1.put("smdpAddress", "SECSMSMINIAPP.EASTCOMPEACE.COM");
+        eSim1.put("pin", "1234");
+        eSim1.put("puk", "15095300");
+        eSim1.put("activationCode", "502F97EF09144E0C9D62FD781E256862");
+        eSims.add(eSim1);
+
+        Map<String, String> eSim2 = new HashMap<>();
+        eSim2.put("qrCodeImg", "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png");
+        eSim2.put("iccid", "89812003916820396627");
+        eSim2.put("planAPN", "plus.4g");
+        eSim2.put("smdpAddress", "SECSMSMINIAPP.EASTCOMPEACE.COM");
+        eSim2.put("pin", "1234");
+        eSim2.put("puk", "15095300");
+        eSim2.put("activationCode", "502F97EF09144E0C9D62FD781E253495");
+        eSims.add(eSim2);
+
+        item.put("eSims", eSims);
+        items.add(item);
+        data.put("items", items);
+        webhookData.put("data", data);
+
+        boolean isValid = isValidData(webhookData, SIGNATURE, CHECKSUM_KEY);
+        System.out.println(isValid);
+    }
+
+    private static Map<String, Object> deepFlattenToObject(Map<String, Object> obj, String prefix) {
+        Map<String, Object> acc = new HashMap<>();
+        for (String k : obj.keySet()) {
+            String pre = prefix.length() > 0 ? prefix + "_" : "";
+            Object value = obj.get(k);
+            if (value instanceof Map) {
+                acc.putAll(deepFlattenToObject((Map<String, Object>) value, pre + k));
+            } else if (value instanceof List) {
+                // Handle list if necessary
+                acc.put(pre + k, value);
+            } else {
+                acc.put(pre + k, value);
+            }
+        }
+        return acc;
+    }
+
+    private static String convertObjToQueryStr(Map<String, Object> object) {
+        Map<String, Object> flatObj = deepFlattenToObject(object, "");
+        List<String> queryParams = new ArrayList<>();
+        flatObj.keySet().stream()
+                .sorted()
+                .filter(key -> flatObj.get(key) != null)
+                .forEach(key -> {
+                    Object value = flatObj.get(key);
+                    if (value == null || "undefined".equals(value) || "null".equals(value)) {
+                        value = "";
+                    }
+                    queryParams.add(key + "=" + value);
+                });
+        return String.join("&", queryParams);
+    }
+
+    private static boolean isValidData(Map<String, Object> data, String currentSignature, String checksumKey) throws Exception {
+        String dataQueryStr = convertObjToQueryStr(data);
+        String dataToSignature = createHmac("HmacSHA256", checksumKey, dataQueryStr);
+        return dataToSignature.equals(currentSignature);
+    }
+
+    private static String createHmac(String algorithm, String key, String data) throws Exception {
+        Mac mac = Mac.getInstance(algorithm);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), algorithm);
+        mac.init(secretKeySpec);
+        byte[] hmacData = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hmacData) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+}
+
+
+```
+</CH.Code>
+
+import { Steps } from 'nextra/components'
+
+
+## Ví dụ
+<Steps>
+#### Dữ liệu đầu vào
+
+<CH.Code>
+```json
+{
+  "id": "674365871128ac4edea31a80",
+  "sentDate": "2024-11-24T17:42:31.424Z",
+  "createdAt": "2024-11-24T17:42:31.424Z",
+  "mode": "TEST_MODE",
+  "type": "PURCHASE_ORDER_SUCCESS",
+  "data": {
+    "orderId": "1544114530",
+    "trackId": "06c08ae1-bfac-4f77-1213-a92f53bb15dd",
+	"status": "SUCCESS",
+    "items": [
+      {
+        "subOrderId": "674365621128ac4edea31a7f",
+        "subTrackId": "62137526-5b53-475f-4333-4c1e83e13a28",
+        "sku": "EAS5XY01GB04DPY",
+        "quantity": 2,
+        "type": "eSIM",
+		"status": "SUCCESS",
+        "eSims": [
+          {
+			"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+            "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+            "iccid": "89812003916820391303",
+            "planAPN": "plus.4g",
+            "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+            "pin": "1234",
+            "puk": "15095300",
+            "activationCode": "502F97EF09144E0C9D62FD781E253943"
+          },
+          {
+			"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+            "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+            "iccid": "89812003916820393632",
+            "planAPN": "plus.4g",
+            "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+            "pin": "1234",
+            "puk": "15095300",
+            "activationCode": "502F97EF09144E0C9D62FD781E257597"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CH.Code>
+
+#### Sau khi đã flat thành Object chỉ có một cấp
+
+
+<CH.Code>
+```json
+{
+	"id": "674365871128ac4edea31a80",
+	"sentDate": "2024-11-24T17:42:31.424Z",
+	"createdAt": "2024-11-24T17:42:31.424Z",
+	"mode": "TEST_MODE",
+	"type": "PURCHASE_ORDER_SUCCESS",
+	"data_orderId": "1544114530",
+	"data_trackId": "06c08ae1-bfac-4f77-1213-a92f53bb15dd",
+	"data_status": "SUCCESS",
+	"data_items_0_subOrderId": "674365621128ac4edea31a7f",
+	"data_items_0_subTrackId": "62137526-5b53-475f-4333-4c1e83e13a28",
+	"data_items_0_sku": "EAS5XY01GB04DPY",
+	"data_items_0_quantity": 2,
+	"data_items_0_type": "eSIM",
+	"data_items_0_status": "SUCCESS",
+	"data_items_0_eSims_0_qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+	"data_items_0_eSims_0_iccid": "89812003916820391303",
+	"data_items_0_eSims_0_planAPN": "plus.4g",
+	"data_items_0_eSims_0_smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+	"data_items_0_eSims_0_pin": "1234",
+	"data_items_0_eSims_0_puk": "15095300",
+	"data_items_0_eSims_0_activationCode": "502F97EF09144E0C9D62FD781E253943",
+	"data_items_0_eSims_1_qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+	"data_items_0_eSims_1_iccid": "89812003916820393632",
+	"data_items_0_eSims_1_planAPN": "plus.4g",
+	"data_items_0_eSims_1_smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+	"data_items_0_eSims_1_pin": "1234",
+	"data_items_0_eSims_1_puk": "15095300",
+	"data_items_0_eSims_1_activationCode": "502F97EF09144E0C9D62FD781E257597"
+}
+```
+</CH.Code>
+
+#### Sắp xếp các trường thuộc tính theo alphabet và chuyển thành chuỗi
+<CH.Code>
+```json
+"createdAt=2024-11-24T17:42:31.424Z&data_items_0_eSims_0_activationCode=502F97EF09144E0C9D62FD781E253943&data_items_0_eSims_0_iccid=89812003916820391303&data_items_0_eSims_0_pin=1234&data_items_0_eSims_0_planAPN=plus.4g&data_items_0_eSims_0_puk=15095300&data_items_0_eSims_0_qrCodeContent=LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916&data_items_0_eSims_0_qrCodeImg=https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png&data_items_0_eSims_0_smdpAddress=SECSMSMINIAPP.EASTCOMPEACE.COM&data_items_0_eSims_1_activationCode=502F97EF09144E0C9D62FD781E257597&data_items_0_eSims_1_iccid=89812003916820393632&data_items_0_eSims_1_pin=1234&data_items_0_eSims_1_planAPN=plus.4g&data_items_0_eSims_1_puk=15095300&data_items_0_eSims_1_qrCodeContent=LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916&data_items_0_eSims_1_qrCodeImg=https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png&data_items_0_eSims_1_smdpAddress=SECSMSMINIAPP.EASTCOMPEACE.COM&data_items_0_quantity=2&data_items_0_sku=EAS5XY01GB04DPY&data_items_0_status=SUCCESS&data_items_0_subOrderId=674365621128ac4edea31a7f&data_items_0_subTrackId=62137526-5b53-475f-4333-4c1e83e13a28&data_items_0_type=eSIM&data_orderId=1544114530&data_status=SUCCESS&data_trackId=06c08ae1-bfac-4f77-1213-a92f53bb15dd&id=674365871128ac4edea31a80&mode=TEST_MODE&sentDate=2024-11-24T17:42:31.424Z&type=PURCHASE_ORDER_SUCCESS"
+```
+</CH.Code>
+
+#### Bắt đầu tạo signature
+
+Thử nghiệm với [Trình tạo Signature](/signature-generator)
+</Steps>

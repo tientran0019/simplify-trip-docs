@@ -1,0 +1,117 @@
+import { Callout, Link, Table, Td, Th, Tr  } from 'nextra/components'
+
+# Quản lý API Key
+SimplifyTrip API sử dụng API Key để xác thực yêu cầu truy cập của bạn. Bạn có thể xem và quản lý API Key của mình trong <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline" target='_blank'>Api Keys Settings</a>.
+
+Api Key chế độ thử nghiệm có tiền tố `pk_test_` và Api Key chế độ live có tiền tố `pk_live_`.
+
+Secret Key chế độ thử nghiệm có tiền tố `sk_test_` và Secret Key chế độ live có tiền tố `sk_live_`.
+
+Tất cả các yêu cầu API phải được thực hiện qua HTTPS . Các cuộc gọi được thực hiện qua HTTP thông thường sẽ không thành công. Các yêu cầu API không xác thực cũng sẽ không thành công.
+
+API Key và Secret Key sẽ PHẢI được gắn trong header lúc request tới SimplifyTrip APIs
+
+<Callout type="info">
+ 	Ở các chế độ khác nhau, `Live Mode` và `Test Mode` bạn có thể tạo nhiều Api Key tách biệt, chúng sẽ không bị ảnh hưởng qua lại giữa các môi trường, đảm bảo dữ liệu ở môi trường thật sẽ được an toàn khi bạn sử dụng Test Api Key để thử nghiệm.
+</Callout>
+
+## Tạo Api Key
+
+Truy cập <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'}  target='_blank'>Api Keys Settings</a> để tạo Api Key cho tổ chức của bạn
+
+<div className="my-5">
+	<img src="/screenshots/create-api-key.png" width="100%" />
+</div>
+
+Nhập các thông tin cần thiết để tạo Api Key
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 w-full">
+	<div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+		<tbody>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>named</code> - <span className="text-[10px] text-red-500">required</span></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Tên của Api Key
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>webhook</code> - <span className="text-[10px] text-red-500">required</span></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Webhook Endpoint Url để nhận dữ liệu từ SimplifyTrip
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>ip</code> - <span className="text-[10px] text-red-500">required</span></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`object`</code>
+
+					Whitelist IP address, Chỉ những địa chỉ IP trong danh sách mới có thể sử dụng Api keys này
+				</Td>
+			</Tr>
+		</tbody>
+		</Table>
+	</div>
+	<div>
+		<div className="my-5">
+			<img src="/screenshots/api-key-form.png" width="100%" />
+		</div>
+	</div>
+</div>
+
+<Callout className="mb-5">
+  **Lưu ý** Sau khi tạo Api Key, Thông tin về Api key này chỉ hiển thị một lần duy nhất, hãy đảm bảo rằng bạn đã lưu lại thông tin trước khi đóng hộp thoại đó.
+</Callout>
+
+## Quản lý Api Key
+
+Thông tin của Api Key sẽ bao gồm các thông tin cần thiết để có thể thực hiện request đến SimplifyTrip APIs.
+
+API Key và Secret Key của bạn có nhiều đặc quyền, vì vậy hãy đảm bảo giữ chúng an toàn! Không chia sẻ API Key và Secret Key của bạn ở những nơi công khai như GitHub, mã phía máy khách, v.v.
+
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 w-full">
+	<div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+		<tbody>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>apiKey</code> - <span className="text-[10px] text-red-500">required</span></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Api Key sẽ được gắn vào `X-Api-Key` trong header khi gửi request
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>secretKey</code> - <span className="text-[10px] text-red-500">required</span></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Secret Key sẽ được gắn vào `Authorization: Bearer ...` trong header khi gửi request
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>checksumKey</code> - <span className="text-[10px] text-red-500">required</span></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Key để kiểm tra dữ liệu với signature [chi tết](/developers/signature)
+				</Td>
+			</Tr>
+		</tbody>
+		</Table>
+	</div>
+	<div>
+		<div className="my-5">
+			<img src="/screenshots/api-key-info.png" width="100%" />
+		</div>
+	</div>
+</div>
+
+Bạn có thể tạo nhiều Api Key cho các mục đích khác nhau, và có thể sửa một vài thông tin của Api Key sau khi tạo.
+
+<Callout className="mb-5" type="error">
+  **Chú ý** Nếu cảm thấy các key của bạn đã bị rò rỉ ra ngoài, hãy vô hiệu hoá chúng, hoặc xoá đi tạo key mới để đảm bảo an toàn cho tổ chức của bạn
+</Callout>

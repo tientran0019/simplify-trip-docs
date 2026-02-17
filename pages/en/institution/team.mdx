@@ -1,0 +1,74 @@
+---
+title: Team management
+---
+
+import { Callout, Link, Table, Td, Th, Tr, Steps  } from 'nextra/components'
+
+# Quản lý thành viên thuộc tổ chức
+Một tổ chức có thể có nhiều thành viên phụ trách cách vai trò khác nhau trong tổ chức đó. Để quản lý thành viên của tổ chức hãy truy cập vào <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/team'} className="underline" target='_blank'>Quản lý thành viên</a>
+
+<Callout>
+ 	Chỉ khi bạn có vai trò trong tổ chức là `Owner` hoặc `Administrator` mới có thể tiếp tục các hành động sau đây
+</Callout>
+
+## Thêm thành viên
+
+<Steps>
+#### Bắt đầu
+Bấm vào nút `Thêm thành viên` để bắt đầu
+
+<div className="my-5">
+	<img src="/screenshots/team-add.png" width="100%" />
+</div>
+
+#### Nhập thông tin
+Nhập email của thành viên bạn muốn thêm vào tổ chức
+
+<Callout>
+ 	Hãy đảm bảo email bạn nhập là chính xác. Một thư mời tham gia tổ chức sẽ được gửi vào email này cho thành viên mới.
+</Callout>
+
+Trong trường hợp thành viên này chưa có tài khoản SimplifyTrip sẽ tự tạo một tài khoản mới bằng email này, sau đó đính kèm email/password vào thư mời.
+Thành viên mới dùng thông tin đó để đăng nhập vào tổ chức.
+
+#### Chọn vai trò
+Vai trò của thành viên mới trong tổ chức này có thể sửa đổi sau đó.
+
+Thông tin các vai trò trong tổ chức sẽ bao gồm:
+
+<Table className='my-5'>
+  <thead>
+    <Tr>
+      <Th>Vai trò</Th>
+      <Th>Nội dung</Th>
+    </Tr>
+  </thead>
+  <tbody>
+    <Tr>
+      <Td>Administrator</Td>
+      <Td>Vai trò này dành cho những người cần quyền truy cập tương tự như chủ tài khoản. Vai trò này có thể xem và quản lý hầu hết mọi thứ.</Td>
+    </Tr>
+    <Tr>
+      <Td>Developer</Td>
+      <Td>Vai trò này dành cho các nhà phát triển cần thiết lập tích hợp SimplifyTrip. Vai trò này có quyền truy cập vào khóa bí mật cấp quyền truy cập vào hầu hết các tài nguyên SimplifyTrip.</Td>
+    </Tr>
+    <Tr>
+      <Td>Accountant</Td>
+      <Td>Vai trò này dành cho những người cần thanh toán dư nợ, nạp tiền vào Tài khoản, quản lý Tài khoản, xem báo cáo và truy xuất dữ liệu.</Td>
+    </Tr>
+    <Tr>
+      <Td>Viewer</Td>
+      <Td>Vai trò này dành cho những người cần xem thanh toán, số dư và tài khoản được kết nối nhưng không thể chỉnh sửa bất kỳ mục nào. Vai trò này cũng có thể truy xuất dữ liệu và xem báo cáo.</Td>
+    </Tr>
+  </tbody>
+</Table>
+
+Đối với quền Owner, Có tất cả các quyền hạn đối với tổ chức này. Owner là loại Quản trị viên đặc biệt có thể thực hiện mọi hành động, bao gồm cả đóng tổ chức. Người tạo tổ chắc được tự động chỉ định làm Owner. Chỉ Owner mới có thể chỉ định vai trò Owner cho các thành viên khác trong nhóm.
+
+#### Submit
+Thư mời sẽ được SimplifyTrip gửi đến email của thành viên này. Nếu chưa nhận được thư mới, người mời có thể gửi lại thử mời bất cứ lúc nào.
+</Steps>
+
+
+## Xoá thành viên
+Ngoài ra Administrator có thể xoá bất kỳ thành viên nào trong tổ chức, trừ thành viên có vai trò `Onwer`

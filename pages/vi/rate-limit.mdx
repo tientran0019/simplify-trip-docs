@@ -1,0 +1,91 @@
+# Rate Limit
+Để bảo vệ các API, hệ thống đã được cài đặt cơ chế Rate Limit để tránh tình trạng một API được gọi liên tục trong một thời gian ngắn, dẫn đến tắc nghẽn hệ thống.
+
+Nếu thực hiện quá nhiều yêu cầu cùng một lúc, thì bạn sẽ nhận một kết quả HTTP là `429` `Too Many Requests`.
+
+Nhìn chung, điều quan trọng là phải quản lý cẩn thận việc sử dụng API của bạn để đảm bảo rằng bạn không vượt quá giới hạn tốc độ và làm gián đoạn dịch vụ cho những người dùng khác.
+Bằng cách triển khai Rate Limiting và xử lý lỗi phù hợp trong ứng dụng của mình, bạn có thể đảm bảo rằng người dùng của mình có trải nghiệm nhất quán và đáng tin cậy khi truy cập API.
+
+### Bộ giới hạn API
+Chúng tôi có một số bộ giới hạn trong API, bao gồm bộ giới hạn tốc độ và bộ giới hạn đồng thời.
+
+Xử lý các giới hạn như mức tối đa và không tạo ra tải không cần thiết. Để ngăn ngừa lạm dụng, chúng tôi có thể giảm các giới hạn.
+
+Bạn có thể yêu cầu tăng giới hạn để kích hoạt ứng dụng có lưu lượng truy cập cao bằng cách liên hệ với Bộ phận hỗ trợ của SimplifyTrip . Nếu bạn yêu cầu tăng giới hạn lớn, hãy liên hệ với chúng tôi trước ít nhất 6 tuần.
+
+###### Bộ giới hạn tốc độ
+
+Một Request ID là tổ hợp của `[Địa chỉ IP]`, `[HTTP Method]`, `[Mode]` & `[Api Key]`. Hệ thống số lượng được tính dựa theo các Request ID.
+
+Hệ thống Rate Limit được sử dụng theo thuật toán Leaky Bucket và có Window Time là 3 giây. Tức là trong vòng 3 giây sẽ bị giới hạn các Request theo bảng bên dưới. Sau 3 giây thì sẽ được reset về 0.
+
+Bên dưới là số lượng theo từng HTTP Method:
+
+import { Table, Td, Th, Tr, Callout } from 'nextra/components'
+
+<Table className="my-5">
+  <thead>
+    <Tr>
+      <Th align="center">Method</Th>
+      <Th>Limit</Th>
+    </Tr>
+  </thead>
+  <tbody>
+    <Tr>
+      <Td align="center">**GET**</Td>
+      <Td>2000 request / 3 giây</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">**POST**</Td>
+      <Td>100 request / 3 giây</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">**PUT**</Td>
+      <Td>100 request / 3 giây</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">**DELETE**</Td>
+      <Td>100 request / 3 giây</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">**Other**</Td>
+      <Td> 50 request / 3 giây</Td>
+    </Tr>
+  </tbody>
+</Table>
+
+###### Bộ giới hạn đồng thời
+
+Bộ giới hạn đồng thời hạn chế số lượng yêu cầu hoạt động đồng thời. Các vấn đề với bộ giới hạn này ít phổ biến hơn so với bộ giới hạn tốc độ, nhưng chúng có thể chỉ ra sự tồn tại của các yêu cầu tốn nhiều tài nguyên, tồn tại lâu dài.
+
+Các cuộc gọi đến các meter endpoint bị giới hạn ở một cuộc gọi đồng thời cho mỗi khách hàng trên mỗi meter.
+
+<Callout>
+  **Lưu ý**  Cơ chế Rate Limit này không tác động đến các Inter-service API Call, tức là các service trong hệ thống gọi lẫn nhau.
+</Callout>
+
+### Nguyên nhân phổ biến và cách giảm thiểu
+
+Giới hạn tốc độ có thể xảy ra trong nhiều điều kiện khác nhau, nhưng phổ biến nhất là trong các trường hợp sau:
+
+- Chạy một khối lượng lớn các yêu cầu cách nhau gần có thể dẫn đến rate limiting. Thông thường, đây là một phần của hoạt động analytical or migration. Khi tham gia vào các hoạt động này, bạn nên cố gắng kiểm soát tốc độ yêu cầu ở phía máy khách (xem Xử lý giới hạn ).
+
+- Việc phát hành **many long-lived requests** có thể kích hoạt giới hạn. Các yêu cầu khác nhau về lượng tài nguyên máy chủ của SimplifyTrip mà chúng sử dụng và các yêu cầu sử dụng nhiều tài nguyên hơn có xu hướng mất nhiều thời gian hơn và có nguy cơ khiến các yêu cầu mới bị bộ giới hạn đồng thời loại bỏ. Các yêu cầu về tài nguyên thay đổi rất nhiều, nhưng các yêu cầu danh sách và các yêu cầu bao gồm phần mở rộng thường sử dụng nhiều tài nguyên hơn và mất nhiều thời gian hơn để chạy. Chúng tôi đề xuất lập hồ sơ về thời lượng của các yêu cầu API SimplifyTrip và theo dõi thời gian chờ để cố gắng phát hiện những yêu cầu chậm bất ngờ.
+
+- Việc tăng đột ngột về khối lượng phí như đợt bán flash sale có thể dẫn đến việc rate limiting. Chúng tôi cố gắng đặt giá cước đủ cao để lưu lượng thanh toán hợp lệ không bao giờ vượt quá giới hạn, nhưng nếu bạn nghi ngờ rằng một sự kiện sắp tới có thể đẩy bạn vượt quá giới hạn được liệt kê ở trên, hãy liên hệ với SimplifyTrip Support .
+
+### Xử lý Rate Limit
+- Một kỹ thuật cơ bản để tích hợp xử lý giới hạn một cách khéo léo là theo dõi `429` mã trạng thái và xây dựng cơ chế thử lại. Cơ chế thử lại phải tuân theo lịch trình lùi lại theo cấp số nhân để giảm khối lượng yêu cầu khi cần thiết. Chúng tôi cũng khuyên bạn nên xây dựng một số tính ngẫu nhiên vào lịch trình lùi lại để tránh hiệu ứng [thundering herd effect](https://en.wikipedia.org/wiki/Thundering_herd_problem).
+
+- Bạn chỉ có thể tối ưu hóa các yêu cầu riêng lẻ ở mức độ hạn chế, do đó, một cách tiếp cận thậm chí còn tinh vi hơn là kiểm soát lưu lượng truy cập đến SimplifyTrip ở global level và điều chỉnh lại nếu bạn phát hiện ra substantial rate limiting. Một kỹ thuật phổ biến để kiểm soát tốc độ là triển khai một cái gì đó giống như [thuật toán giới hạn tốc độ token bucket](https://en.wikipedia.org/wiki/Token_bucket) ở phía máy khách. Các triển khai sẵn sàng và hoàn thiện cho token bucket có sẵn trong hầu hết mọi ngôn ngữ lập trình.
+
+- Triển khai giới hạn tốc độ trong ứng dụng của bạn: As a client, điều quan trọng là phải triển khai giới hạn tốc độ trong ứng dụng của riêng bạn để đảm bảo rằng bạn không vượt quá giới hạn tốc độ của API. Điều này có thể được thực hiện bằng cách theo dõi số lượng yêu cầu được thực hiện và thời gian thực hiện chúng, đồng thời so sánh điều này với các chính sách giới hạn tốc độ của API.
+
+- Sử dụng thời gian chờ theo cấp số nhân: Khi thử lại một yêu cầu sau lỗi giới hạn tốc độ, việc sử dụng thời gian chờ theo cấp số nhân có thể hữu ích. Điều này có nghĩa là bạn nên tăng lượng thời gian chờ đợi giữa các lần thử lại lên gấp hai (hoặc một số hệ số khác) mỗi khi bạn nhận được lỗi giới hạn tốc độ. Ví dụ: bạn có thể thử lại yêu cầu sau 1 giây, rồi 2 giây, rồi 4 giây, v.v. Điều này giúp giảm nguy cơ áp đảo API khi thử lại quá nhiều lần trong một khoảng thời gian ngắn.
+
+- Sử dụng bộ đệm: Lưu kết quả của các yêu cầu API vào bộ nhớ đệm có thể giúp giảm số lượng yêu cầu được gửi tới API và cũng có thể cải thiện hiệu suất ứng dụng của bạn. Bằng cách lưu trữ cục bộ kết quả của các yêu cầu API và sử dụng lại chúng cho đến khi chúng trở nên cũ, bạn có thể giảm nhu cầu thực hiện các yêu cầu thường xuyên đối với API.
+
+### Kiểm tra tải
+Người dùng thường chuẩn bị cho một sự kiện bán hàng lớn bằng cách kiểm tra tải hệ thống của họ, với SimplifyTrip API chạy ở chế độ Test Mode như một phần của nó. Chúng tôi thường không khuyến khích thực hành này vì giới hạn API thấp hơn ở chế độ Test Mode, do đó, kiểm tra tải có khả năng đạt đến giới hạn mà nó sẽ không đạt được trong môi trường `production`. Chế độ Test Mode cũng không phải là giải pháp thay thế hoàn hảo cho các lệnh gọi API trực tiếp và điều đó có thể gây hiểu lầm phần nào. Ví dụ: tạo một đơn hàng ở chế độ trực tiếp sẽ gửi yêu cầu đến cổng thanh toán và yêu cầu đó được mô phỏng ở chế độ Test Mode, dẫn đến các cấu hình độ trễ khác biệt đáng kể.
+
+Một giải pháp thay thế, chúng tôi khuyên bạn nên xây dựng các tích hợp để chúng có một hệ thống có thể cấu hình để mô phỏng các yêu cầu tới SimplifyTrip API, mà bạn có thể bật cho các bài kiểm tra tải. Để có kết quả thực tế, chúng nên mô phỏng độ trễ bằng cách delay trong một khoảng thời gian mà bạn xác định bằng cách lấy mẫu thời lượng của các cuộc gọi SimplifyTrip API ở chế độ Live Mode.

@@ -1,23 +1,26 @@
 import cx from 'clsx';
 
 import Image from 'next/image';
-
-const footerNavs = [
-	{
-		href: 'javascript:void()',
-		name: 'Mã số thuế: 0318490860'
-	},
-	{
-		href: 'javascript:void()',
-		name: 'Hotline: (+84)901 88 7120'
-	},
-	{
-		href: 'javascript:void()',
-		name: 'Email: info@simplifytrip.com'
-	},
-]
+import { useRouter } from 'nextra/hooks';
 
 export const Footer = ({ className = '' }) => {
+	const { locale } = useRouter();
+	const isEnglish = locale === 'en';
+	const footerNavs = [
+		{
+			href: 'javascript:void()',
+			name: isEnglish ? 'Tax code: 0318490860' : 'Ma so thue: 0318490860',
+		},
+		{
+			href: 'javascript:void()',
+			name: 'Hotline: (+84)901 88 7120',
+		},
+		{
+			href: 'javascript:void()',
+			name: 'Email: info@simplifytrip.com',
+		},
+	];
+
 	return (
 		<footer
 			className={cx(
@@ -27,10 +30,15 @@ export const Footer = ({ className = '' }) => {
 		>
 			<div className="max-w-lg sm:mx-auto text-center">
 				<Image src="/logo-full.png" width={200} height={0} quality={100} alt="logo" className="inline" />
-				<h3 className="text-center mt-10 font-bold mb-4">CÔNG TY TNHH ĐƠN GIẢN HOÁ CHUYẾN ĐI<br />(SIMPLIFY TRIP)</h3>
+				<h3 className="text-center mt-10 font-bold mb-4">
+					{isEnglish ? 'SIMPLIFY TRIP COMPANY LIMITED' : 'CONG TY TNHH DON GIAN HOA CHUYEN DI'}
+					<br />
+					(SIMPLIFY TRIP)
+				</h3>
 				<p className="text-center leading-relaxed text-[15px]">
-					Giấy chứng nhận Đăng ký Kinh doanh số 0318490860
-					do Sở Kế hoạch và Đầu tư TP.HCM cấp ngày 05/06/2024.
+					{isEnglish
+						? 'Business Registration Certificate No. 0318490860 issued by the Ho Chi Minh City Department of Planning and Investment on June 5, 2024.'
+						: 'Giay chung nhan Dang ky Kinh doanh so 0318490860 do So Ke hoach va Dau tu TP.HCM cap ngay 05/06/2024.'}
 				</p>
 			</div>
 			<ul className="items-center justify-center mt-8 space-y-5 sm:flex sm:space-x-4 sm:space-y-0">
