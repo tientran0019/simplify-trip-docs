@@ -2,66 +2,66 @@ import { CopyToClipboard, Link, Table, Td, Th, Tr, Callout } from 'nextra/compon
 
 # Webhook
 
-SimplifyTrip sử dụng webhook để thông báo cho ứng dụng của bạn bất cứ khi nào có sự kiện xảy ra với dữ liệu của bạn. Mỗi webhook có tên sự kiện, endpoint và phương thức HTTP. Các payload theo chuẩn JSON.
+SimplifyTrip uses webhooks to notify your application whenever events occur on your data. Each webhook includes an event type, endpoint, HTTP method, and JSON payload.
 
-Bạn có thể xem và quản lý các sự kiện đã được gửi đến bạn thông qua webhook của mình trong <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/stats/webhooks'} className="underline" target='_blank'>Thống kê Webhooks</a>.
+You can view and manage webhook events delivered to your endpoint in <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/stats/webhooks'} className="underline" target='_blank'>Webhook statistics</a>.
 
 <Callout>
- 	Để thay đổi webhook endpoint, vui lòng truy cập <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline text-inherit" target='_blank'>quản lý Api Keys</a>, mỗi endpoint sẽ được gắn với một Api key cụ thể.
+ 	To change webhook endpoint, go to <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline text-inherit" target='_blank'>API Key management</a>, each endpoint is associated with a specific API key.
 </Callout>
 
-### Quy ước chung
+### General conventions
 
 - Content-Type: `application/json`
-- Authorization: sử dụng `X-Simplify-Trip-Signature` header để xác minh
-- Retry: tối đa 3 lần cách nhau 5 phút
-- Idempotency: trường `id` kèm `sentDate`, `createdAt` để tránh xử lý trùng, trường `type` để định danh dữ liệu [Danh sách webhook](#danh-sách-webhook)
+- Authorization: use `X-Simplify-Trip-Signature` header for verification
+- Retry: maximum 3 retries, 5 minutes apart
+- Idempotency: use `id` with `sentDate`, `createdAt` to avoid duplicate handling, and use `type` to identify payload [Webhook list](#webhook-list)
 
 
-### Cài đặt
-Bạn cần cung cấp Endpoint trong hệ thống của mình để nhận webhook từ chúng tôi. Thông báo webhook sẽ được gửi qua phương thức POST tới URL webhook mà bạn đã đặt.
-Thiết lập URL webhook của bạn trong phần quản lý Api Key. Endpoint webhook sẽ được cài đặt trong một Api Key riêng biệt. Bạn cũng có thể dùng chung một endpoint cho nhiều Api Key khác nhau. Bạn có thể sử dụng một công cụ như `ngrok` để cung cấp Endpoint để nhận webhook trong quá trình thử nghiệm.
+### Setup
+Provide an endpoint in your system to receive webhooks. Webhook notifications are sent via POST to the configured URL.
+Configure webhook URL in API key settings. You can set one endpoint per API key or share one endpoint across multiple keys. You can use tools such as `ngrok` during testing.
 
 ### Event Handling
-Việc xử lý chính xác các sự kiện webhook là rất quan trọng để đảm bảo logic kinh doanh của hệ thống của bạn hoạt động như mong đợi
+Correct webhook handling is critical to ensure your business logic behaves as expected.
 
-##### Xác nhận sự kiện ngay lập tức
+##### Acknowledge events immediately
 
-Nếu api webhook của bạn thực hiện logic phức tạp hoặc thực hiện network calls, thì có thể api đó sẽ hết thời gian chờ trước khi SimplifyTrip xác nhận đã gửi data thành công. Lý tưởng nhất là mã xử lý webhook của bạn (xác nhận việc nhận sự kiện bằng cách trả về mã trạng thái 2xx) tách biệt với bất kỳ logic nào khác mà bạn thực hiện cho sự kiện đó.
+If your webhook endpoint performs complex logic or network calls, it may time out before SimplifyTrip receives a success response. Ideally, acknowledge event receipt first (2xx), then process business logic asynchronously.
 
-##### Xử lý sự kiện trùng lặp
+##### Handle duplicate events
 
-Endpoint Webhook đôi khi có thể nhận được cùng một sự kiện nhiều lần. Chúng tôi khuyên bạn nên đề phòng các biên nhận sự kiện trùng lặp bằng cách làm cho quá trình xử lý sự kiện của bạn trở nên idempotent. Một cách để thực hiện việc này là ghi lại các sự kiện bạn đã xử lý và sau đó không xử lý các sự kiện đã được ghi lại. Chúng tôi cung cấp webhook-id dưới dạng mã định danh duy nhất trong tham số tiêu đề của mỗi webhook để giúp bạn triển khai tính idempotent. Tìm hiểu về sự [idempotent](https://en.wikipedia.org/wiki/Idempotence).
+Webhook endpoints may receive the same event multiple times. Make your event handling idempotent by storing processed events and skipping duplicates. Each webhook includes a unique webhook-id to help implement idempotency. Learn more about [idempotency](https://en.wikipedia.org/wiki/Idempotence).
 
-##### Thứ tự sự kiện
+##### Event ordering
 
-SimplifyTrip không đảm bảo việc phân phối các sự kiện theo thứ tự chúng được tạo. Endpoint của bạn không nên mong đợi việc phân phối các sự kiện này theo thứ tự này và nên xử lý việc này một cách phù hợp. Bạn cũng có thể sử dụng API để tìm nạp mọi đối tượng bị thiếu.
+SimplifyTrip does not guarantee delivery order of events. Your endpoint should not assume event ordering and should handle out-of-order events safely. You can fetch missing objects through API.
 
-### Retry (Gửi lại)
+### Retry
 
-SimplifyTrip sẽ tự động gửi lại webhook vào endpoint của bạn nếu không xảy ra lỗi 4xx, vì lỗi 4xx là lỗi bên trong hệ thống của bạn, chúng tôi không gửi lại vì điều này là vô nghĩa. Trong trường hợp này bạn hãy fixbug bên trong hệ thống của mình, sau đó tiến hành gửi lại webhook thủ công trong trang dành cho partner <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/stats/webhooks'} className="underline" target='_blank'>Thống kê Webhooks</a>.
+SimplifyTrip retries webhook delivery unless your endpoint returns 4xx. Since 4xx indicates an issue in your system, automatic retry is skipped. Fix your system issue, then manually resend webhook from <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/stats/webhooks'} className="underline" target='_blank'>Webhook statistics</a>.
 
-Số lần gửi lại tự động tối đa là 3 lần, khoảng cách giữa các lần thử lại là 5 phút.
+Maximum automatic retries: 3. Retry interval: 5 minutes.
 
 ### Security
-Giữ an toàn cho Endpoint của bạn là điều quan trọng để bảo vệ thông tin của khách hàng. SimplifyTrip cung cấp một số cách để bạn xác minh các sự kiện đến từ SimplifyTrip một cách an toàn.
+Securing your endpoint is important to protect customer information. SimplifyTrip provides several ways to verify incoming events safely.
 
-- **Nhận sự kiện với máy chủ HTTPS**
+- **Receive events through HTTPS server**
 
-	Nếu bạn sử dụng URL HTTPS cho Endpoint webhook của mình, SimplifyTrip sẽ xác thực rằng kết nối đến máy chủ của bạn là an toàn trước khi gửi dữ liệu webhook của bạn. Để tính năng này hoạt động, máy chủ của bạn phải được định cấu hình chính xác để hỗ trợ HTTPS bằng chứng chỉ máy chủ hợp lệ.
+	If your webhook endpoint uses HTTPS, SimplifyTrip verifies secure transport before sending payloads. Your server must be correctly configured with a valid TLS certificate.
 
 - **Replay protection:**
 
-	Kiểm tra `id`, `sentDate` và `createdAt`, chấp nhận sự kiện chỉ một lần trong window 24h.
+	Check `id`, `sentDate`, and `createdAt`; accept each event once within a 24-hour window.
 
-- **Xác minh các sự kiện được gửi từ SimplifyTrip**
+- **Verify events sent from SimplifyTrip**
 
-	SimplifyTrip sign các sự kiện webhook mà nó gửi đến Endpoint của bạn.
-	Chúng tôi làm như vậy bằng cách cách tạo mã `signature` của mỗi sự kiện và gửi kèm chúng tới endpoint của bạn bằng cách gắn signature vào header của request với tên là `X-Simplify-Trip-Signature`. Điều này cho phép bạn xác minh rằng các sự kiện được gửi bởi SimplifyTrip chứ không phải bởi bên thứ ba. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature) để biết chi tiết.
+	SimplifyTrip signs webhook events sent to your endpoint.
+	A `signature` is generated for each event and sent in request header `X-Simplify-Trip-Signature`. This allows you to verify events are from SimplifyTrip, not third parties. See [Verify data with signature](/developers/signature).
 
-## Danh sách webhook
-### Dữ liệu đơn hàng eSim
-Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm môt mã signature và một object chứa thông tin đơn hàng và danh sách eSim bạn đã đặt hàng.
+## Webhook list
+### eSIM order payload
+Event payload after your eSIM purchase order is completed. Includes signature and order object with purchased eSIM list.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div>
 	##### Request Headers
@@ -71,7 +71,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 
 		<code className='text-red-500 text-xs ml-2'>`string`</code>
 
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+		A signature is a string used to verify data integrity between your system and SimplifyTrip. See [Verify data with signature](/developers/signature).
 
 	</div>
 	##### Request Body
@@ -82,7 +82,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Mã định danh cho webhook này
+				Unique identifier of this webhook
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -90,7 +90,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Loại sự kiện của webhook `PURCHASE_ORDER_SUCCESS` | `PURCHASE_ORDER_FAIL`
+				Webhook event type `PURCHASE_ORDER_SUCCESS` | `PURCHASE_ORDER_FAIL`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -98,7 +98,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`datetime`</code>
 
-				Thời gian sự kiện webhook được tạo
+				Webhook event creation time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -106,7 +106,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`datetime`</code>
 
-				Thời gian sự kiện webhook được gửi đi
+				Webhook event sent time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -114,7 +114,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
+				Mode: test or live `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -122,7 +122,7 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`object`</code>
 
-				Chứa thông tin đơn hàng của bạn, bao gồm danh sách eSim đã mua, các mã định danh...
+				Contains order information including purchased eSIM list and identifiers...
 			</Td>
 		</Tr>
 	</tbody>
@@ -177,8 +177,8 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 	</div>
 </div>
 
-### Dữ liệu đơn hàng SIM vật lý
-Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của đơn hàng. Bao gồm môt mã signature và một object chứa thông tin trạng thái đơn hàng.
+### Physical SIM order payload
+Event payload when physical SIM order status changes. Includes signature and order status object.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div>
 	##### Request Headers
@@ -188,7 +188,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 
 		<code className='text-red-500 text-xs ml-2'>`string`</code>
 
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+		A signature is a string used to verify data integrity between your system and SimplifyTrip. See [Verify data with signature](/developers/signature).
 
 	</div>
 	##### Request Body
@@ -199,7 +199,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-					Mã định danh cho webhook này
+					Unique identifier of this webhook
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -207,7 +207,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Loại sự kiện của webhook `PURCHASE_ORDER_UPDATE`
+				Webhook event type `PURCHASE_ORDER_UPDATE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -215,7 +215,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`datetime`</code>
 
-				Thời gian sự kiện webhook được tạo
+				Webhook event creation time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -223,7 +223,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`datetime`</code>
 
-				Thời gian sự kiện webhook được gửi đi
+				Webhook event sent time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -231,7 +231,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
+				Mode: test or live `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -239,7 +239,7 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`object`</code>
 
-				Chứa thông tin đơn hàng của bạn, bao gồm trạng thái đơn hàng `NEW` | `CONFIRMED` | `DELIVERING` | `SUCCESS` | `CANCELED`
+				Contains order information, including status `NEW` | `CONFIRMED` | `DELIVERING` | `SUCCESS` | `CANCELED`
 
 			</Td>
 		</Tr>
@@ -283,8 +283,8 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 	</div>
 </div>
 
-### Dữ liệu yêu cầu trả hàng
-Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm môt mã signature và một object chứa thông tin trạng thái yêu cầu.
+### Return request payload
+Event payload when return request status changes. Includes signature and return-status object.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div>
 	##### Request Headers
@@ -294,7 +294,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 
 		<code className='text-red-500 text-xs ml-2'>`string`</code>
 
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+		A signature is a string used to verify data integrity between your system and SimplifyTrip. See [Verify data with signature](/developers/signature).
 
 	</div>
 	##### Request Body
@@ -305,7 +305,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-					Mã định danh cho webhook này
+					Unique identifier of this webhook
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -313,7 +313,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Loại sự kiện của webhook `RETURN_ORDER_UPDATE`
+				Webhook event type `RETURN_ORDER_UPDATE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -321,7 +321,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`datetime`</code>
 
-				Thời gian sự kiện webhook được tạo
+				Webhook event creation time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -329,7 +329,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`datetime`</code>
 
-				Thời gian sự kiện webhook được gửi đi
+				Webhook event sent time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -337,7 +337,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
+				Mode: test or live `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -345,7 +345,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`object`</code>
 
-				Chứa thông tin yêu cầu trả hàng, bao gồm trạng thái `REVIEWING` | `APPROVED` | `REJECTED`
+				Contains return request information, including status `REVIEWING` | `APPROVED` | `REJECTED`
 
 			</Td>
 		</Tr>
@@ -373,7 +373,7 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 	"refundAmount": 205000,
     "items": [
       {
-        "productName": "SIM Đông Nam Á (7 nước) chỉ có data (Unlimited Data/ngày - 3 ngày)",
+        "productName": "Southeast Asia SIM (7 countries), data-only (Unlimited Data/day - 3 days)",
         "sku": "AS7BCUNL03DPY",
         "quantity": 3,
 		"type": "SIM",

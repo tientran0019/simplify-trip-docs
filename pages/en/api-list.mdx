@@ -1,30 +1,28 @@
 ---
 title: API list
 ---
-import { CopyToClipboard, Table, Td, Th, Tr  } from 'nextra/components'
-import ReactJson from 'src/components/ObjectDisplay'
-import Link from 'next/link'
+import { CopyToClipboard } from 'nextra/components'
 
-# Danh sách các SimplifyTrip APIs hỗ trợ.
+# Supported SimplifyTrip APIs
 
-API SimplifyTrip được tổ chức xấy dựng dựa trên [REST](https://en.wikipedia.org/wiki/REST). API của chúng tôi là các resource-oriented URLs có thể dự đoán được, chấp nhận [form-encoded](https://en.wikipedia.org/wiki/POST_(HTTP)#Use_for_submitting_web_forms) request bodies, trả về các phản hồi được mã hóa theo [JSON-encoded](https://www.json.org/json-en.html) và sử dụng các mã phản hồi HTTP chuẩn, authentication, and verbs.
+SimplifyTrip APIs are built on [REST](https://en.wikipedia.org/wiki/REST). Endpoints use predictable resource-oriented URLs, accept request payloads, return [JSON](https://www.json.org/json-en.html), and use standard HTTP status codes.
 
-Bạn có thể sử dụng API SimplifyTrip ở **Test Mode**, điều này không ảnh hưởng đến dữ liệu thực tế của bạn và có thể tương tác với các Tài khoản ảo có sẵn. API Key bạn sử dụng để xác thực yêu cầu sẽ được dùng để xác định xem yêu cầu đó là chế độ `LIVE_MODE` hay `TEST_MODE`.
+You can use SimplifyTrip APIs in **Test Mode** without affecting real data. The API key used in authentication determines whether the request runs in `LIVE_MODE` or `TEST_MODE`.
 
 #### Authentication
-SimplifyTrip API sử dụng API Key để xác thực yêu cầu truy cập của bạn. Bạn có thể xem và quản lý API Key của mình trong <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline" target='_blank'>Api Keys Settings</a>.
+SimplifyTrip API uses API keys to authenticate requests. You can manage your API keys in <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline" target='_blank'>API Keys Settings</a>.
 
-Api Key chế độ thử nghiệm có tiền tố `pk_test_` và Api Key chế độ live có tiền tố `pk_live_`.
+Test API keys start with `pk_test_`, live API keys start with `pk_live_`.
 
-Secret Key chế độ thử nghiệm có tiền tố `sk_test_` và Secret Key chế độ live có tiền tố `sk_live_`.
+Test secret keys start with `sk_test_`, live secret keys start with `sk_live_`.
 
-API Key và Secret Key của bạn có nhiều đặc quyền, vì vậy hãy đảm bảo giữ chúng an toàn! Không chia sẻ API Key và Secret Key của bạn ở những nơi công khai như GitHub, mã phía máy khách, v.v.
+Keep keys secure. Do not expose API Key or Secret Key in public places such as GitHub or client-side code.
 
-Tất cả các yêu cầu API phải được thực hiện qua HTTPS . Các cuộc gọi được thực hiện qua HTTP thông thường sẽ không thành công. Các yêu cầu API không xác thực cũng sẽ không thành công.
+All API requests must be made over HTTPS.
 
 #### Base URL
 
-Tất cả web service hiện tại đều bắt đầu bằng đường dẫn bên dưới, gọi tắt là `BASE_URL`:
+All current web services start with the base path below (`BASE_URL`):
 
 <div className="flex items-center gap-2 mt-5">
 	<strong>BASE_URL:</strong>{' '}
@@ -45,12 +43,12 @@ Tất cả web service hiện tại đều bắt đầu bằng đường dẫn b
 	<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}`} />
 </div>
 
-Thử nghiệm với Swagger <a href={process.env.NEXT_PUBLIC_PARTNERS_API_URL + '/api'} className="underline" target='_blank'>SimplifyTrip Open API</a>.
+Try with Swagger: <a href={process.env.NEXT_PUBLIC_PARTNERS_API_URL + '/api'} className="underline" target='_blank'>SimplifyTrip Open API</a>.
 
 #### Requirements
-- **Api Key và Secret Key**
+- **Api Key and Secret Key**
 
-	Mọi request tới SimplifyTrip API đều PHẢI bao gồm khóa Api Key và Secret Key trong headers.
+	Every request to SimplifyTrip API MUST include Api Key and Secret Key in headers.
 
 ```json
 X-Api-Key: "pk_live_xxxxxxxxxxxxxxxxxx"
@@ -59,7 +57,7 @@ Authorization: "Bearer sk_live_xxxxxxxxxxxxxxxxxx"
 
 - **Content Type**
 
-	Content type của request PHẢI là `application/json`.
+	The request content type MUST be `application/json`.
 
 ```json
 Content-Type: "application/json"

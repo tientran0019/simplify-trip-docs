@@ -19,7 +19,7 @@ function Logo() {
 		<div className="flex flex-row items-center">
 			<Image src="/logo-full.png" width={105} height={0} quality={100} alt="logo" />
 			<span className="mx-2">|</span>
-			<span>{isEnglish ? 'API Integration' : 'Tich hop API'}</span>
+			<span>{isEnglish ? 'API Integration' : 'Tích hợp API'}</span>
 		</div>
 	);
 }
@@ -56,7 +56,7 @@ const config: DocsThemeConfig = {
 	logo: <Logo />,
 	logoLink: '/',
 	i18n: [
-		{ locale: 'vi', name: 'Tieng Viet' },
+		{ locale: 'vi', name: 'Tiếng Việt' },
 		{ locale: 'en', name: 'English' },
 	],
 	nextThemes: {

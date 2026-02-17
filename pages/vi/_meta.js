@@ -80,9 +80,9 @@ export default {
 	},
 	404: {
 		type: 'page',
+		display: 'hidden',
 		theme: {
-			timestamp: false,
-			typesetting: 'article',
-		},
+			sidebar: false
+		}
 	},
 };

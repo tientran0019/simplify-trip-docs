@@ -1,4 +1,4 @@
-# Chế độ Test Mode và các trường hợp sử dụng
+# Test Mode and Use Cases
 
 import Image from 'next/image'
 
@@ -6,52 +6,53 @@ import Image from 'next/image'
 	<Image src="/screenshots/test-mode.png" height={45} width={250} />
 </div>
 
-Sử dụng Test Mode để giả lập môi trường development của bạn.
+Use Test Mode to simulate your development environment.
 
-Test Mode của SimplifyTrip cho phép bạn tích hợp hệ thống của mình mà không cần thực hiện các khoản phí hoặc thanh toán thực tế.
-Test Mode là môi trường giả lập mô phỏng việc tạo các giao dịch thực mà không ảnh hưởng đến các giao dịch thực hoặc dòng tiền thực.
-Chúng tôi khuyên bạn nên sử dụng Test Mode để đảm bảo chất lượng (QA) trong quá trình phát triển hệ thống của mình.
+SimplifyTrip Test Mode lets you integrate your system without real charges or real payments.
+It simulates real transactions without affecting live transactions or real cash flow.
+We recommend using Test Mode for QA throughout development.
 
 ### Test Mode
-Ở chế độ thử nghiệm, bạn có thể mô phỏng các giao dịch giả lập nhằm đảm bảo tích hợp của bạn hoạt động chính xác.
-Tính năng này giúp xác định bất kỳ lỗi hoặc sai sót nào trong quá trình triển khai hệ thống của bạn với SimplifyTrip trước khi bạn đưa vào hoạt động với các giao dịch thực tế.
+In Test Mode, you can simulate transactions to ensure your integration works correctly.
+This helps identify issues before going live with real transactions.
 
-Sau khi tạo tài khoản SimplifyTrip, bạn có thể tìm thấy một bộ Test API Key thử nghiệm trong SimplifyTrip Dashboard . Bạn có thể sử dụng các Test API Key này để tạo và truy xuất dữ liệu mô phỏng bằng cách gửi yêu cầu đến SimplifyTrip API.
-Để bắt đầu những giao dịch thực, bạn cần **kích hoạt tài khoản** của mình , tắt Test Mode và sử dụng **Live API Key** trong tích hợp của bạn.
+After creating a SimplifyTrip account, you can find a set of test API keys in the SimplifyTrip Dashboard.
+Use these keys to create and retrieve simulated data through SimplifyTrip APIs.
+To start real transactions, you need to **activate your account**, disable Test Mode, and use **Live API Keys**.
 
 import { Callout, Table, Td, Th, Tr } from 'nextra/components'
 
 <Callout>
-  **Lưu ý** Trong Dashboard, việc thay đổi cài đặt ở chế độ Test Mode cũng có thể thay đổi cài đặt ở chế độ Live Mode. Nhiều trang Dashboard có hộp thông báo màu đỏ và vô hiệu hóa cài đặt chế độ Live Mode khi ở chế độ Test Mode. Trong trường hợp này, bất kỳ cài đặt nào vẫn được bật đều an toàn để sử dụng. Nếu không có chú thích màu đỏ, nghĩa là bất kỳ thay đổi nào được thực hiện ở chế độ Test Mode đều ảnh hưởng đến cài đặt chế độ Live Mode (trừ khi bạn thấy biểu ngữ dữ liệu Test Mode màu cam).
+  **Note** In the Dashboard, changing settings in Test Mode can also affect Live Mode settings. Some pages show a red warning and disable certain Live Mode settings while you are in Test Mode. If no red warning is shown, changes may affect Live Mode settings as well.
 </Callout>
 
-### Chế độ Test Mode so với chế độ Live Mode
+### Test Mode vs Live Mode
 
-Tất cả các yêu cầu API SimplifyTrip đều xảy ra ở chế độ Test Mode hoặc chế độ Live Mode. Các đối tượng API ở chế độ này không thể truy cập được ở chế độ kia. Ví dụ,  ở chế độ Test Mode các Tài khoản không thể thực hiện thanh toán ở chế độ Live Mode.
+All SimplifyTrip API requests run in either Test Mode or Live Mode. Objects in one mode are not available in the other mode. For example, in Test Mode, wallets cannot make live payments.
 
 <Table className='my-5'>
   <thead>
     <Tr>
       <Th>Mode</Th>
-      <Th>Trường hợp sử dụng</Th>
-      <Th>Đối tượng</Th>
-      <Th>Cách sự dụng</Th>
+      <Th>Use case</Th>
+      <Th>Objects</Th>
+      <Th>How to use</Th>
     </Tr>
   </thead>
   <tbody>
     <Tr>
       <Td>Test Mode</Td>
-      <Td>Sử dụng chế độ Test Mode và các khóa API Test Mode liên quan khi bạn xây dựng tích hợp. Ở chế độ này mọi giao dịch, số tiền trong Tài khoản, thông tin sản phẩm đều là giả lập.</Td>
-      <Td>Các lệnh gọi API trả về các đối tượng mô phỏng. Ví dụ, bạn có thể truy xuất và sử dụng các đối tượng test như eSim, Tài khoản,....</Td>
-      <Td>Sử dụng Tài khoản Test Mode để thanh toán. Bạn không thể chấp nhận phương thức thanh toán thực hoặc làm việc với tài khoản thực.</Td>
+      <Td>Use Test Mode and corresponding test API keys while building integration. In this mode, transactions, wallet balances, and product data are simulated.</Td>
+      <Td>API calls return mock objects. For example, you can retrieve and use test eSIM and wallet objects.</Td>
+      <Td>Use Test Mode wallets for testing. You cannot accept real payments or work with real wallets.</Td>
     </Tr>
     <Tr>
       <Td>Live Mode</Td>
-      <Td>Sử dụng chế độ Live Mode và các khóa API Live Mode liên quan khi bạn đã sẵn sàng khởi chạy tích hợp và chấp nhận tiền thật. Ở chế độ Live Mode, tất cả giao dịch đều là thật, tiền trong Tài khoản của bạn sẽ bị trừ thật.</Td>
-      <Td>Các lệnh gọi API trả về các đối tượng thực. Ví dụ, bạn có thể truy xuất và sử dụng các đối tượng thực như eSim, Tài khoản,...</Td>
-      <Td>Cấc sản phẩm do SimplifyTrip trả về đều là thật, bạn có thể cung cấp cho khách hàng của bạn.</Td>
+      <Td>Use Live Mode and corresponding live API keys when you are ready to launch and accept real money. In this mode, all transactions are real and wallet balances are deducted for real.</Td>
+      <Td>API calls return real objects. For example, you can retrieve and use real eSIM and wallet objects.</Td>
+      <Td>Products returned by SimplifyTrip are live and can be delivered to your customers.</Td>
     </Tr>
   </tbody>
 </Table>
 
-Nút chuyển đổi chế độ **Test Mode** trong Bảng điều khiển không ảnh hưởng đến mã tích hợp của bạn. API Key chế độ Test Mode và chế độ Live Mode của bạn mới ảnh hưởng đến hành vi của mã. API Key bạn sử dụng để xác thực yêu cầu sẽ được dùng để xác định xem yêu cầu đó là chế độ Live Mode hay Test Mode. Api Key chế độ thử nghiệm có tiền tố `pk_test_` và Api Key chế độ live có tiền tố `pk_live_`.
+The **Test Mode** toggle in Dashboard does not change your integration code behavior directly. Your API keys determine behavior. The key you use for authentication decides whether the request is processed in Test Mode or Live Mode. Test API keys start with `pk_test_`, and live API keys start with `pk_live_`.

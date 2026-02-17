@@ -1,27 +1,27 @@
 ---
 title: Frequently asked questions
 ---
-# Các câu hỏi thường gặp
+# Frequently asked questions
 
-Các câu hỏi thường gặp khi tích hợp SimplifyTrip Open APIs
+Frequently asked questions when integrating SimplifyTrip Open APIs.
 
-### 1. Signature là gì và khi nào dùng đến?
-- Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Được tạo ra khi kết hợp checksumKey và các trường data tương ứng với mỗi API.
+### 1. What is a signature and when should I use it?
+- A signature is a string used to verify data integrity when data is exchanged between your system and SimplifyTrip. It is generated from `checksumKey` and the corresponding data fields required by each API.
 
-- Mỗi khi bạn nhận được dữ liệu từ SimplifyTrip bạn nên kiểm tra signature để chắc chắn dữ liệu bạn nhận được đúng với thông tin mà hệ thống SimplifyTrip trả về.
+- Every time you receive data from SimplifyTrip, you should verify the signature to ensure the payload is authentic and unchanged.
 
-- Các trường hợp dùng đến:
-	- Tạo order
-	- Nhận thông tin order qua webhook
+- Common use cases:
+	- Creating an order
+	- Receiving order data via webhook
 
-### 2. Tại sao tôi bị lỗi Mã kiểm tra(signature) không hợp lệ?
-- Kiểm tra các trường tạo signature đã đúng chưa, Đầu tiên hãy flat dữ liệu thành một Object chỉ có một cấp, Các trường dữ liệu sẽ được sắp xếp theo bảng chữ cái alphabet trước khi tạo signature.
+### 2. Why do I get an invalid signature error?
+- Check that your signature input fields are correct. First flatten the payload into a single-level object. Then sort fields alphabetically before generating the signature.
 
-- Kiểm tra lại dữ liệu của bạn có đang truyền ở body và dạng JSON.
+- Make sure your payload is sent in the request body and in JSON format.
 
-Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+See [Verify data with signature](/developers/signature).
 
-### 3. Làm thế nào để đảm bảo bảo mật khi làm việc với API SimplifyTrip?
-- **Bảo mật key API**: Không để lộ key API trong code công khai. Sử dụng các biến môi trường hoặc file cấu hình để lưu trữ.
-- **Xác thực người dùng**: Đảm bảo rằng chỉ những người dùng được phép mới có thể truy cập API.
-- **Mã hóa dữ liệu**: Mã hóa dữ liệu nhạy cảm trước khi truyền đi.
+### 3. How do I keep my SimplifyTrip API integration secure?
+- **Protect API keys**: Never expose keys in public code. Store them in environment variables or secure config.
+- **Authenticate users**: Ensure only authorized users can access your API integration.
+- **Encrypt sensitive data**: Encrypt sensitive information before transmission.

@@ -4,11 +4,11 @@ title: eSIM API
 import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
 import ReactJson from 'src/components/ObjectDisplay'
 
-<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
+<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>API list</a>
 
-# Api mặt hàng
-## Api lấy danh sách các mặt hàng
-Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
+# Product API
+## Get product list API
+Returns all products distributed by SimplifyTrip.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Query Parameters
@@ -19,7 +19,7 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
 
-				Loại sản phẩm mà bạn muốn lọc, bỏ trống để lấy tất cả
+				Product type to filter by. Leave empty to get all.
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -27,7 +27,7 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Từ khoá tìm kiếm theo tên, id, quốc gia hoặc khu vực...
+				Search keyword by name, id, country, or region...
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -35,7 +35,7 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				ID của quốc gia
+				Country ID
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -43,7 +43,7 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				ID của khu vực
+				Region ID
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -51,7 +51,7 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`number`</code>
 
-				Số lượng kết quả trả về cho một trang
+				Number of results returned per page
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -59,7 +59,7 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`number`</code>
 
-				Chỉ mục ban đầu để trả về kết quả.
+				Starting offset for returned results.
 			</Td>
 		</Tr>
 	</tbody>
@@ -367,7 +367,7 @@ curl -X 'GET' \
       "createdAt": "2024-10-21T03:07:09.818Z",
       "updatedAt": "2024-10-21T03:07:09.818Z",
       "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data ",
+        "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only",
         "en": "eSIM HongKong, Macao 4G high speed, data only"
       },
       "slug": {
@@ -405,7 +405,7 @@ curl -X 'GET' \
         {
           "sku": "EHKXY02GB05DPY",
           "name": {
-            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 5 ngày)",
+            "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 5 days)",
             "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 5 days)"
           },
           "price": 270000,
@@ -416,7 +416,7 @@ curl -X 'GET' \
           "package": "DAILY",
           "data": "2GB",
           "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
+          "smsCall": "TikTok is not supported",
           "apn": "Auto",
           "pointContactType": null,
           "hotsPot": true
@@ -424,7 +424,7 @@ curl -X 'GET' \
         {
           "sku": "EHKXY02GB07DPY",
           "name": {
-            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 7 ngày)",
+            "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 7 days)",
             "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 7 days)"
           },
           "price": 356000,
@@ -435,7 +435,7 @@ curl -X 'GET' \
           "package": "DAILY",
           "data": "2GB",
           "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
+          "smsCall": "TikTok is not supported",
           "apn": "Auto",
           "pointContactType": null,
           "hotsPot": true
@@ -443,7 +443,7 @@ curl -X 'GET' \
         {
           "sku": "EHKXY02GB06DPY",
           "name": {
-            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
+            "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 6 days)",
             "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
           },
           "price": 313000,
@@ -454,7 +454,7 @@ curl -X 'GET' \
           "package": "DAILY",
           "data": "2GB",
           "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
+          "smsCall": "TikTok is not supported",
           "apn": "Auto",
           "pointContactType": null,
           "hotsPot": true
@@ -462,7 +462,7 @@ curl -X 'GET' \
         {
           "sku": "EHKXY01GB01DPY",
           "name": {
-            "vi": "eSIM HongKong tốc độ cao 4G, chỉ có data (1GB/ngày - 1 ngày)",
+            "vi": "eSIM Hong Kong high-speed 4G, data-only (1GB/day - 1 day)",
             "en": "4G high-speed Hongkong travel eSIM, data only (1GB/day - 1 day)"
           },
           "price": 93000,
@@ -473,7 +473,7 @@ curl -X 'GET' \
           "package": "DAILY",
           "data": "1GB",
           "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
+          "smsCall": "TikTok is not supported",
           "apn": "Auto",
           "pointContactType": null,
           "hotsPot": true
@@ -481,7 +481,7 @@ curl -X 'GET' \
         {
           "sku": "EHKXY02GB04DPY",
           "name": {
-            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 4 ngày)",
+            "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 4 days)",
             "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 4 days)"
           },
           "price": 230000,
@@ -492,7 +492,7 @@ curl -X 'GET' \
           "package": "DAILY",
           "data": "2GB",
           "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
+          "smsCall": "TikTok is not supported",
           "apn": "Auto",
           "pointContactType": null,
           "hotsPot": true
@@ -508,8 +508,8 @@ curl -X 'GET' \
 	</div>
 </div>
 
-## Api lấy thông tin một mặt hàng
-Api lấy thông tin chi tiết một mặt hàng của SimplifyTrip thông qua slug hoặc spu
+## Get product details API
+Get product detail by slug or SPU
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Path Parameters
@@ -519,7 +519,7 @@ Api lấy thông tin chi tiết một mặt hàng của SimplifyTrip thông qua 
 			<Td className='border-0'><code>spu</code> - <span className="text-[10px] text-red-500">required</span></Td>
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
-				slug hoặc spu lấy từ API get danh sách
+				Slug or SPU from list API
 			</Td>
 		</Tr>
 	</tbody>
@@ -780,7 +780,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
   "createdAt": "2024-10-21T03:07:09.818Z",
   "updatedAt": "2024-10-21T03:07:09.818Z",
   "name": {
-    "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data ",
+    "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only",
     "en": "eSIM HongKong, Macao 4G high speed, data only"
   },
   "slug": {
@@ -818,7 +818,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
     {
       "sku": "EHKXY02GB05DPY",
       "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 5 ngày)",
+        "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 5 days)",
         "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 5 days)"
       },
       "price": 270000,
@@ -829,7 +829,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
       "package": "DAILY",
       "data": "2GB",
       "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
+      "smsCall": "TikTok is not supported",
       "apn": "Auto",
       "pointContactType": null,
       "hotsPot": true
@@ -837,7 +837,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
     {
       "sku": "EHKXY02GB07DPY",
       "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 7 ngày)",
+        "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 7 days)",
         "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 7 days)"
       },
       "price": 356000,
@@ -848,7 +848,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
       "package": "DAILY",
       "data": "2GB",
       "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
+      "smsCall": "TikTok is not supported",
       "apn": "Auto",
       "pointContactType": null,
       "hotsPot": true
@@ -856,7 +856,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
     {
       "sku": "EHKXY02GB06DPY",
       "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
+        "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 6 days)",
         "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
       },
       "price": 313000,
@@ -867,7 +867,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
       "package": "DAILY",
       "data": "2GB",
       "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
+      "smsCall": "TikTok is not supported",
       "apn": "Auto",
       "pointContactType": null,
       "hotsPot": true
@@ -875,7 +875,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
     {
       "sku": "EHKXY01GB01DPY",
       "name": {
-        "vi": "eSIM HongKong tốc độ cao 4G, chỉ có data (1GB/ngày - 1 ngày)",
+        "vi": "eSIM Hong Kong high-speed 4G, data-only (1GB/day - 1 day)",
         "en": "4G high-speed Hongkong travel eSIM, data only (1GB/day - 1 day)"
       },
       "price": 93000,
@@ -886,7 +886,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
       "package": "DAILY",
       "data": "1GB",
       "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
+      "smsCall": "TikTok is not supported",
       "apn": "Auto",
       "pointContactType": null,
       "hotsPot": true
@@ -894,7 +894,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
     {
       "sku": "EHKXY02GB04DPY",
       "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 4 ngày)",
+        "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 4 days)",
         "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 4 days)"
       },
       "price": 230000,
@@ -905,7 +905,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
       "package": "DAILY",
       "data": "2GB",
       "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
+      "smsCall": "TikTok is not supported",
       "apn": "Auto",
       "pointContactType": null,
       "hotsPot": true
@@ -918,8 +918,8 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
 	</div>
 </div>
 
-## Api lấy thông tin một variation
-Api lấy thông tin chi tiết một mẫu mã của mặt hàng thông qua sku
+## Get variation details API
+Get variation detail by SKU
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Path Parameters
@@ -1148,7 +1148,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01G
 {
 	"sku": "EHKXY02GB06DPY",
 	"name": {
-		"vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
+		"vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 6 days)",
 		"en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
 	},
 	"price": 313000,
@@ -1159,7 +1159,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01G
 	"package": "DAILY",
 	"data": "2GB",
 	"throttleSpeed": "128kpbs",
-	"smsCall": "Không dùng được Tiktok",
+	"smsCall": "TikTok is not supported",
 	"apn": "Auto",
 	"pointContactType": null,
 	"hotsPot": true,
@@ -1171,8 +1171,8 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01G
 	</div>
 </div>
 
-## Api tra cứu trạng thái eSim đã mua thông qua ICCID
-Api lấy thông tin eSim, bao gồm Trạng thái, lịch sử hoạt động, lượng dữ liệu đã sử dụng...
+## Get purchased eSIM status by ICCID API
+Get eSIM information, including status, activity history, and data usage...
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Path Parameters
@@ -1476,7 +1476,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/iccid/898120039168
     "sku": "E23XY06GB08DFX",
     "spu": "E23XY",
     "name": {
-      "vi": "eSIM Ấn Độ 06GB tốc độ cao 4G, chỉ có data (6GB - 8 ngày ) ",
+      "vi": "eSIM India 06GB high-speed 4G, data-only (6GB - 8 days)",
       "en": "4G high-speed India travel eSIM, data only (6GB - 8 days ) "
     },
     "type": "eSIM",
@@ -1487,7 +1487,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/iccid/898120039168
     "hotsPot": true,
     "throttleSpeed": "Stop",
     "pointContactType": null,
-    "smsCall": "Các nước có thể sử dụng: Australia, Brunei, Bahrain, Bhutan ,Georgia , Cambodia, China (including Tibet), Hong Kong, India, Indonesia, Japan, Laos, Macau, Malaysia, Myanmar, Nepal, Philippines, Qatar, Singapore, South Korea, Sri Lanka, Taiwan, Thailand, Vietnam, Bangladesh, Israel, Kazakhstan, Pakistan , Guam , Kuwait , Uzbekistan , Qatar , Oman , Mongolia , Jordan ."
+    "smsCall": "Available countries: Australia, Brunei, Bahrain, Bhutan, Georgia, Cambodia, China (including Tibet), Hong Kong, India, Indonesia, Japan, Laos, Macau, Malaysia, Myanmar, Nepal, Philippines, Qatar, Singapore, South Korea, Sri Lanka, Taiwan, Thailand, Vietnam, Bangladesh, Israel, Kazakhstan, Pakistan, Guam, Kuwait, Uzbekistan, Oman, Mongolia, Jordan."
   }
 }
 		```

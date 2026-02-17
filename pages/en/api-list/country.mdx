@@ -4,11 +4,11 @@ title: Country API
 import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
 import ReactJson from 'src/components/ObjectDisplay'
 
-<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
+<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>API list</a>
 
-# Api Quốc Gia
-## Api lấy danh sách Quốc gia
-Trả về danh sách Quốc gia có eSim được cung cấp bởi SimplifyTrip
+# Country API
+## Get country list API
+Returns the list of countries with eSIM products provided by SimplifyTrip.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Query Parameters
@@ -19,7 +19,7 @@ Trả về danh sách Quốc gia có eSim được cung cấp bởi SimplifyTrip
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
-				Từ khoá tìm kiếm theo tên, id,...
+				Search keyword by name, id, ...
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -27,7 +27,7 @@ Trả về danh sách Quốc gia có eSim được cung cấp bởi SimplifyTrip
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`number`</code>
 
-				Số lượng kết quả trả về cho một trang
+				Number of results returned per page
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
@@ -35,7 +35,7 @@ Trả về danh sách Quốc gia có eSim được cung cấp bởi SimplifyTrip
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`number`</code>
 
-				Chỉ mục ban đầu để trả về kết quả.
+				Starting offset for returned results.
 			</Td>
 		</Tr>
 	</tbody>
@@ -288,7 +288,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/countries?take=10&skip=0 \
     {
       {
 		"name": {
-			"vi": "Thái Lan",
+			"vi": "Thailand",
 			"en": "Thailand"
 		},
 		"id": "TH",

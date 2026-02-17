@@ -152,7 +152,7 @@ const SignatureGenerator: React.FC<PropTypes> = () => {
 						rows={6}
 						value={dataOutput}
 						disabled
-						placeholder="Dữ liệu để tạo Signature"
+						placeholder="Data for creating a Signature"
 						className="w-full pr-12 pl-3 py-2 bg-gray-1000 outline-none border rounded-lg"
 					/>
 				</div>
@@ -172,7 +172,7 @@ const SignatureGenerator: React.FC<PropTypes> = () => {
 			</div >
 			<div className="mt-5">
 				<label>
-					Verify với Signature nhận từ SimplifyTrip (trong headers)
+					Verify with the signature received from SimplifyTrip (in the headers).
 				</label>
 				<div className="relative mt-2">
 					<input
