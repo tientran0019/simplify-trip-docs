@@ -32,8 +32,8 @@ const withNextra = nextra({
 
 export default withNextra({
 	i18n: {
-		locales: ['vi', 'en'],
-		defaultLocale: 'vi',
+		locales: ['en', 'vi'],
+		defaultLocale: 'en',
 	},
 	eslint: {
 		ignoreDuringBuilds: true,
