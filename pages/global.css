@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-size: 14px;
+}
+
+a {
+	color: rgb(61, 143, 80);
+}
+
+.\[\&\:not\(\:first-child\)\]\:_mt-6:not(:first-child) {
+	margin-top: 0.5rem;
+}
+
+.json-custom span {
+	color: inherit !important;
+}
+
+.nextra-nav-container nav,
+.nextra-nav-container + div {
+	max-width: 140rem;
+}
+.nextra-nav-container + div article main {
+	max-width: 100%;
+}
+
+.ch-frame-title-bar .ch-frame-buttons {
+	display: none;
+}

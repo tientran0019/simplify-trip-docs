@@ -1,0 +1,1497 @@
+---
+title: Api eSim
+---
+import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
+import ReactJson from 'src/components/ObjectDisplay'
+
+<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
+
+# Api mặt hàng
+## Api lấy danh sách các mặt hàng
+Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Query Parameters
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>type</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+
+				Loại sản phẩm mà bạn muốn lọc, bỏ trống để lấy tất cả
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>query</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Từ khoá tìm kiếm theo tên, id, quốc gia hoặc khu vực...
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>countryId</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				ID của quốc gia
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>regionId</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				ID của khu vực
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>take</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+
+				Số lượng kết quả trả về cho một trang
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>skip</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+
+				Chỉ mục ban đầu để trả về kết quả.
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div className="flex gap-2 items-center py-4">
+		<div className="flex-1 text-lg">200 OK </div>
+		<code>application/json</code>
+		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+	</div>
+<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>total - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>take - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>skip - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`number`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="product[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+  "total": 1,
+  "skip": 0,
+  "take": 10,
+  "items": [
+    {
+      "spu": "string",
+      "createdAt": "2025-05-14T02:23:19.222Z",
+      "updatedAt": "2025-05-14T02:23:19.222Z",
+      "name": {
+        "vi": "string",
+        "en": "string"
+      },
+      "slug": {
+        "vi": "string",
+        "en": "string"
+      },
+      "type": "string",
+      "thumbnail": "string",
+      "regions": [
+        {
+          "id": "string",
+          "name": {
+            "vi": "string",
+            "en": "string"
+          },
+          "thumbnail": "string"
+        }
+      ],
+      "countries": [
+        {
+          "id": "string",
+          "name": {
+            "vi": "string",
+            "en": "string"
+          },
+          "mcc": "string",
+          "mcc3": "string",
+          "continent": "string",
+          "thumbnail": "string"
+        }
+      ],
+      "variations": [
+        {
+          "sku": "string",
+          "name": {
+            "vi": "string",
+            "en": "string"
+          },
+          "price": 0,
+          "priceFloor": 0,
+          "discount": 0,
+          "highFlowSize": 0,
+          "days": 0,
+          "package": "DAILY",
+          "data": "string",
+          "throttleSpeed": "string",
+          "smsCall": "string",
+          "apn": "string",
+          "pointContactType": "string",
+          "hotsPot": true
+        }
+      ]
+    }
+  ]
+}} />
+			</Td>
+		</Tr>
+	</tbody>
+</Table>
+<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1'>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/products</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/products`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Products/ProductsController_findAll`}>Try it on Swagger</a>
+		</div>
+<CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/products?take=10&skip=1',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/products?take=10&skip=1';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+			.catch(err => console.error(err));
+		```
+		```php PHP
+		<?php
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, [
+			CURLOPT_URL => "https://merchant.simplifytrip.com/api/v1/products?take=10&skip=1",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_HTTPHEADER => [
+				"accept: application/json",
+				"content-type: application/json",
+				"authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+				"x-api-key: pk_live_xxxxxxxxxxxxxxxxxx",
+			],
+		]);
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+			echo "cURL Error #:" . $err;
+		} else {
+			echo $response;
+		}
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/products?take=10&skip=1");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",);,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/products?take=10&skip=1"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/products?take=10&skip=1"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X 'GET' \
+  'https://merchant.simplifytrip.com/api/v1/products?skip=0&take=10' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx'
+
+```
+</CH.Code>
+
+		##### Sample Response
+<CH.Code>
+```json
+{
+  "total": 100,
+  "skip": 0,
+  "take": 10,
+  "items": [
+    {
+      "spu": "EHKXY",
+      "createdAt": "2024-10-21T03:07:09.818Z",
+      "updatedAt": "2024-10-21T03:07:09.818Z",
+      "name": {
+        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data ",
+        "en": "eSIM HongKong, Macao 4G high speed, data only"
+      },
+      "slug": {
+        "vi": "esim-hongkong-macao-toc-do-cao-4g-data",
+        "en": "esim-hongkong-macao-4g-high-speed-data-only"
+      },
+      "type": "eSIM",
+      "thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/esim/esim-hongkong-macao.jpg",
+      "regions": [],
+      "countries": [
+        {
+          "id": "HK",
+          "name": {
+            "vi": "Hong Kong",
+            "en": "Hong Kong"
+          },
+          "thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/flag/hongkong-flag.jpg",
+          "mcc": "HK",
+          "mcc3": "HKG",
+          "continent": "Asia"
+        },
+        {
+          "id": "MO",
+          "name": {
+            "vi": "Macau (China)",
+            "en": "Macau (China)"
+          },
+          "thumbnail": "https://op-flow-public.oss-cn-hangzhou.aliyuncs.com/module/country/aomen.png",
+          "mcc": "MO",
+          "mcc3": "MAC",
+          "continent": "Asia"
+        }
+      ],
+      "variations": [
+        {
+          "sku": "EHKXY02GB05DPY",
+          "name": {
+            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 5 ngày)",
+            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 5 days)"
+          },
+          "price": 270000,
+          "priceFloor": 270000,
+          "discount": 0,
+          "highFlowSize": 2097152,
+          "days": 5,
+          "package": "DAILY",
+          "data": "2GB",
+          "throttleSpeed": "128kpbs",
+          "smsCall": "Không dùng được Tiktok",
+          "apn": "Auto",
+          "pointContactType": null,
+          "hotsPot": true
+        },
+        {
+          "sku": "EHKXY02GB07DPY",
+          "name": {
+            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 7 ngày)",
+            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 7 days)"
+          },
+          "price": 356000,
+          "priceFloor": 356000,
+          "discount": 0,
+          "highFlowSize": 2097152,
+          "days": 7,
+          "package": "DAILY",
+          "data": "2GB",
+          "throttleSpeed": "128kpbs",
+          "smsCall": "Không dùng được Tiktok",
+          "apn": "Auto",
+          "pointContactType": null,
+          "hotsPot": true
+        },
+        {
+          "sku": "EHKXY02GB06DPY",
+          "name": {
+            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
+            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
+          },
+          "price": 313000,
+          "priceFloor": 313000,
+          "discount": 0,
+          "highFlowSize": 2097152,
+          "days": 6,
+          "package": "DAILY",
+          "data": "2GB",
+          "throttleSpeed": "128kpbs",
+          "smsCall": "Không dùng được Tiktok",
+          "apn": "Auto",
+          "pointContactType": null,
+          "hotsPot": true
+        },
+        {
+          "sku": "EHKXY01GB01DPY",
+          "name": {
+            "vi": "eSIM HongKong tốc độ cao 4G, chỉ có data (1GB/ngày - 1 ngày)",
+            "en": "4G high-speed Hongkong travel eSIM, data only (1GB/day - 1 day)"
+          },
+          "price": 93000,
+          "priceFloor": 93000,
+          "discount": 0,
+          "highFlowSize": 1048576,
+          "days": 1,
+          "package": "DAILY",
+          "data": "1GB",
+          "throttleSpeed": "128kpbs",
+          "smsCall": "Không dùng được Tiktok",
+          "apn": "Auto",
+          "pointContactType": null,
+          "hotsPot": true
+        },
+        {
+          "sku": "EHKXY02GB04DPY",
+          "name": {
+            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 4 ngày)",
+            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 4 days)"
+          },
+          "price": 230000,
+          "priceFloor": 230000,
+          "discount": 0,
+          "highFlowSize": 2097152,
+          "days": 4,
+          "package": "DAILY",
+          "data": "2GB",
+          "throttleSpeed": "128kpbs",
+          "smsCall": "Không dùng được Tiktok",
+          "apn": "Auto",
+          "pointContactType": null,
+          "hotsPot": true
+        }
+      ]
+    },
+	...
+  ]
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>
+
+## Api lấy thông tin một mặt hàng
+Api lấy thông tin chi tiết một mặt hàng của SimplifyTrip thông qua slug hoặc spu
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Path Parameters
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>spu</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+				slug hoặc spu lấy từ API get danh sách
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div className="flex gap-2 items-center py-4">
+		<div className="flex-1 text-lg">200 OK </div>
+		<code>application/json</code>
+		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+	</div>
+<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code></code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="productInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+  "spu": "string",
+  "createdAt": "2025-05-14T02:38:30.207Z",
+  "updatedAt": "2025-05-14T02:38:30.207Z",
+  "name": {
+    "vi": "string",
+    "en": "string"
+  },
+  "slug": {
+    "vi": "string",
+    "en": "string"
+  },
+  "type": "string",
+  "thumbnail": "string",
+  "regions": [
+    {
+      "id": "string",
+      "name": {
+        "vi": "string",
+        "en": "string"
+      },
+      "thumbnail": "string"
+    }
+  ],
+  "countries": [
+    {
+      "id": "string",
+      "name": {
+        "vi": "string",
+        "en": "string"
+      },
+      "mcc": "string",
+      "mcc3": "string",
+      "continent": "string",
+      "thumbnail": "string"
+    }
+  ],
+  "variations": [
+    {
+      "sku": "string",
+      "name": {
+        "vi": "string",
+        "en": "string"
+      },
+      "price": 0,
+      "priceFloor": 0,
+      "discount": 0,
+      "highFlowSize": 0,
+      "days": 0,
+      "package": "DAILY",
+      "data": "string",
+      "throttleSpeed": "string",
+      "smsCall": "string",
+      "apn": "string",
+      "pointContactType": "string",
+      "hotsPot": true
+    }
+  ]
+}} />
+			</Td>
+		</Tr>
+	</tbody>
+</Table>
+<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1'>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/products/:spu</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/products/:spu`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Products/ProductsController_findOne`}>Try it on Swagger</a>
+		</div>
+ <CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/products/EHKXY',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/products/EHKXY';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+	.catch(err => console.error(err));
+```
+```php PHP
+<?php
+require_once('vendor/autoload.php');
+
+$client = new \GuzzleHttp\Client();
+
+$response = $client->request('GET', 'https://merchant.simplifytrip.com/v1/products/EHKXY', [
+	'headers' => [
+		'accept' => 'application/json',
+		'content-type' => 'application/json',
+		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+	],
+]);
+
+echo $response->getBody();
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/products/EHKXY");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/products/EHKXY"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/products/EHKXY"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
+	-H "Accept: application/json" \
+	-H "content-type: application/json" \
+	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
+	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
+
+```
+</CH.Code>
+		##### Sample Response
+<CH.Code>
+```json
+{
+  "spu": "EHKXY",
+  "createdAt": "2024-10-21T03:07:09.818Z",
+  "updatedAt": "2024-10-21T03:07:09.818Z",
+  "name": {
+    "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data ",
+    "en": "eSIM HongKong, Macao 4G high speed, data only"
+  },
+  "slug": {
+    "vi": "esim-hongkong-macao-toc-do-cao-4g-data",
+    "en": "esim-hongkong-macao-4g-high-speed-data-only"
+  },
+  "type": "eSIM",
+  "thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/esim/esim-hongkong-macao.jpg",
+  "regions": [],
+  "countries": [
+    {
+      "id": "HK",
+      "name": {
+        "vi": "Hong Kong",
+        "en": "Hong Kong"
+      },
+      "thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/flag/hongkong-flag.jpg",
+      "mcc": "HK",
+      "mcc3": "HKG",
+      "continent": "Asia"
+    },
+    {
+      "id": "MO",
+      "name": {
+        "vi": "Macau (China)",
+        "en": "Macau (China)"
+      },
+      "thumbnail": "https://op-flow-public.oss-cn-hangzhou.aliyuncs.com/module/country/aomen.png",
+      "mcc": "MO",
+      "mcc3": "MAC",
+      "continent": "Asia"
+    }
+  ],
+  "variations": [
+    {
+      "sku": "EHKXY02GB05DPY",
+      "name": {
+        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 5 ngày)",
+        "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 5 days)"
+      },
+      "price": 270000,
+      "priceFloor": 270000,
+      "discount": 0,
+      "highFlowSize": 2097152,
+      "days": 5,
+      "package": "DAILY",
+      "data": "2GB",
+      "throttleSpeed": "128kpbs",
+      "smsCall": "Không dùng được Tiktok",
+      "apn": "Auto",
+      "pointContactType": null,
+      "hotsPot": true
+    },
+    {
+      "sku": "EHKXY02GB07DPY",
+      "name": {
+        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 7 ngày)",
+        "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 7 days)"
+      },
+      "price": 356000,
+      "priceFloor": 356000,
+      "discount": 0,
+      "highFlowSize": 2097152,
+      "days": 7,
+      "package": "DAILY",
+      "data": "2GB",
+      "throttleSpeed": "128kpbs",
+      "smsCall": "Không dùng được Tiktok",
+      "apn": "Auto",
+      "pointContactType": null,
+      "hotsPot": true
+    },
+    {
+      "sku": "EHKXY02GB06DPY",
+      "name": {
+        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
+        "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
+      },
+      "price": 313000,
+      "priceFloor": 313000,
+      "discount": 0,
+      "highFlowSize": 2097152,
+      "days": 6,
+      "package": "DAILY",
+      "data": "2GB",
+      "throttleSpeed": "128kpbs",
+      "smsCall": "Không dùng được Tiktok",
+      "apn": "Auto",
+      "pointContactType": null,
+      "hotsPot": true
+    },
+    {
+      "sku": "EHKXY01GB01DPY",
+      "name": {
+        "vi": "eSIM HongKong tốc độ cao 4G, chỉ có data (1GB/ngày - 1 ngày)",
+        "en": "4G high-speed Hongkong travel eSIM, data only (1GB/day - 1 day)"
+      },
+      "price": 93000,
+      "priceFloor": 93000,
+      "discount": 0,
+      "highFlowSize": 1048576,
+      "days": 1,
+      "package": "DAILY",
+      "data": "1GB",
+      "throttleSpeed": "128kpbs",
+      "smsCall": "Không dùng được Tiktok",
+      "apn": "Auto",
+      "pointContactType": null,
+      "hotsPot": true
+    },
+    {
+      "sku": "EHKXY02GB04DPY",
+      "name": {
+        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 4 ngày)",
+        "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 4 days)"
+      },
+      "price": 230000,
+      "priceFloor": 230000,
+      "discount": 0,
+      "highFlowSize": 2097152,
+      "days": 4,
+      "package": "DAILY",
+      "data": "2GB",
+      "throttleSpeed": "128kpbs",
+      "smsCall": "Không dùng được Tiktok",
+      "apn": "Auto",
+      "pointContactType": null,
+      "hotsPot": true
+    }
+  ]
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>
+
+## Api lấy thông tin một variation
+Api lấy thông tin chi tiết một mẫu mã của mặt hàng thông qua sku
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Path Parameters
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div className="flex gap-2 items-center py-4">
+		<div className="flex-1 text-lg">200 OK </div>
+		<code>application/json</code>
+		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+	</div>
+<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code></code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="variationInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+	"sku": "string",
+	"name": {
+	"vi": "string",
+	"en": "string"
+	},
+	"price": 0,
+	"priceFloor": 0,
+	"discount": 0,
+	"highFlowSize": 0,
+	"days": 0,
+	"package": "DAILY",
+	"data": "string",
+	"throttleSpeed": "string",
+	"smsCall": "string",
+	"apn": "string",
+	"pointContactType": "string",
+	"hotsPot": true,
+	"spu": "string"
+}} />
+			</Td>
+		</Tr>
+	</tbody>
+</Table>
+<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1'>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/products/variation/:sku</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/products/variation/:sku`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Products/ProductsController_findOneVariation`}>Try it on Swagger</a>
+		</div>
+ <CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01GB01DPY',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01GB01DPY';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+	.catch(err => console.error(err));
+```
+```php PHP
+<?php
+require_once('vendor/autoload.php');
+
+$client = new \GuzzleHttp\Client();
+
+$response = $client->request('GET', 'https://merchant.simplifytrip.com/v1/products/variation/EHKXY01GB01DPY', [
+	'headers' => [
+		'accept' => 'application/json',
+		'content-type' => 'application/json',
+		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+	],
+]);
+
+echo $response->getBody();
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01GB01DPY");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01GB01DPY"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01GB01DPY"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X GET https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01GB01DPY \
+	-H "Accept: application/json" \
+	-H "content-type: application/json" \
+	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
+	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
+
+```
+</CH.Code>
+		##### Sample Response
+<CH.Code>
+```json
+{
+	"sku": "EHKXY02GB06DPY",
+	"name": {
+		"vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
+		"en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
+	},
+	"price": 313000,
+	"priceFloor": 313000,
+	"discount": 0,
+	"highFlowSize": 2097152,
+	"days": 6,
+	"package": "DAILY",
+	"data": "2GB",
+	"throttleSpeed": "128kpbs",
+	"smsCall": "Không dùng được Tiktok",
+	"apn": "Auto",
+	"pointContactType": null,
+	"hotsPot": true,
+	"spu": "EHKXY"
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>
+
+## Api tra cứu trạng thái eSim đã mua thông qua ICCID
+Api lấy thông tin eSim, bao gồm Trạng thái, lịch sử hoạt động, lượng dữ liệu đã sử dụng...
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Path Parameters
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>iccid</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div className="flex gap-2 items-center py-4">
+		<div className="flex-1 text-lg">200 OK </div>
+		<code>application/json</code>
+		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+	</div>
+<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>iccid</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>activityLogs</code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="ActivityLog[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+       "eid": 'string',
+		"recordTime": 'datetime',
+		"status": 'number: 0-not downloaded 1-downloaded 2-installed 3-enabled 4-disabled 5-recycled',
+    }} />
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>usageInfoList</code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="UsageInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+       "usedDate": 'datetime',
+		"usageAmt": 'number',
+    }} />
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>eSimStatus</code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="UsageInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+	"planStartTime": "2025-05-14T02:24:27.520Z",
+    "planEndTime": "2025-05-14T02:24:27.520Z",
+    "useEndTime": "2025-05-14T02:24:27.520Z",
+    "remainingDays": 'number',
+    "usedTraffic": 'number',
+    "planStatus": 'number | 0-not used 1-in use 2-used 3-cancelled'
+    }} />
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>productInfo</code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="UsageInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+	"sku": "string",
+    "spu": "string",
+    "name": "string",
+    "type": "eSIM",
+    "package": "FIXED | DAILY",
+    "days": 'number',
+    "data": "string",
+    "apn": "string",
+    "hotsPot": 'boolean',
+    "networks": 'string[]',
+    "throttleSpeed": "string",
+    "pointContactType": "string",
+    "smsCall": "string"
+    }} />
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>orderInfo</code></Td>
+			<Td className='border-0 json-custom'>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="UsageInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{
+	"orderId": "string",
+    "trackId": "string",
+    "subOrderId": "string",
+    "subTrackId": "string",
+    "purchaseDate": "datetime"
+    }} />
+			</Td>
+		</Tr>
+	</tbody>
+</Table>
+<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1'>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/products/esim/:iccid</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/products/esim/:iccid`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Products/ProductsController_getSimInfo`}>Try it on Swagger</a>
+		</div>
+ <CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/products/iccid/89812003916820412483',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/products/iccid/89812003916820412483';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+	.catch(err => console.error(err));
+```
+```php PHP
+<?php
+require_once('vendor/autoload.php');
+
+$client = new \GuzzleHttp\Client();
+
+$response = $client->request('GET', 'https://merchant.simplifytrip.com/v1/products/iccid/89812003916820412483', [
+	'headers' => [
+		'accept' => 'application/json',
+		'content-type' => 'application/json',
+		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+	],
+]);
+
+echo $response->getBody();
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/products/iccid/89812003916820412483");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/products/iccid/89812003916820412483"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/products/iccid/89812003916820412483"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X GET https://merchant.simplifytrip.com/api/v1/products/iccid/89812003916820412483 \
+	-H "Accept: application/json" \
+	-H "content-type: application/json" \
+	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
+	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
+
+```
+</CH.Code>
+		##### Sample Response
+<CH.Code>
+```json
+{
+  "activityLogs": [
+    {
+      "eid": null,
+      "recordTime": "2025-05-13 22:42:42",
+      "status": 0
+    }
+  ],
+  "usageInfoList": [],
+  "eSimStatus": {
+    "planStartTime": null,
+    "planEndTime": null,
+    "remainingDays": 1,
+    "useEndTime": "",
+    "usedTraffic": 0,
+    "planStatus": 0
+  },
+  "iccid": "89812003916820447472",
+  "orderInfo": {
+    "orderId": "481989189736539",
+    "trackId": "2f01814f-d3da-40ae-afd1-79cbd8f789e3",
+    "subOrderId": "68235a3f02fe66336899c820",
+    "subTrackId": "18824662-0ba2-4fe5-a22f-b7475755335f",
+    "purchaseDate": "2025-05-13T14:42:07.069Z"
+  },
+  "productInfo": {
+    "sku": "E23XY06GB08DFX",
+    "spu": "E23XY",
+    "name": {
+      "vi": "eSIM Ấn Độ 06GB tốc độ cao 4G, chỉ có data (6GB - 8 ngày ) ",
+      "en": "4G high-speed India travel eSIM, data only (6GB - 8 days ) "
+    },
+    "type": "eSIM",
+    "package": "FIXED",
+    "days": 8,
+    "data": "6GB",
+    "apn": "internet",
+    "hotsPot": true,
+    "throttleSpeed": "Stop",
+    "pointContactType": null,
+    "smsCall": "Các nước có thể sử dụng: Australia, Brunei, Bahrain, Bhutan ,Georgia , Cambodia, China (including Tibet), Hong Kong, India, Indonesia, Japan, Laos, Macau, Malaysia, Myanmar, Nepal, Philippines, Qatar, Singapore, South Korea, Sri Lanka, Taiwan, Thailand, Vietnam, Bangladesh, Israel, Kazakhstan, Pakistan , Guam , Kuwait , Uzbekistan , Qatar , Oman , Mongolia , Jordan ."
+  }
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>

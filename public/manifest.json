@@ -1,0 +1,17 @@
+{
+	"name": "SimplifyTrip Docs",
+	"short_name": "SimplifyTrip Docs",
+	"description": "Tài liệu dành cho đối tác của SimplifyTrip",
+	"lang": "vi_VN",
+	"start_url": "/",
+	"display": "fullscreen",
+	"theme_color": "#234900",
+	"background_color": "#ffffff",
+	"icons": [
+		{
+			"src": "/icons/icon.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}

@@ -1,0 +1,393 @@
+import { CopyToClipboard, Link, Table, Td, Th, Tr, Callout } from 'nextra/components'
+
+# Webhook
+
+SimplifyTrip sử dụng webhook để thông báo cho ứng dụng của bạn bất cứ khi nào có sự kiện xảy ra với dữ liệu của bạn. Mỗi webhook có tên sự kiện, endpoint và phương thức HTTP. Các payload theo chuẩn JSON.
+
+Bạn có thể xem và quản lý các sự kiện đã được gửi đến bạn thông qua webhook của mình trong <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/stats/webhooks'} className="underline" target='_blank'>Thống kê Webhooks</a>.
+
+<Callout>
+ 	Để thay đổi webhook endpoint, vui lòng truy cập <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline text-inherit" target='_blank'>quản lý Api Keys</a>, mỗi endpoint sẽ được gắn với một Api key cụ thể.
+</Callout>
+
+### Quy ước chung
+
+- Content-Type: `application/json`
+- Authorization: sử dụng `X-Simplify-Trip-Signature` header để xác minh
+- Retry: tối đa 3 lần cách nhau 5 phút
+- Idempotency: trường `id` kèm `sentDate`, `createdAt` để tránh xử lý trùng, trường `type` để định danh dữ liệu [Danh sách webhook](#danh-sách-webhook)
+
+
+### Cài đặt
+Bạn cần cung cấp Endpoint trong hệ thống của mình để nhận webhook từ chúng tôi. Thông báo webhook sẽ được gửi qua phương thức POST tới URL webhook mà bạn đã đặt.
+Thiết lập URL webhook của bạn trong phần quản lý Api Key. Endpoint webhook sẽ được cài đặt trong một Api Key riêng biệt. Bạn cũng có thể dùng chung một endpoint cho nhiều Api Key khác nhau. Bạn có thể sử dụng một công cụ như `ngrok` để cung cấp Endpoint để nhận webhook trong quá trình thử nghiệm.
+
+### Event Handling
+Việc xử lý chính xác các sự kiện webhook là rất quan trọng để đảm bảo logic kinh doanh của hệ thống của bạn hoạt động như mong đợi
+
+##### Xác nhận sự kiện ngay lập tức
+
+Nếu api webhook của bạn thực hiện logic phức tạp hoặc thực hiện network calls, thì có thể api đó sẽ hết thời gian chờ trước khi SimplifyTrip xác nhận đã gửi data thành công. Lý tưởng nhất là mã xử lý webhook của bạn (xác nhận việc nhận sự kiện bằng cách trả về mã trạng thái 2xx) tách biệt với bất kỳ logic nào khác mà bạn thực hiện cho sự kiện đó.
+
+##### Xử lý sự kiện trùng lặp
+
+Endpoint Webhook đôi khi có thể nhận được cùng một sự kiện nhiều lần. Chúng tôi khuyên bạn nên đề phòng các biên nhận sự kiện trùng lặp bằng cách làm cho quá trình xử lý sự kiện của bạn trở nên idempotent. Một cách để thực hiện việc này là ghi lại các sự kiện bạn đã xử lý và sau đó không xử lý các sự kiện đã được ghi lại. Chúng tôi cung cấp webhook-id dưới dạng mã định danh duy nhất trong tham số tiêu đề của mỗi webhook để giúp bạn triển khai tính idempotent. Tìm hiểu về sự [idempotent](https://en.wikipedia.org/wiki/Idempotence).
+
+##### Thứ tự sự kiện
+
+SimplifyTrip không đảm bảo việc phân phối các sự kiện theo thứ tự chúng được tạo. Endpoint của bạn không nên mong đợi việc phân phối các sự kiện này theo thứ tự này và nên xử lý việc này một cách phù hợp. Bạn cũng có thể sử dụng API để tìm nạp mọi đối tượng bị thiếu.
+
+### Retry (Gửi lại)
+
+SimplifyTrip sẽ tự động gửi lại webhook vào endpoint của bạn nếu không xảy ra lỗi 4xx, vì lỗi 4xx là lỗi bên trong hệ thống của bạn, chúng tôi không gửi lại vì điều này là vô nghĩa. Trong trường hợp này bạn hãy fixbug bên trong hệ thống của mình, sau đó tiến hành gửi lại webhook thủ công trong trang dành cho partner <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/stats/webhooks'} className="underline" target='_blank'>Thống kê Webhooks</a>.
+
+Số lần gửi lại tự động tối đa là 3 lần, khoảng cách giữa các lần thử lại là 5 phút.
+
+### Security
+Giữ an toàn cho Endpoint của bạn là điều quan trọng để bảo vệ thông tin của khách hàng. SimplifyTrip cung cấp một số cách để bạn xác minh các sự kiện đến từ SimplifyTrip một cách an toàn.
+
+- **Nhận sự kiện với máy chủ HTTPS**
+
+	Nếu bạn sử dụng URL HTTPS cho Endpoint webhook của mình, SimplifyTrip sẽ xác thực rằng kết nối đến máy chủ của bạn là an toàn trước khi gửi dữ liệu webhook của bạn. Để tính năng này hoạt động, máy chủ của bạn phải được định cấu hình chính xác để hỗ trợ HTTPS bằng chứng chỉ máy chủ hợp lệ.
+
+- **Replay protection:**
+
+	Kiểm tra `id`, `sentDate` và `createdAt`, chấp nhận sự kiện chỉ một lần trong window 24h.
+
+- **Xác minh các sự kiện được gửi từ SimplifyTrip**
+
+	SimplifyTrip sign các sự kiện webhook mà nó gửi đến Endpoint của bạn.
+	Chúng tôi làm như vậy bằng cách cách tạo mã `signature` của mỗi sự kiện và gửi kèm chúng tới endpoint của bạn bằng cách gắn signature vào header của request với tên là `X-Simplify-Trip-Signature`. Điều này cho phép bạn xác minh rằng các sự kiện được gửi bởi SimplifyTrip chứ không phải bởi bên thứ ba. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature) để biết chi tiết.
+
+## Danh sách webhook
+### Dữ liệu đơn hàng eSim
+Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm môt mã signature và một object chứa thông tin đơn hàng và danh sách eSim bạn đã đặt hàng.
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div>
+	##### Request Headers
+
+	<div className="mt-3">
+		<code>`X-Simplify-Trip-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+
+		<code className='text-red-500 text-xs ml-2'>`string`</code>
+
+		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+
+	</div>
+	##### Request Body
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Mã định danh cho webhook này
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Loại sự kiện của webhook `PURCHASE_ORDER_SUCCESS` | `PURCHASE_ORDER_FAIL`
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`datetime`</code>
+
+				Thời gian sự kiện webhook được tạo
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`datetime`</code>
+
+				Thời gian sự kiện webhook được gửi đi
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`object`</code>
+
+				Chứa thông tin đơn hàng của bạn, bao gồm danh sách eSim đã mua, các mã định danh...
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	</div>
+	<div>
+<CH.Code>
+```json BodyData
+{
+  "id": "6741ae7de65369e169a70758",
+  "sentDate": "2024-11-23T10:29:17.887Z",
+  "createdAt": "2024-11-23T10:29:17.887Z",
+  "mode": "TEST_MODE",
+  "type": "PURCHASE_ORDER_SUCCESS",
+  "data": {
+    "orderId": "7258736707",
+    "trackId": "fd66829c-f768-43a7-b147-9e92d44c4e81",
+	"status": "SUCCESS",
+    "items": [
+      {
+        "subOrderId": "6741ae68e65369e169a70757",
+        "subTrackId": "c6858ae7-0f40-4f44-be1a-ac656851ba92",
+        "sku": "E23XY06GB08DFX",
+        "quantity": 1,
+		"type": "eSIM",
+		"status": "SUCCESS",
+        "eSims": [
+          {
+			"qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+            "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+            "iccid": "89812003916820393515",
+            "planAPN": "plus.4g",
+            "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+            "pin": "1234",
+            "puk": "15095300",
+            "activationCode": "502F97EF09144E0C9D62FD781E256383"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+```json Headers
+{
+	"X-Simplify-Trip-Signature": "6236b093f1e9ce8fee57110e5a11e8fbdcc59d57f654adb7a70522aaf26cd77a"
+}
+```
+</CH.Code>
+
+	</div>
+</div>
+
+### Dữ liệu đơn hàng SIM vật lý
+Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của đơn hàng. Bao gồm môt mã signature và một object chứa thông tin trạng thái đơn hàng.
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div>
+	##### Request Headers
+
+	<div className="mt-3">
+		<code>`X-Simplify-Trip-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+
+		<code className='text-red-500 text-xs ml-2'>`string`</code>
+
+		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+
+	</div>
+	##### Request Body
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+					Mã định danh cho webhook này
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Loại sự kiện của webhook `PURCHASE_ORDER_UPDATE`
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`datetime`</code>
+
+				Thời gian sự kiện webhook được tạo
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`datetime`</code>
+
+				Thời gian sự kiện webhook được gửi đi
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`object`</code>
+
+				Chứa thông tin đơn hàng của bạn, bao gồm trạng thái đơn hàng `NEW` | `CONFIRMED` | `DELIVERING` | `SUCCESS` | `CANCELED`
+
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	</div>
+	<div>
+<CH.Code>
+```json BodyData
+{
+  "id": "6741ae7de65369e169a70758",
+  "sentDate": "2024-11-23T10:29:17.887Z",
+  "createdAt": "2024-11-23T10:29:17.887Z",
+  "mode": "TEST_MODE",
+  "type": "PURCHASE_ORDER_UPDATE",
+  "data": {
+    "orderId": "7258736707",
+    "trackId": "fd66829c-f768-43a7-b147-9e92d44c4e81",
+	"status": "SUCCESS",
+    "items": [
+      {
+        "subOrderId": "6741ae68e65369e169a70757",
+        "subTrackId": "c6858ae7-0f40-4f44-be1a-ac656851ba92",
+        "sku": "AS7BCUNL03DPY",
+        "quantity": 3,
+		"type": "SIM",
+		"status": "SUCCESS"
+      }
+    ]
+  }
+}
+```
+```json Headers
+{
+	"X-Simplify-Trip-Signature": "6236b093f1e9ce8fee57110e5a11e8fbdcc59d57f654adb7a70522aaf26cd77a"
+}
+```
+</CH.Code>
+
+	</div>
+</div>
+
+### Dữ liệu yêu cầu trả hàng
+Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm môt mã signature và một object chứa thông tin trạng thái yêu cầu.
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div>
+	##### Request Headers
+
+	<div className="mt-3">
+		<code>`X-Simplify-Trip-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+
+		<code className='text-red-500 text-xs ml-2'>`string`</code>
+
+		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+
+	</div>
+	##### Request Body
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+					Mã định danh cho webhook này
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Loại sự kiện của webhook `RETURN_ORDER_UPDATE`
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`datetime`</code>
+
+				Thời gian sự kiện webhook được tạo
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`datetime`</code>
+
+				Thời gian sự kiện webhook được gửi đi
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`object`</code>
+
+				Chứa thông tin yêu cầu trả hàng, bao gồm trạng thái `REVIEWING` | `APPROVED` | `REJECTED`
+
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	</div>
+	<div>
+<CH.Code>
+```json BodyData
+{
+  "id": "6741ae7de65369e169a70758",
+  "sentDate": "2024-11-23T10:29:17.887Z",
+  "createdAt": "2024-11-23T10:29:17.887Z",
+  "mode": "TEST_MODE",
+  "type": "RETURN_ORDER_UPDATE",
+  "data": {
+    "id": "6741ae68e65369e169a70757",
+	"createdAt": "2024-11-23T10:29:17.887Z",
+    "orderId": "7258736707",
+    "trackId": "fd66829c-f768-43a7-b147-9e92d44c4e81",
+	"status": "REVIEWING",
+	"reason": "reason",
+	"returnType": "FULL",
+	"refundAmount": 205000,
+    "items": [
+      {
+        "productName": "SIM Đông Nam Á (7 nước) chỉ có data (Unlimited Data/ngày - 3 ngày)",
+        "sku": "AS7BCUNL03DPY",
+        "quantity": 3,
+		"type": "SIM",
+      }
+    ]
+  }
+}
+```
+```json Headers
+{
+	"X-Simplify-Trip-Signature": "6236b093f1e9ce8fee57110e5a11e8fbdcc59d57f654adb7a70522aaf26cd77a"
+}
+```
+</CH.Code>
+
+	</div>
+</div>

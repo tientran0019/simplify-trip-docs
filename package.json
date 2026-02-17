@@ -1,0 +1,47 @@
+{
+  "name": "docs",
+  "version": "1.2.0",
+  "description": "Docs for partners",
+  "scripts": {
+    "dev": "dotenv -c development next dev",
+    "build:docs": "dotenv -c production next build",
+    "start:docs": "dotenv -c production next start",
+    "start:prod:docs": "dotenv -c production next start",
+    "clean": "rm -rf .next && rm -rf node_modules && rm -rf .turbo"
+  },
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "react-json-view": "^1.21.3",
+    "lodash": "^4.17.23",
+    "@code-hike/mdx": "^0.9.0",
+    "clsx": "^2.1.1",
+    "next": "15.5.11",
+    "nextra": "3.2.5",
+    "nextra-theme-docs": "3.2.5",
+    "crypto-js": "^4.2.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.10",
+    "@types/react": "19.2.9",
+    "autoprefixer": "^10.4.23",
+    "@types/crypto-js": "^4.2.2", 
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-perfectionist": "^4.15.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@10.29.3+sha512.498e1fb4cca5aa06c1dcf2611e6fafc50972ffe7189998c409e90de74566444298ffe43e6cd2acdc775ba1aa7cc5e092a8b7054c811ba8c5770f84693d33d2dc"
+}

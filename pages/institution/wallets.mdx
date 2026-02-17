@@ -1,0 +1,36 @@
+---
+title: Tài khoản
+---
+import { Callout, Link, Table, Td, Th, Tr, Steps  } from 'nextra/components'
+
+# Tài khoản của tổ chức
+
+Đây là nơi chứa thông tin các Tài khoản mà tổ chức của bạn có. Truy cập tại <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/wallet'} className="underline" target='_blank'>Quản lý Tài khoản</a>
+
+Có hai loại Tài khoản khác nhau:
+
+- **Tài khoản Top-up:** Đây là loại Tài khoản mặc định cho các tổ chức mới gia nhập. Với lại Tài khoản này bạn phải nạp tiền trước để có thể sử dụng. Hay đảm bảo rằng sô dư tài khoản luôn luôn dương để không bị gián đoạn khi thực hiện các giao dịch trên SimplifyTrip.
+Khi số dư của bạn xuống dưới mức quy đinh, một email sẽ được gửi đến Onwer của tổ chức để nhắc nhở bạn nạp tiền vào Tài khoản. Mỗi khi thực hiện một đơn đặt hàng, số tiền trong Tài khoản sẽ bị trừ đi mức tương ứng với đơn hàng của bạn.
+
+- **Tài khoản công nợ:** Các tổ chức dủ điều kiện sẽ được kích hoạt loại Tài khoản này. Vui lòng liên hệ với SimplifyTrip để có thể biết thêm các điều kiện để mở Tài khoản này.Đối với Tài khoản công nợ, bạn có thể thực hiện các giao dịch mà không cần phải nạp tiền trước, các khoản chi sẽ được ghi nợ vào Tài khoản,
+Cuối hàng tháng, SimplifyTrip sẽ chốt sao kê cho Tài khoản của bạn, một email thông báo dư nợ sẽ được gửi cho Owner của tổ chức, bạn có 10 ngày để thanh toán dư nợ cho SimplifyTrip, nếu quá hạn, Tài khoản của bạn sẽ bị khoá, mọi dịch vụ sẽ bị gián đoạn nếu dư nợ không được giải quyết.
+
+<Callout type="info">
+ 	Bạn có thể chủ động chọn một trong hai loại tài khoản này của tổ chức làm Tài khoản mặc định thanh toán. Khi gọi Api thực hiện giao dịch, SimplifyTrip sẽ tính khấu trừ từ Tài khoản mặc định này.
+</Callout>
+
+### Tài khoản trong chố độ Test Mode
+
+SimplifyTrip chia thành các môi trường khác nhau, để bạn có thể tiến hành các thử nghiệm của mình một cách dễ dàng
+
+Đối với chế độ Test Mode, tất các các giao dịch đều là giả lập, nên các Tài khoản ở chế độ này đều không có thật, có nghĩa là tiền trong Tài khoản này chỉ để bạn thử nghiệm các tính năng của SimplifyTrip, bạn có thể nạp thêm bao nhiêu tiền tuỳ thích mà không mất một chi phí thật nào.
+Không cần phải thanh toán dự nợ của Tài khoản công nợ ở các kỳ sao kê khi ở chế độ này.
+
+## Kích hoạt Tài khoản
+
+Truy cập tại <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/wallet'} className="underline" target='_blank'>Quản lý Tài khoản</a>
+
+<div className="my-5">
+	<img src="/screenshots/wallets.png" width="100%" />
+</div>
+

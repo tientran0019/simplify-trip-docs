@@ -1,0 +1,1184 @@
+---
+title: Api Đơn hàng
+---
+import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
+import ReactJson from 'src/components/ObjectDisplay'
+
+<a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
+# Api Đơn hàng
+
+## Api tạo đơn hàng
+Tạo đơn hàng mua eSim từ SimplifyTrip
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Request Headers
+
+	<div className="mt-3">
+		<code>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+
+		<code className='text-red-500 text-xs ml-2'>`string`</code>
+
+		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+
+	</div>
+
+	##### Request Body
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Id hệ thống của bạn tạo ra, dùng để định danh order, ví dụ trong trường hợp nhận được dữ liệu từ webhook, trackId sẽ giúp bạn nhận ra hệ thống cần xử lý đơn hàng nào
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[37%]'><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`Item[]`</code>
+			</Td>
+		</Tr>
+
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 p-0 pl-9 ' colSpan={2}>
+				<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
+				<tbody>
+					<Tr className='border-0 !bg-inherit'>
+						<Td className='border-0  pt-4  w-[37%]'><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+						<Td className='border-0  pt-4'>
+							<code className='text-red-500 text-xs'>`string`</code>
+
+							Id của item
+						</Td>
+					</Tr>
+					<Tr className='border-0 !bg-inherit'>
+						<Td className='border-0'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+						<Td className='border-0'>
+							<code className='text-red-500 text-xs'>`string`</code>
+
+							SKU của mặt hàng lấy từ Api danh sách Products
+						</Td>
+					</Tr>
+					<Tr className='border-0 !bg-inherit'>
+						<Td className='border-0'><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
+						<Td className='border-0'>
+							<code className='text-red-500 text-xs'>`number`</code>
+
+							Số lượng sim cần mua
+						</Td>
+					</Tr>
+				</tbody>
+				</Table>
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div>
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">200 OK </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>success</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`boolean`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>orderId</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+
+						Id SimplifyTrip tạo ra, bạn có thể dùng nó để tra cứu thông tin của đơn hàng trên SimplifyTrip
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>trackId</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+
+						Id hệ thống của bạn đã truyền lên
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>items</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`Item[]`</code>
+					</Td>
+				</Tr>
+
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 p-0 pl-9 ' colSpan={2}>
+						<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
+						<tbody>
+							<Tr className='border-0 !bg-inherit'>
+								<Td className='border-0  pt-4  w-[37%]'><code>subOrderId</code></Td>
+								<Td className='border-0  pt-4'>
+									<code className='text-red-500 text-xs'>`string`</code>
+
+									Id của item SimplifyTrip tạo ra
+								</Td>
+							</Tr>
+							<Tr className='border-0 !bg-inherit'>
+								<Td className='border-0  pt-4  w-[37%]'><code>subTrackId</code></Td>
+								<Td className='border-0  pt-4'>
+									<code className='text-red-500 text-xs'>`string`</code>
+
+									Id của item hệ thống của bạn đã truyền lên
+								</Td>
+							</Tr>
+							<Tr className='border-0 !bg-inherit'>
+								<Td className='border-0'><code>sku</code></Td>
+								<Td className='border-0'>
+									<code className='text-red-500 text-xs'>`string`</code>
+
+									SKU của mặt hàng lấy từ Api danh sách Products
+								</Td>
+							</Tr>
+							<Tr className='border-0 !bg-inherit'>
+								<Td className='border-0'><code>quantity</code></Td>
+								<Td className='border-0'>
+									<code className='text-red-500 text-xs'>`number`</code>
+
+									Số lượng sim cần mua
+								</Td>
+							</Tr>
+							<Tr className='border-0 !bg-inherit'>
+								<Td className='border-0'><code>type</code></Td>
+								<Td className='border-0'>
+									<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+
+									Chủng loại của sản phẩm
+								</Td>
+							</Tr>
+						</tbody>
+						</Table>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1 '>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
+			<div className='flex-1'>
+				<code>/api/v1/orders</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/orders`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_order`}>Try it on Swagger</a>
+		</div>
+<CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'POST',
+			url: 'https://merchant.simplifytrip.com/api/v1/orders',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
+			}
+			data: {
+				'trackId': 'b4b08205-836e-4296-a054-52462089edf6',
+				'items': [
+					{
+						'subTrackId': '958acd57-182f-4b5c-b408-5e93f646ddde',
+						'sku': 'E23XY06GB08DFX',
+						'quantity': 2
+					}
+				]
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/orders';
+		const options = {
+			method: 'POST',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
+			}
+			body: JSON.stringify({
+				"trackId": "b4b08205-836e-4296-a054-52462089edf6",
+				"items": [
+					{
+						"subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+						"sku": "E23XY06GB08DFX",
+						"quantity": 2
+					}
+				]
+			}),
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+			.catch(err => console.error(err));
+```
+```php PHP
+<?php
+require_once('vendor/autoload.php');
+
+$client = new \GuzzleHttp\Client();
+
+$response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/orders', [
+	'body' => '{
+			"trackId": "b4b08205-836e-4296-a054-52462089edf6",
+			"items": [
+				{
+					"subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+					"sku": "E23XY06GB08DFX",
+					"quantity": 2
+				}
+			]
+	}',
+	'headers' => [
+		'accept' => 'application/json',
+		'content-type' => 'application/json',
+		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+		'x-signature' => '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
+	],
+]);
+
+echo $response->getBody();
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03");,
+request.AddJsonBody("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }", false);
+
+var response = await client.PostAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
+    .method("POST",  HttpRequest.BodyPublishers.ofString("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }"))
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/orders"
+
+	payload := strings.NewReader("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }")
+
+	req, _ := http.NewRequest("POST", url, payload)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X 'POST' \
+  'https://merchant.simplifytrip.com/api/v1/orders' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  -H 'x-signature: 412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "items": [
+    {
+      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+      "sku": "E23XY06GB08DFX",
+      "quantity": 2
+    }
+  ]
+}'
+```
+</CH.Code>
+
+		##### Sample Response
+<CH.Code>
+```json Success
+{
+  "success": true,
+  "orderId": "658441501843542",
+  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "items": [
+    {
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+      "sku": "E23XY06GB08DFX",
+      "quantity": 2,
+	  "type": "eSIM"
+	}
+  ]
+}
+		```
+```json Error
+{
+  "timestamp": 1732328902280,
+  "statusCode": 400,
+  "errorCode": "BAD_REQUEST",
+  "message": "Vui lòng không để trống: trackId"
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>
+
+
+## Api huỷ đơn hàng
+Huỷ một đơn hàng theo ID được cung cấp
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Request Headers
+
+	<div className="mt-3">
+		<code>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+
+		<code className='text-red-500 text-xs ml-2'>`string`</code>
+
+		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+
+	</div>
+	##### Request Body
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>orderId -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> Id của đơn hàng muốn huỷ
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>reason</code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> Lý do huỷ đơn (Không bắt buộc)
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div>
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">200 OK </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>id</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>trackId</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>createdAt</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`datetime`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>updatedAt</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`datetime`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>status</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`CANCELED`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>reason</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>items</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`Item[]`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0 p-0 pl-9 ' colSpan={2}>
+					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
+					<tbody>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0  pt-4  w-[37%]'><code>id</code></Td>
+							<Td className='border-0  pt-4'>
+								<code className='text-red-500 text-xs'>`string`</code>
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0  pt-4  w-[37%]'><code>subTrackId</code></Td>
+							<Td className='border-0  pt-4'>
+								<code className='text-red-500 text-xs'>`string`</code>
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>status</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`CANCELED`</code>
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>sku</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`string`</code>
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>quantity</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`number`</code>
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>type</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+							</Td>
+						</Tr>
+					</tbody>
+					</Table>
+				</Td>
+			</Tr>
+			</tbody>
+		</Table>
+	</div>
+	<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1 '>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
+			<div className='flex-1'>
+				<code>/api/v1/orders/cancel</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/orders/cancel`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_orderCancel`}>Try it on Swagger</a>
+		</div>
+<CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'POST',
+			url: 'https://merchant.simplifytrip.com/api/v1/orders/cancel',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
+			},
+			data: {
+				'orderId': '658441501843542',
+				'reason': 'Đơn hàng đã bị hủy bởi người dùng'
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/orders/cancel';
+		const options = {
+			method: 'POST',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
+			},
+			body: JSON.stringify({
+				"orderId": "658441501843542",
+				"reason": "Đơn hàng đã bị hủy bởi người dùng"
+			}),
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+			.catch(err => console.error(err));
+```
+```php PHP
+<?php
+require_once('vendor/autoload.php');
+
+$client = new \GuzzleHttp\Client();
+
+$response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/orders/cancel', [
+	'body' => '{
+		"orderId": "658441501843542"
+	}',
+	'headers' => [
+		'accept' => 'application/json',
+		'content-type' => 'application/json',
+		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+		'x-signature' => '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
+	],
+]);
+
+echo $response->getBody();
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders/cancel");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03");,
+request.AddJsonBody("{\"orderId\": \"658441501843542\" }", false);
+
+var response = await client.PostAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/cancel"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
+    .method("POST",  HttpRequest.BodyPublishers.ofString("{\"orderId\": \"658441501843542\" }"))
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/orders/cancel"
+
+	payload := strings.NewReader("{\"orderId\": \"658441501843542\" }")
+
+	req, _ := http.NewRequest("POST", url, payload)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X 'POST' \
+  'https://merchant.simplifytrip.com/api/v1/orders/cancel' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  -H 'x-signature: 412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "orderId": "658441501843542"
+}'
+```
+</CH.Code>
+
+		##### Sample Response
+<CH.Code>
+```json Success
+{
+  "id": "658441501843542",
+  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "createdAt": "2024-11-22T18:33:35.127Z",
+  "updatedAt": "2024-11-22T18:33:35.577Z",
+  "status": "CANCELED",
+  "reason": "Đơn hàng đã bị hủy bởi người dùng",
+  "items": [
+    {
+      "id": "6740ce7f9d04259159bc6401",
+      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+	  "status": "CANCELED",
+      "quantity": 2,
+      "sku": "E23XY06GB08DFX",
+      "type": "eSIM"
+    }
+  ]
+}
+```
+```json Error
+{
+  "timestamp": 1732331961614,
+  "statusCode": 404,
+  "errorCode": "NOT_FOUND",
+  "message": "Không tìm thấy đơn hàng phù hợp"
+}
+```
+		</CH.Code>
+
+	</div>
+</div>
+
+
+## Api chi tiết đơn hàng
+Trả về thông tin chi tiết của một đơn hàng theo ID được cung cấp
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-1'>
+	##### Path Parameters
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>id -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code>
+
+				Id hoặc trrackId của đơn hàng muốn tra cứu - Hãy đảm bảo bạn dùng trackId không bị trùng lặp
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+
+	##### Responses
+	<div>
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">200 OK </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+		<tbody>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>id</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Id đơn hàng do SimplifyTrip tạo ra
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>trackId</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Id hệ thống của bạn tạo
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>createdAt</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`datetime`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>updatedAt</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`datetime`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>status</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`NEW | PROCESSING | CONFIRMED | DELIVERING | SUCCESS | ERROR | CANCELED | REFUNDED | PARTIALLY_REFUNDED | REFUNDING`</code>
+
+					Trạng thái đơn hàng
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>error</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`string`</code>
+
+					Nguyên nhân đơn hàng bị lỗi, xuất hiện khi status = ERROR
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>total</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`number`</code>
+
+					Tổng giá trị đơn hàng
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0'><code>items</code></Td>
+				<Td className='border-0'>
+					<code className='text-red-500 text-xs'>`Item[]`</code>
+				</Td>
+			</Tr>
+			<Tr className='border-0 !bg-inherit'>
+				<Td className='border-0 p-0 pl-9 ' colSpan={2}>
+					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
+					<tbody>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0  pt-4  w-[37%]'><code>id</code></Td>
+							<Td className='border-0  pt-4'>
+								<code className='text-red-500 text-xs'>`string`</code>
+
+								Id của item
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0  pt-4  w-[37%]'><code>subTrackId</code></Td>
+							<Td className='border-0  pt-4'>
+								<code className='text-red-500 text-xs'>`string`</code>
+
+								Track Id của item
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>status</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`NEW | PROCESSING | CONFIRMED | DELIVERING | SUCCESS | ERROR | CANCELED | REFUNDED | PARTIALLY_REFUNDED | REFUNDING`</code>
+
+								Trạng thái của item
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>sku</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`string`</code>
+
+								SKU của mặt hàng lấy từ Api danh sách product
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>quantity</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`number`</code>
+
+								Số lượng sim cần mua
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>price</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`number`</code>
+
+								Đơn giá của sim sau khi đã trừ các ưu đãi tương ứng
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>type</code></Td>
+							<Td className='border-0'>
+								<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+
+								Chủng loại của sản phẩm
+							</Td>
+						</Tr>
+						<Tr className='border-0 !bg-inherit'>
+							<Td className='border-0'><code>eSims</code></Td>
+							<Td className='border-0 json-custom'>
+								<ReactJson displayDataTypes={false} displayObjectSize={false} name="eSim[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white" collapsed={true}
+								src={{
+									"qrCodeContent": "string",
+									"qrCodeImg": "string",
+									"iccid": "string",
+									"planAPN": "string",
+									"smdpAddress": "string",
+									"pin": "string",
+									"puk": "string",
+									"activationCode": "string"
+								}} />
+							</Td>
+						</Tr>
+					</tbody>
+					</Table>
+				</Td>
+			</Tr>
+	</tbody>
+</Table>
+	</div>
+	<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center py-4">
+			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<Table rules="none" border={0} width="100%" className='border-0'>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`timestamp`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`number`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'>
+						<code className='text-red-500 text-xs'>`string`</code>
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+	</div>
+	</div>
+	<div className='flex-1 min-w-1 '>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/orders/:id</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/orders/:id`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_orderDetails`}>Try it on Swagger</a>
+		</div>
+<CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/orders/658441501843542',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/orders/658441501843542';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+	.catch(err => console.error(err));
+```
+```php PHP
+<?php
+require_once('vendor/autoload.php');
+
+$client = new \GuzzleHttp\Client();
+
+$response = $client->request('GET', 'https://merchant.simplifytrip.com/v1/orders/658441501843542', [
+	'headers' => [
+		'accept' => 'application/json',
+		'content-type' => 'application/json',
+		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+	],
+]);
+
+echo $response->getBody();
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders/658441501843542");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/658441501843542"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/orders/658441501843542"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X GET https://merchant.simplifytrip.com/api/v1/orders/658441501843542 \
+	-H "Accept: application/json" \
+	-H "content-type: application/json" \
+	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
+	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
+
+```
+</CH.Code>
+
+		##### Sample Response
+<CH.Code>
+```json Success
+{
+  "id": "658441501843542",
+  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "createdAt": "2024-11-22T18:33:35.127Z",
+  "updatedAt": "2024-11-22T18:33:35.577Z",
+  "status": "SUCCESS",
+  "total": 840000,
+  "error": null,
+  "items": [
+    {
+      "id": "6740ce7f9d04259159bc6401",
+      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+	  "status": "SUCCESS",
+      "quantity": 2,
+      "price": 420000,
+      "sku": "E23XY06GB08DFX",
+      "type": "eSIM",
+      "eSims": [
+        {
+		  "qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
+          "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+          "iccid": "89812003916820397854",
+          "planAPN": "plus.4g",
+          "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+          "pin": "1234",
+          "puk": "15095300",
+          "activationCode": "502F97EF09144E0C9D62FD781E259916"
+        },
+        {
+		  "qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E255011",
+          "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
+          "iccid": "89812003916820392108",
+          "planAPN": "plus.4g",
+          "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
+          "pin": "1234",
+          "puk": "15095300",
+          "activationCode": "502F97EF09144E0C9D62FD781E255011"
+        }
+      ]
+    }
+  ]
+}
+```
+```json Error
+{
+  "timestamp": 1732331961614,
+  "statusCode": 404,
+  "errorCode": "NOT_FOUND",
+  "message": "Không tìm thấy đơn hàng phù hợp"
+}
+```
+		</CH.Code>
+
+	</div>
+</div>
+

@@ -1,0 +1,158 @@
+import { Table, Td, Th, Tr } from 'nextra/components'
+
+# Errors
+Quá trình tích hợp SimplifyTrip APIs của bạn có thể phải xử lý lỗi tại một số thời điểm khi thực hiện yêu cầu API tới SimplifyTrip APIs. Những lỗi này thuộc một số loại chính:
+
+- **Lỗi nội dung** xảy ra do nội dung trong yêu cầu API không hợp lệ theo một cách nào đó. Chúng trả về phản hồi HTTP có mã lỗi 4xx. Ví dụ: máy chủ API có thể trả về 401 nếu khóa API không hợp lệ được cung cấp hoặc 400 nếu thiếu tham số bắt buộc
+
+- **Lỗi mạng** xảy ra do sự cố giao tiếp không liên tục giữa máy khách và máy chủ. Chúng trả về các lỗi low-level, chẳng hạn như ngoại lệ về socket hoặc timeout exceptions. Ví dụ: khách hàng có thể hết thời gian chờ trong khi cố đọc từ máy chủ của SimplifyTrip APIs hoặc có thể không bao giờ nhận được phản hồi API do kết nối chấm dứt sớm. Lưu ý rằng lỗi mạng không nhất thiết phải là một yêu cầu thành công --- nó cũng có thể là một loại lỗi khác bị che giấu bởi sự cố gián đoạn
+
+- **Lỗi máy chủ** xảy ra do sự cố trên máy chủ của SimplifyTrip APIs. Lỗi máy chủ trả về phản hồi HTTP có mã lỗi 5xx. SimplifyTrip APIs nỗ lực làm cho những lỗi này hiếm gặp nhất có thể, nhưng các phần tích hợp sẽ có thể xử lý chúng khi chúng phát sinh.
+
+Cách tiếp cận phù hợp và ngữ nghĩa bình thường được sử dụng để xử lý lỗi tùy thuộc vào loại lỗi được xử lý.
+
+### HTTP Status Code
+
+SimplifyTrip sử dụng mã phản hồi HTTP thông thường để cho biết sự thành công hay thất bại của yêu cầu API. Thông thường: Mã trong phạm vi 2xx biểu thị thành công. Các mã trong phạm vi 4xx cho biết lỗi không thành công dựa trên thông tin được cung cấp (ví dụ: tham số bắt buộc bị bỏ qua, sạc không thành công, v.v.). Các mã trong phạm vi 5xx cho biết có lỗi xảy ra với máy chủ của SimplifyTrip (những trường hợp này rất hiếm).
+
+Một số lỗi 4xx có thể được xử lý theo chương trình (ví dụ: thẻ bị từ chối) bao gồm mã lỗi giải thích ngắn gọn lỗi được báo cáo.
+
+SimplifyTrip Api thiết kế theo phương pháp Restful API dựa trên HTTPS nên các response trả về từ web service đều là HTTP Response, do đó, kèm theo HTTP Status Code. Dưới đây là các status code thường gặp trong HTTP Response.
+
+###### HTTP Status Code khi request thành công
+
+<Table className="mt-5">
+  <thead>
+    <Tr>
+      <Th align="center">HTTP Status</Th>
+      <Th>Ý nghĩa</Th>
+    </Tr>
+  </thead>
+  <tbody>
+    <Tr>
+      <Td align="center">200</Td>
+      <Td>OK - Request đã được xử lý thành công. Đây là status code mặc định cho hầu hết request GET để truy xuất dữ liệu.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">201</Td>
+      <Td>Created - Tài nguyên, đối tượng dữ liệu đã được tạo thành công. Đây là status code mặc định cho hầu hết request POST để tạo dữ liệu mới.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">204</Td>
+      <Td>No Content - Tài nguyên của bạn đã được xóa thành công. Đây là status code mặc định cho hầu hết request DELETE để xóa dữ liệu đã có.</Td>
+    </Tr>
+  </tbody>
+</Table>
+###### HTTP Status Code khi request thất bại / có lỗi
+
+<Table className='mt-5'>
+  <thead>
+    <Tr>
+      <Th>HTTP Status</Th>
+      <Th>Ý nghĩa</Th>
+    </Tr>
+  </thead>
+  <tbody>
+    <Tr>
+      <Td align="center">400</Td>
+      <Td>Bad Request - Request không hợp lệ hoặc bị lỗi khi trao đổi dữ liệu với trình duyệt.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">401</Td>
+      <Td>Unauthorized - Api Key của bạn hết hạn hoặc không hợp lệ.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">403</Td>
+      <Td>Forbidden - Bạn không được quyền truy cập tài nguyên ngày.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">404</Td>
+      <Td>Not Found - Tài nguyên bạn muốn truy xuất không tồn tại hoặc đã bị xóa.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">405</Td>
+      <Td>Method Not Allowed - Đường dẫn bạn truy cập không tồn tại.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">422</Td>
+      <Td>Unprocessable Entity - Dữ liệu của bạn gửi lên không hợp lệ hoặc bị lỗi.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">429</Td>
+      <Td>Too Many Requests - Bạn gửi request quá nhanh và đã bị giới hạn truy cập. Xem thêm phần Rate Limit.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">500</Td>
+      <Td>Internal Server Error - Hệ thống Server đang có vấn đề hoặc không truy cập được.</Td>
+    </Tr>
+    <Tr>
+      <Td align="center">503</Td>
+      <Td>Service Unavailable - Hệ thống tạm thời không truy cập được, có thể là chúng tôi đang bảo trì hoăc bị sự cố. Hãy vui lòng thử lại sau.</Td>
+    </Tr>
+  </tbody>
+</Table>
+
+###### Error Code
+
+Dưới đây là một số lỗi phổ biến nhất trên tất cả các endpoint của chúng tôi. Các lỗi cụ thể nằm dưới mỗi endpoint.
+
+<Table className='mt-5 w-full'>
+  <thead>
+    <Tr>
+      <Th>Error Code</Th>
+      <Th  width="100%">Ý nghĩa</Th>
+    </Tr>
+  </thead>
+  <tbody>
+    <Tr>
+      <Td>TOO_MANY_REQUESTS</Td>
+      <Td>Vượt quá rate limit</Td>
+    </Tr>
+    <Tr>
+      <Td>BAD_REQUEST</Td>
+      <Td>Lỗi yêu cầu không hợp lệ phát sinh khi yêu cầu của bạn có tham số không hợp lệ</Td>
+    </Tr>
+    <Tr>
+      <Td>UNAUTHORIZED</Td>
+      <Td>Api key không được gửi lên hoặc gửi lên không hợp lệ và không thể trích xuất dữ liệu.</Td>
+    </Tr>
+    <Tr>
+      <Td>FORBIDDEN</Td>
+      <Td>Khóa API không có quyền thực hiện yêu cầu</Td>
+    </Tr>
+    <Tr>
+      <Td>INTERNAL_SERVER_ERROR</Td>
+      <Td>Lỗi API bao gồm bất kỳ loại sự cố nào khác (ví dụ: sự cố tạm thời với máy chủ của SimplifyTrip) và cực kỳ hiếm gặp</Td>
+    </Tr>
+  </tbody>
+</Table>
+
+### Error Handling
+###### Safely retry requests with idempotency
+
+Một phần quan trọng của thiết kế API web là ý tưởng về tính idempotency, được định nghĩa là có thể áp dụng cùng một thao tác nhiều lần mà không thay đổi kết quả sau lần thử đầu tiên. Vì có thể xảy ra một số lỗi gián đoạn nhất định nên máy khách cần có cách reconciling các yêu cầu không thành công với máy chủ và tính idempotency cung cấp cơ chế cho việc đó.
+
+API SimplifyTrip đảm bảo tính idempotency của các yêu cầu GET, vì vậy việc thử lại chúng luôn an toàn. Việc bao gồm Idempotency key làm cho yêu cầu POST và PATCH trở nên idempotency, nhắc API thực hiện ghi sổ kế toán cần thiết để ngăn các hoạt động trùng lặp. Ví dụ: nếu yêu cầu tạo khoản giải ngân không phản hồi do lỗi kết nối mạng, bạn có thể thử lại yêu cầu với cùng một Idempotency key để đảm bảo rằng không có nhiều hơn một khoản giải ngân được tạo.
+
+Idempotency key được đặt trong headers của API request. Headersc cho tính idempotency phụ thuộc vào API cụ thể. Ví dụ: tiêu đề khóa idempotency trên API Tạo đơn hàng. Một số chiến lược phổ biến để tạo Idempotency key là:
+
+- Sử dụng thuật toán tạo mã thông báo có tính ngẫu nhiên tốt, như `UUID v4`
+
+- Lấy khóa từ đối tượng do người dùng đính kèm như ID của giỏ hàng. Điều này cung cấp một cách tương đối dễ dàng để bảo vệ khỏi việc gửi hai lần
+
+###### Content errors
+Content errros là kết quả của việc nội dung của yêu cầu API không hợp lệ và trả về mã lỗi 4xx. Tiện ích tích hợp sẽ sửa yêu cầu ban đầu và thử lại. Tùy thuộc vào loại lỗi của người dùng, có thể xử lý sự cố theo chương trình.
+
+Đối với thao tác POST sử dụng Idempotency key, miễn là phương thức API bắt đầu thực thi, các máy chủ API của SimplifyTrip sẽ lưu trữ kết quả của yêu cầu bất kể chúng là gì. Một yêu cầu trả về 400 sẽ gửi lại 400 tương tự nếu theo sau là một yêu cầu mới có cùng Idempotency key. Cần tạo Idempotency key mới khi sửa đổi yêu cầu ban đầu để có kết quả thành công. Chiến lược an toàn nhất khi có liên quan đến lỗi 4xx là luôn tạo Idempotency key mới.
+
+###### Network errors
+Network errors à kết quả của sự cố kết nối giữa máy khách và máy chủ và có xu hướng biểu hiện dưới dạng lỗi low-level như exceptions về ổ socket hoặc timeout.
+
+Loại lỗi này là nơi giá trị của Idempotency key và số lần thử lại yêu cầu được thể hiện rõ ràng nhất. Khi xảy ra sự cố gián đoạn, máy khách thường ở trạng thái không biết liệu máy chủ có nhận được yêu cầu hay không. Để có được câu trả lời dứt khoát, họ nên thử lại các yêu cầu đó với cùng Idempotency key và cùng tham số cho đến khi có thể nhận được kết quả từ máy chủ. Việc gửi cùng một Idempotency key với các tham số khác nhau sẽ tạo ra lỗi cho biết yêu cầu mới không khớp với yêu cầu ban đầu.
+
+###### Server errors
+Server errors là kết quả của sự cố phía máy chủ và trả về mã lỗi 5xx. Những lỗi này khó xử lý nhất nên chúng tôi cố gắng đảm bảo rằng chúng xảy ra ít thường xuyên nhất có thể.
+
+Đối với các lỗi, việc thử lại chúng với cùng một Idempotency key thường sẽ cho kết quả tương tự. Yêu cầu có thể được thử lại bằng Idempotency key mới, nhưng chúng tôi khuyên bạn không nên làm như vậy vì yêu cầu ban đầu có thể tạo ra tác dụng phụ.
+
+Kết quả của yêu cầu 500 sẽ được coi là không xác định. Bản chất chính xác của mọi thay đổi có hiệu lực trở về trước trong hệ thống phụ thuộc rất nhiều vào loại yêu cầu. Ví dụ: nếu việc tạo đơn hàng trả về lỗi 500 nhưng chúng tôi phát hiện thông tin đã được chuyển tới mạng thanh toán, chúng tôi sẽ cố gắng chuyển tiếp và gửi lệnh gọi lại sau khi hoàn tất. Nếu không, chúng tôi sẽ cố gắng khôi phục lại. Tuy nhiên, kết quả lý tưởng trong những trường hợp này không được đảm bảo và các yêu cầu dẫn đến lỗi 500 có thể gây ra tác dụng phụ mà người dùng có thể thấy.
