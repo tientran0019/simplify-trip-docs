@@ -1,12 +1,12 @@
 {
-  "name": "docs",
+  "name": "simplify-trip-docs",
   "version": "1.2.0",
   "description": "Docs for partners",
   "scripts": {
     "dev": "dotenv -c development next dev",
-    "build:docs": "dotenv -c production next build",
-    "start:docs": "dotenv -c production next start",
-    "start:prod:docs": "dotenv -c production next start",
+    "build": "dotenv -c production next build",
+    "start": "dotenv -c production next start",
+    "start:prod": "dotenv -c production next start",
     "clean": "rm -rf .next && rm -rf node_modules && rm -rf .turbo"
   },
   "type": "module",
