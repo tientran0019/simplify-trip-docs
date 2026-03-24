@@ -1,9 +1,14 @@
 ## What's New? 👋
 Cập cập nhật các thay đổi của hệ thống
 
+##### Version 1.3.0 (Mar 24, 2026)
+- ✅ Thêm API `/orders/recharge` mới để nạp dữ liệu vào phôi SIM.
+- ✅ Quốc tế hóa: Hỗ trợ đa ngôn ngữ. Thêm `X-Lang: "vi"` vào tiêu đề của request.
+- ✅ Fix bugs
+
 ##### Phiên bản 1.2.0 (14/05/2025)
 - ✅ Cung cấp nhóm APIs mới `/products/*` để phục vụ nhu cầu phân phối các sản phẩm mới của SimplifyTrip (ngoài eSim) trong tương lai.
-- ✅ Nâng cấp API `/order`, bây giờ bạn có thể order nhiều sản phẩm trong cùng một đơn hàng.
+- ✅ Nâng cấp API `/orders`, bây giờ bạn có thể order nhiều sản phẩm trong cùng một đơn hàng.
 - ✅ Loại bỏ nhóm APIs `/esims/*` chính thức xoá vào ngày **15/06/2025**.
 - ✅ Thay đổi webhook type khi đơn hàng được xử lý xong: `ORDER_ESIM_SUCCESS` => `PURCHASE_ORDER_SUCCESS` và `ORDER_ESIM_FAIL` => `PURCHASE_ORDER_FAIL`
 - ✅ Fix bugs

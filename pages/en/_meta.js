@@ -23,6 +23,15 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
+	'workflows': {
+		title: 'Workflows',
+		theme: {
+			"layout": "default",
+			breadcrumb: true,
+			// "toc": false,
+			// "sidebar": false
+		}
+	},
 	'api-list': {
 		title: 'API list',
 		theme: {
