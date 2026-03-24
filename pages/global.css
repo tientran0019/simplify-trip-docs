@@ -29,3 +29,7 @@ a {
 .ch-frame-title-bar .ch-frame-buttons {
 	display: none;
 }
+
+table tr {
+	vertical-align: top;
+}

@@ -14,7 +14,7 @@ Create a return request after an order succeeds.
 	##### Request Headers
 
 	<div className="mt-3">
-		<code>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
 
 		<code className='text-red-500 text-xs ml-2'>`string`</code>
 
@@ -26,7 +26,7 @@ Create a return request after an order succeeds.
 	<Table rules="none" border={0} width="100%" className='border-0'>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0 w-[220px]'><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
@@ -56,7 +56,7 @@ Create a return request after an order succeeds.
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[37%]'><code>items</code></Td>
+			<Td className='border-0 w-[220px]'><code>items</code></Td>
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`Item[]`</code>
 				List of items you want to return from the order
@@ -65,10 +65,10 @@ Create a return request after an order succeeds.
 
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-				<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
+				<Table rules="none" border={0} width="100%" className='w-full table border-0 border-l'>
 				<tbody>
 					<Tr className='border-0 !bg-inherit'>
-						<Td className='border-0'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+						<Td className='border-0 w-[calc(220px_-_36px)]'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
 						<Td className='border-0'>
 							<code className='text-red-500 text-xs'>`string`</code>
 							Product SKU in your order
@@ -98,7 +98,7 @@ Create a return request after an order succeeds.
 		<Table rules="none" border={0} width="100%" className='border-0'>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[37%]'><code>id</code></Td>
+					<Td className='border-0 w-[220px]'><code>id</code></Td>
 					<Td className='border-0'>
 						<code className='text-red-500 text-xs'>`string`</code>
 						Return request ID
@@ -151,7 +151,7 @@ Create a return request after an order succeeds.
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[37%]'><code>items</code></Td>
+					<Td className='border-0 w-[220px]'><code>items</code></Td>
 					<Td className='border-0'>
 						<code className='text-red-500 text-xs'>`Item[]`</code>
 					</Td>
@@ -162,7 +162,7 @@ Create a return request after an order succeeds.
 						<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
 						<tbody>
 							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0  pt-4  w-[37%]'><code>productName</code></Td>
+								<Td className='border-0  pt-4   w-[calc(220px_-_36px)]'><code>productName</code></Td>
 								<Td className='border-0  pt-4'>
 									<code className='text-red-500 text-xs'>`string`</code>
 								</Td>
@@ -182,7 +182,7 @@ Create a return request after an order succeeds.
 							<Tr className='border-0 !bg-inherit'>
 								<Td className='border-0'><code>type</code></Td>
 								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+									<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
 								</Td>
 							</Tr>
 						</tbody>
@@ -201,7 +201,7 @@ Create a return request after an order succeeds.
 		<Table rules="none" border={0} width="100%" className='border-0'>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[37%]'><code>timestamp</code></Td>
+					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
 					<Td className='border-0'>
 						<code className='text-red-500 text-xs'>`timestamp`</code>
 					</Td>
@@ -464,7 +464,7 @@ Cancel a refund request by the provided ID.
 	##### Request Headers
 
 	<div className="mt-3">
-		<code>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
 
 		<code className='text-red-500 text-xs ml-2'>`string`</code>
 
@@ -494,7 +494,7 @@ Cancel a refund request by the provided ID.
 		<Table rules="none" border={0} width="100%" className='border-0'>
 		<tbody>
 			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>id</code></Td>
+				<Td className='border-0 w-[220px]'><code>id</code></Td>
 				<Td className='border-0'>
 					<code className='text-red-500 text-xs'>`string`</code>
 
@@ -550,7 +550,7 @@ Cancel a refund request by the provided ID.
 					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
 					<tbody>
 						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[37%]'><code>productName</code></Td>
+							<Td className='border-0  pt-4   w-[calc(220px_-_36px)]'><code>productName</code></Td>
 							<Td className='border-0  pt-4'>
 								<code className='text-red-500 text-xs'>`string`</code>
 							</Td>
@@ -570,7 +570,7 @@ Cancel a refund request by the provided ID.
 						<Tr className='border-0 !bg-inherit'>
 							<Td className='border-0'><code>type</code></Td>
 							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+								<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
 
 								Product type
 							</Td>
@@ -591,7 +591,7 @@ Cancel a refund request by the provided ID.
 		<Table rules="none" border={0} width="100%" className='border-0'>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
 					<Td className='border-0'>
 						<code className='text-red-500 text-xs'>`timestamp`</code>
 					</Td>
@@ -812,7 +812,7 @@ Returns detailed information of a refund request by the provided ID.
 	<Table rules="none" border={0} width="100%" className='border-0'>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>id -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0 w-[220px]'><code>id -  <span className="text-[10px] text-red-500">required</span></code></Td>
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code>
 
@@ -832,7 +832,7 @@ Returns detailed information of a refund request by the provided ID.
 		<Table rules="none" border={0} width="100%" className='border-0'>
 		<tbody>
 			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>id</code></Td>
+				<Td className='border-0 w-[220px]'><code>id</code></Td>
 				<Td className='border-0'>
 					<code className='text-red-500 text-xs'>`string`</code>
 
@@ -889,7 +889,7 @@ Returns detailed information of a refund request by the provided ID.
 					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
 					<tbody>
 						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[37%]'><code>productName</code></Td>
+							<Td className='border-0  pt-4   w-[calc(220px_-_36px)]'><code>productName</code></Td>
 							<Td className='border-0  pt-4'>
 								<code className='text-red-500 text-xs'>`string`</code>
 							</Td>
@@ -909,7 +909,7 @@ Returns detailed information of a refund request by the provided ID.
 						<Tr className='border-0 !bg-inherit'>
 							<Td className='border-0'><code>type</code></Td>
 							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+								<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
 
 								Product type
 							</Td>
@@ -930,7 +930,7 @@ Returns detailed information of a refund request by the provided ID.
 		<Table rules="none" border={0} width="100%" className='border-0'>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
 					<Td className='border-0'>
 						<code className='text-red-500 text-xs'>`timestamp`</code>
 					</Td>
