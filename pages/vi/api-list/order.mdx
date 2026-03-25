@@ -12,15 +12,19 @@ Tạo đơn hàng mua eSim từ SimplifyTrip
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
+ 
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
-
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
-
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-
-	</div>
+				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
@@ -424,14 +428,18 @@ Nạp gói dữ liệu vào phôi sim trắng mua từ SimplifyTrip
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
-
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-
-	</div>
+				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
@@ -864,14 +872,18 @@ Huỷ một đơn hàng theo ID được cung cấp
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
-
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-
-	</div>
+				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
 	<tbody>

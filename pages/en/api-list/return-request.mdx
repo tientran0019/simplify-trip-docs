@@ -13,14 +13,19 @@ Create a return request after an order succeeds.
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
+				A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
 
-		A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
-
-	</div>
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
@@ -462,21 +467,26 @@ Cancel a refund request by the provided ID.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
+ 
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+				A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
 
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
-
-		A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
-
-	</div>
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>returnId -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0 w-[220px]'><code>returnId -  <span className="text-[10px] text-red-500">required</span></code></Td>
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code> Return request ID to cancel
 			</Td>

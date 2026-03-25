@@ -13,14 +13,18 @@ Tạo yêu cầu trả hàng sau khi đơn hàng đã thành công
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
-
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-
-	</div>
+				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
@@ -463,20 +467,24 @@ Huỷ của một yêu cầu hoàn tiền theo ID được cung cấp
 	<div className='flex-1 min-w-1'>
 	##### Request Headers
 
-	<div className="mt-3">
-		<code className='w-[220px] inline-block'>`X-Signature` - <span className="text-[10px] text-red-500">required</span></code>
+	<Table rules="none" border={0} width="100%" className='border-0'>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'>
+				<code className='text-red-500 text-xs'>`string`</code> 
 
-		<code className='text-red-500 text-xs ml-2'>`string`</code>
-
-		Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-
-	</div>
+				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
 
 	##### Request Body
 	<Table rules="none" border={0} width="100%" className='border-0'>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>returnId -  <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0 w-[220px]'><code>returnId -  <span className="text-[10px] text-red-500">required</span></code></Td>
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`string`</code> Id của yêu cầu trả hàng muốn huỷ
 			</Td>
