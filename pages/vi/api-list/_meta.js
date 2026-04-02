@@ -35,4 +35,10 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
+	'retrieve': {
+		title: 'Try xuất thông tin',
+		// theme: {
+		// 	typesetting: 'article',
+		// },
+	},
 }

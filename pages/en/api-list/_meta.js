@@ -35,4 +35,10 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
+	'retrieve': {
+		title: 'Retrieve information',
+		// theme: {
+		// 	typesetting: 'article',
+		// },
+	},
 }
