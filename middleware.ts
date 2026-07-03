@@ -1,57 +1,60 @@
-import { NextRequest, NextResponse } from 'next/server';
+export { middleware } from 'nextra/locales';
 
-const SUPPORTED_LOCALES = ['en', 'vi'] as const;
-const DEFAULT_LOCALE = 'en';
-const NEXT_LOCALE_COOKIE = 'NEXT_LOCALE';
+// import { NextRequest, NextResponse } from 'next/server';
 
-const getLocaleFromAcceptLanguage = (acceptLanguage: string | null): string | null => {
-	if (!acceptLanguage) {
-		return null;
-	}
+// const SUPPORTED_LOCALES = ['en', 'vi'] as const;
+// const DEFAULT_LOCALE = 'en';
+// const NEXT_LOCALE_COOKIE = 'NEXT_LOCALE';
 
-	const normalized = acceptLanguage.toLowerCase();
-	if (normalized.includes('vi')) {
-		return 'vi';
-	}
-	if (normalized.includes('en')) {
-		return 'en';
-	}
+// const getLocaleFromAcceptLanguage = (acceptLanguage: string | null): string | null => {
+// 	if (!acceptLanguage) {
+// 		return null;
+// 	}
 
-	return null;
-};
+// 	const normalized = acceptLanguage.toLowerCase();
+// 	if (normalized.includes('vi')) {
+// 		return 'vi';
+// 	}
+// 	if (normalized.includes('en')) {
+// 		return 'en';
+// 	}
 
-const getPreferredLocale = (request: NextRequest): string => {
-	const localeFromCookie = request.cookies.get(NEXT_LOCALE_COOKIE)?.value;
-	if (localeFromCookie === 'en' || localeFromCookie === 'vi') {
-		return localeFromCookie;
-	}
+// 	return null;
+// };
 
-	const localeFromHeader = getLocaleFromAcceptLanguage(
-		request.headers.get('accept-language'),
-	);
+// const getPreferredLocale = (request: NextRequest): string => {
+// 	const localeFromCookie = request.cookies.get(NEXT_LOCALE_COOKIE)?.value;
+// 	if (localeFromCookie === 'en' || localeFromCookie === 'vi') {
+// 		return localeFromCookie;
+// 	}
 
-	return localeFromHeader ?? DEFAULT_LOCALE;
-};
+// 	const localeFromHeader = getLocaleFromAcceptLanguage(
+// 		request.headers.get('accept-language'),
+// 	);
 
-export function middleware(request: NextRequest) {
-	const { pathname, search } = request.nextUrl;
-	const hasLocalePrefix = SUPPORTED_LOCALES.some(
-		(locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
-	);
+// 	return localeFromHeader ?? DEFAULT_LOCALE;
+// };
 
-	if (hasLocalePrefix) {
-		return NextResponse.next();
-	}
+// export function middleware(request: NextRequest) {
+// 	const { pathname, search } = request.nextUrl;
+// 	const hasLocalePrefix = SUPPORTED_LOCALES.some(
+// 		(locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
+// 	);
 
-	const target = request.nextUrl.clone();
-	target.pathname = `/${getPreferredLocale(request)}${pathname}`;
-	target.search = search;
+// 	if (hasLocalePrefix) {
+// 		return NextResponse.next();
+// 	}
 
-	return NextResponse.redirect(target);
-}
+// 	const target = request.nextUrl.clone();
+// 	target.pathname = `/${getPreferredLocale(request)}${pathname}`;
+// 	target.search = search;
+
+// 	return NextResponse.redirect(target);
+// }
 
 export const config = {
 	matcher: [
-		'/((?!api(?:/|$)|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+		// '/((?!api(?:/|$)|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+		'/((?!api(?:/|$)|_next/static|_next/image|favicon.ico|icon.svg|apple-icon.png|manifest|.*\\..*).*)'
 	],
 };

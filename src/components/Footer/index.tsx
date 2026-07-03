@@ -1,15 +1,15 @@
 import cx from 'clsx';
 
-import Image from 'next/image';
-import { useRouter } from 'nextra/hooks';
-
-export const Footer = ({ className = '' }) => {
-	const { locale } = useRouter();
-	const isEnglish = locale === 'en';
+import Image from 'next/image'; 
+import useLocale from 'src/hooks/useLocale';
+ 
+export const Footer = ({ className = '' }) => { 
+	const locale = useLocale();
+ 
 	const footerNavs = [
 		{
 			href: 'javascript:void()',
-			name: isEnglish ? 'Tax code: 0318490860' : 'Mã số thuế: 0318490860',
+			name: locale !== 'vi' ? 'Tax code: 0318490860' : 'Mã số thuế: 0318490860',
 		},
 		{
 			href: 'javascript:void()',
@@ -31,12 +31,12 @@ export const Footer = ({ className = '' }) => {
 			<div className="max-w-lg sm:mx-auto text-center">
 				<Image src="/logo-full.png" width={200} height={0} quality={100} alt="logo" className="inline" />
 				<h3 className="text-center mt-10 font-bold mb-4">
-					{isEnglish ? 'SIMPLIFY TRIP COMPANY LIMITED' : 'CÔNG TY TNHH ĐƠN GIẢN HOÁ CHUYẾN ĐI'}
+					{locale !== 'vi' ? 'SIMPLIFY TRIP COMPANY LIMITED' : 'CÔNG TY TNHH ĐƠN GIẢN HOÁ CHUYẾN ĐI'}
 					<br />
 					(SIMPLIFY TRIP)
 				</h3>
 				<p className="text-center leading-relaxed text-[15px]">
-					{isEnglish
+					{locale !== 'vi'
 						? 'Business Registration Certificate No. 0318490860 issued by the Ho Chi Minh City Department of Planning and Investment on June 5, 2024.'
 						: 'Giấy chứng nhận Đăng ký Kinh doanh số 0318490860 do Sở Kế hoạch và Đầu tư TP.HCM cấp ngày 05/06/2024.'}
 				</p>

@@ -22,12 +22,12 @@ const withNextra = nextra({
 	defaultShowCopyCode: true,
 	mdxOptions: {
 		remarkPlugins: [
-		  [
-			codeHike.remarkCodeHike,
-			chConfig
-		  ]
+			[
+				codeHike.remarkCodeHike,
+				chConfig
+			]
 		]
-	  }
+	}
 })
 
 export default withNextra({
