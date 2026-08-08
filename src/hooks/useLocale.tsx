@@ -1,16 +1,25 @@
 import { useRouter } from "nextra/hooks";
 
-export default function useLocale() {
-	const router = useRouter();
+type SupportedLocale = 'en' | 'vi';
 
-    const { pathname } = router;
-    
-	const cleanPath = pathname?.split(/[?#]/)[0];
-	const firstSegment = cleanPath?.split('/').filter(Boolean)[0]; 
+const getSupportedLocale = (value?: string): SupportedLocale | undefined => {
+	const cleanValue = value?.split(/[?#]/)[0];
+	const firstSegment = cleanValue?.split('/').filter(Boolean)[0] || cleanValue;
 
 	if (firstSegment === 'en' || firstSegment === 'vi') {
 		return firstSegment;
 	}
 
-	return 'en';
+	return undefined;
+};
+
+export default function useLocale() {
+	const router = useRouter();
+
+	return (
+		getSupportedLocale(router.locale)
+		?? getSupportedLocale(router.asPath)
+		?? getSupportedLocale(router.pathname)
+		?? 'en'
+	);
 }

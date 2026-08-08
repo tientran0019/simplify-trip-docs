@@ -103,7 +103,11 @@ Returns all products distributed by SimplifyTrip.
         "vi": "string",
         "en": "string"
       },
-      "slug": {
+	   "slug": {
+        "vi": "string",
+        "en": "string"
+      }, 
+      "metadata": {
         "vi": "string",
         "en": "string"
       },
@@ -363,9 +367,13 @@ curl -X 'GET' \
         "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only",
         "en": "eSIM HongKong, Macao 4G high speed, data only"
       },
-      "slug": {
-        "vi": "esim-hongkong-macao-toc-do-cao-4g-data",
-        "en": "esim-hongkong-macao-4g-high-speed-data-only"
+	   "slug": {
+        "vi": "esim-trung-quoc-hongkong-macao-4g-chi-co-data",
+        "en": "esim-china-hongkong-macao-4g-data-only"
+      },
+      "metadata": {
+        "vi": "<ul>\n    <li><strong>Nhà cung cấp:</strong> BC</li>\n    <li>Thời gian làm mới dung lượng: 00:00 - 24:00 (UTC+8)</li>\n    <li>Quét mã QR trước chuyến bay và bật Chuyển vùng dữ liệu khi đến nơi.</li>\n    <li>Hotspot: Hỗ trợ</li>\n <li><strong>Android:</strong> ❌ Không hỗ trợ TikTok</li>\n    <li><strong>iOS:</strong> ❌ Không hỗ trợ TikTok</li>\n    <li><strong>Phạm vi phủ sóng:</strong> Trung Quốc, Hongkong, Macao</li>\n    <li><strong>Nhà mạng:</strong> CSL,\tChina Telecom HK(CSL),ChinaTelecom (4G/5G)</li>\n    <li><strong>APN:</strong> CTExcel</li>\n    <li>Tốc độ giảm còn 384kbps sau khi sử dụng hết dung lượng tốc độ cao trong ngày.</li>\n    <li><strong>TikTok:</strong> Tắt Truy cập vị trí, Hoạt động trực tiếp và Cho phép theo dõi trước khi khởi hành. Nhà cung cấp không chịu trách nhiệm nếu chưa thực hiện các bước trên.</li>\n</ul>",
+        "en": "<ul>\n    <li><strong>Provider:</strong> BC</li>\n    <li>Data refresh time: 00:00 - 24:00 (UTC+8)</li>\n    <li>Scan the QR code before your flight and enable Data Roaming upon arrival.</li>\n    <li>Hotspot: Supported</li>\n    <li><strong>Android:</strong> ❌ TikTok not supported</li>\n    <li><strong>iOS:</strong> ❌ TikTok not supported</li>\n    <li><strong>Coverage:</strong> China, Hong Kong, Macau</li>\n    <li><strong>Network operators:</strong> CSL, China Telecom HK (CSL), China Telecom (4G/5G)</li>\n    <li><strong>APN:</strong> CTExcel</li>\n    <li>Speed reduced to 384kbps after using the daily high-speed data limit.</li>\n    <li><strong>TikTok:</strong> Turn off Location Access, Live Activities, and Allow Tracking before departure. The provider is not responsible if these steps are not followed.</li>\n</ul>"
       },
       "type": "eSIM",
       "thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/esim/esim-hongkong-macao.jpg",
@@ -539,6 +547,10 @@ Get product detail by slug or SPU
     "en": "string"
   },
   "slug": {
+    "vi": "string",
+    "en": "string"
+  },
+  "metadata": {
     "vi": "string",
     "en": "string"
   },
@@ -779,6 +791,10 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
   "slug": {
     "vi": "esim-hongkong-macao-toc-do-cao-4g-data",
     "en": "esim-hongkong-macao-4g-high-speed-data-only"
+  },
+   "metadata": {
+	"vi": "<ul>\n    <li><strong>Nhà cung cấp:</strong> BC</li>\n    <li>Thời gian làm mới dung lượng: 00:00 - 24:00 (UTC+8)</li>\n    <li>Quét mã QR trước chuyến bay và bật Chuyển vùng dữ liệu khi đến nơi.</li>\n    <li>Hotspot: Hỗ trợ</li>\n <li><strong>Android:</strong> ❌ Không hỗ trợ TikTok</li>\n    <li><strong>iOS:</strong> ❌ Không hỗ trợ TikTok</li>\n    <li><strong>Phạm vi phủ sóng:</strong> Trung Quốc, Hongkong, Macao</li>\n    <li><strong>Nhà mạng:</strong> CSL,\tChina Telecom HK(CSL),ChinaTelecom (4G/5G)</li>\n    <li><strong>APN:</strong> CTExcel</li>\n    <li>Tốc độ giảm còn 384kbps sau khi sử dụng hết dung lượng tốc độ cao trong ngày.</li>\n    <li><strong>TikTok:</strong> Tắt Truy cập vị trí, Hoạt động trực tiếp và Cho phép theo dõi trước khi khởi hành. Nhà cung cấp không chịu trách nhiệm nếu chưa thực hiện các bước trên.</li>\n</ul>",
+	"en": "<ul>\n    <li><strong>Provider:</strong> BC</li>\n    <li>Data refresh time: 00:00 - 24:00 (UTC+8)</li>\n    <li>Scan the QR code before your flight and enable Data Roaming upon arrival.</li>\n    <li>Hotspot: Supported</li>\n    <li><strong>Android:</strong> ❌ TikTok not supported</li>\n    <li><strong>iOS:</strong> ❌ TikTok not supported</li>\n    <li><strong>Coverage:</strong> China, Hong Kong, Macau</li>\n    <li><strong>Network operators:</strong> CSL, China Telecom HK (CSL), China Telecom (4G/5G)</li>\n    <li><strong>APN:</strong> CTExcel</li>\n    <li>Speed reduced to 384kbps after using the daily high-speed data limit.</li>\n    <li><strong>TikTok:</strong> Turn off Location Access, Live Activities, and Allow Tracking before departure. The provider is not responsible if these steps are not followed.</li>\n</ul>"
   },
   "type": "eSIM",
   "thumbnail": "https://awssimplifytrip.s3.ap-southeast-1.amazonaws.com/esim/esim-hongkong-macao.jpg",
