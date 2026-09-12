@@ -4,7 +4,9 @@ title: Quy trình xử lý Nạp dữ liệu vào thẻ sim
 
 # Quy trình xử lý Nạp dữ liệu vào thẻ sim
 
-Here is the sequence flow of the integration
+1. Tạo đơn bằng `POST /api/v1/orders/recharge`, ký bằng `X-Signature`. Gửi `trackId` duy nhất, lưu `orderId` và từng `subOrderId` trả về.
+2. Chỉ dùng item loại `SIM_RECHARGE`. Nạp tối đa 50 phôi sim cùng một đơn hàng. 
+3. Đơn hàng sẽ xử lý và cho kết quả ngay lập tức. 
  
 <div className="my-2 mx-auto max-w-[900px]">
 	<img src="/workflows/recharge.png" width="100%" />

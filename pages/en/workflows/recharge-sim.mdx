@@ -4,7 +4,9 @@ title: SIM Data Recharge Workflow
 
 # SIM Data Recharge Workflow
 
-Here is the sequence flow of the integration
+1. Create an order using `POST /api/v1/orders/recharge` and sign the request with `X-Signature`. Submit a unique `trackId`, and store the returned `orderId` and each `subOrderId`.
+2. Use only items of type `SIM_RECHARGE`. Top up a maximum of 50 SIM cards per order.
+3. The order will be processed, and the result will be returned immediately.
 
 <div className="my-2 mx-auto max-w-[900px]">
 	<img src="/workflows/recharge.png" width="100%" />

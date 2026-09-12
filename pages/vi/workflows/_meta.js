@@ -22,4 +22,10 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	}, 
+	'return-request': {
+		title: 'Trả hàng / hoàn tiền',
+		// theme: {
+		// 	typesetting: 'article',
+		// },
+	}, 
 };

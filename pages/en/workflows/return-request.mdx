@@ -1,0 +1,11 @@
+---
+title: Return / Refund Processing Workflow
+---
+ 
+# Return / Refund Processing Workflow
+
+For an eligible `SUCCESS` order within 6 months of creation, call signed `POST /api/v1/return-requests` with a unique `returnTrackId`, the original `orderId` and explicit items.For eSIMs or data package, specify `orderItemId` and the eligible `iccids`; quantity is calculated from the ICCID list. For physical SIMs, specify `orderItemId` and a positive `quantity`.
+
+The return normally follows `REQUESTED → REFUNDING → COMPLETED`. A pending request can be `REJECTED` or canceled via `/return-requests/cancel` only while `REQUESTED`. Wait for completion before returning further eligible units of the same order.
+
+The order remains `SUCCESS`. On completion, `returnStatus` becomes `PARTIAL` or `FULL`, `quantityReturned` and `refundAmount` increase, and `total` decreases. Read [Order API](/api-list/order), [Return Request API](/api-list/return-request) and [webhooks](/developers/webhooks) for exact payloads and fees.

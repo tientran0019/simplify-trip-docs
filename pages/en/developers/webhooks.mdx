@@ -345,7 +345,7 @@ Event payload when return request status changes. Includes signature and return-
 			<Td className='border-0'>
 				<code className='text-red-500 text-xs'>`object`</code>
 
-				Contains return request information, including status `REVIEWING` | `APPROVED` | `REJECTED`
+				Contains return progress. The completion event uses `status: COMPLETED`; do not treat `REFUNDING` as completed. Match `returnId`/`returnTrackId` to the return and `orderId`/`orderTrackId` to the original order. See [Return Request API](/api-list/return-request) for the full status flow.
 
 			</Td>
 		</Tr>
@@ -358,27 +358,37 @@ Event payload when return request status changes. Includes signature and return-
 ```json BodyData
 {
   "id": "6741ae7de65369e169a70758",
-  "sentDate": "2024-11-23T10:29:17.887Z",
-  "createdAt": "2024-11-23T10:29:17.887Z",
+  "sentDate": "2026-09-12T08:05:00.000Z",
+  "createdAt": "2026-09-12T08:05:00.000Z",
   "mode": "TEST_MODE",
   "type": "RETURN_ORDER_UPDATE",
   "data": {
-    "id": "6741ae68e65369e169a70757",
-	"createdAt": "2024-11-23T10:29:17.887Z",
-    "orderId": "7258736707",
-    "trackId": "fd66829c-f768-43a7-b147-9e92d44c4e81",
-	"status": "REVIEWING",
-	"reason": "reason",
-	"returnType": "FULL",
-	"refundAmount": 205000,
+    "returnId": "6741ae68e65369e169a70757",
+    "returnTrackId": "partner-return-001",
+    "orderId": "658441501843542",
+    "orderTrackId": "partner-order-001",
+    "createdAt": "2026-09-12T08:00:00.000Z",
+    "reason": "Customer requested a return",
+    "returnType": "PARTIAL",
+    "refundFee": 15000,
+    "extraFee": 0,
+    "refundAmount": 85000,
     "items": [
       {
-        "productName": "Southeast Asia SIM (7 countries), data-only (Unlimited Data/day - 3 days)",
-        "sku": "AS7BCUNL03DPY",
-        "quantity": 3,
-		"type": "SIM",
+        "orderItemId": "6740ce7f9d04259159bc6401",
+        "subOrderTrackId": "partner-item-001",
+        "spu": "example-product",
+        "sku": "E23XY06GB08DFX",
+        "type": "eSIM",
+        "returnType": "PARTIAL",
+        "iccids": [
+          "8985200000000000001"
+        ],
+        "quantity": 1
       }
-    ]
+    ],
+    "status": "COMPLETED",
+    "mode": "TEST_MODE"
   }
 }
 ```

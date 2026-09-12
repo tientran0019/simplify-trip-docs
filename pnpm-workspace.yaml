@@ -1,6 +1,2 @@
-packages:
-  - "."
-
 allowBuilds:
-  sharp: true
-minimumReleaseAge: 0
+  sharp: false

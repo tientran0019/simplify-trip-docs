@@ -1,0 +1,11 @@
+---
+title: Quy trình xử lý trả hàng / hoàn tiền
+---
+ 
+# Quy trình xử lý trả hàng / hoàn tiền
+
+Với đơn hàng đã thành công `SUCCESS` và đủ điều kiện trong vòng 6 tháng từ ngày tạo, gọi `POST /api/v1/return-requests` có chữ ký, gửi `returnTrackId` duy nhất, `orderId` gốc và các item cụ thể. Với eSIM hoặc gói data, gửi `orderItemId` và `iccids` đủ điều kiện; số lượng được tính từ danh sách ICCID. Với SIM vật lý, gửi `orderItemId` và `quantity` nguyên dương.
+
+Yêu cầu thường đi qua `REQUESTED → REFUNDING → COMPLETED`. Yêu cầu chờ xử lý có thể bị `REJECTED`, hoặc hủy qua `/return-requests/cancel` khi còn `REQUESTED`. Chờ hoàn tất trước khi yêu cầu hoàn tiếp phần còn đủ điều kiện của cùng đơn.
+
+Đơn giữ `SUCCESS`. Khi hoàn tất, `returnStatus` chuyển thành `PARTIAL` hoặc `FULL`, `quantityReturned` và `refundAmount` tăng, `total` giảm. Xem [Order API](/api-list/order), [Return Request API](/api-list/return-request) và [webhook](/developers/webhooks) để biết payload và phí cụ thể.
