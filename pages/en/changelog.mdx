@@ -1,6 +1,13 @@
 ## What's New? 👋
 System change log
 
+##### Version 1.4.0 (September 12, 2026)
+
+- ✅ Updated the [Return Request API](/api-list/return-request): use a separate `returnTrackId` for each return and select individual items by physical SIM quantity or eSIM/data-plan ICCIDs. The system determines whether the return is full (`FULL`) or partial (`PARTIAL`).
+- ✅ Updated the return flow to `REQUESTED → REFUNDING → COMPLETED`, with `REJECTED` and `CANCELED` outcomes. Only `REQUESTED` requests can be canceled; each order can have only one pending or refunding request at a time.
+- ✅ Separated return progress from order status. Successfully fulfilled orders remain `SUCCESS`; the [Order API](/api-list/order) provides tracking through `returnStatus`, `hasPendingReturn`, `hasRefundingReturn`, `quantityReturned`, `refundAmount`, `totalBeforeRefund` and the `returns` history.
+- ✅ Updated the `RETURN_ORDER_UPDATE` webhook payload with return references, original order references, item details and refund information. Completion events use `COMPLETED` status. 
+ 
 ##### Version 1.3.0 (Mar 24, 2026)
 - ✅ Added a new `/orders/recharge` API to Top-up data onto SIM cards.
 - ✅ Internationalization: Multilingual support is available. Add `X-Lang: "vi"` to the headers of request.

@@ -1,7 +1,14 @@
 ## What's New? 👋
 Cập cập nhật các thay đổi của hệ thống
 
-##### Version 1.3.0 (Mar 24, 2026)
+##### Phiên bản 1.4.0 (12/09/2026)
+
+- ✅ Cập nhật [Return Request API](/api-list/return-request): dùng `returnTrackId` riêng cho yêu cầu hoàn trả; chọn từng item bằng số lượng SIM vật lý hoặc danh sách ICCID của eSIM/gói data. Hệ thống tự xác định hoàn toàn bộ (`FULL`) hoặc một phần (`PARTIAL`).
+- ✅ Cập nhật flow hoàn trả: `REQUESTED → REFUNDING → COMPLETED`, cùng các trạng thái `REJECTED` và `CANCELED`. Chỉ hủy được yêu cầu còn ở `REQUESTED`; mỗi đơn chỉ có một yêu cầu đang chờ hoặc đang hoàn tiền tại một thời điểm.
+- ✅ Tách trạng thái hoàn trả khỏi trạng thái đơn hàng. Đơn đã giao thành công giữ `SUCCESS`; [Order API](/api-list/order) bổ sung thông tin theo dõi qua `returnStatus`, `hasPendingReturn`, `hasRefundingReturn`, `quantityReturned`, `refundAmount`, `totalBeforeRefund` và lịch sử `returns`.
+- ✅ Cập nhật payload webhook `RETURN_ORDER_UPDATE` với mã yêu cầu, mã đơn gốc, chi tiết item và thông tin hoàn tiền. Sự kiện hoàn tất dùng trạng thái `COMPLETED`. 
+
+##### Version 1.3.0 (24/03/2026)
 - ✅ Thêm API `/orders/recharge` mới để nạp dữ liệu vào phôi SIM.
 - ✅ Quốc tế hóa: Hỗ trợ đa ngôn ngữ. Thêm `X-Lang: "vi"` vào tiêu đề của request.
 - ✅ Fix bugs
