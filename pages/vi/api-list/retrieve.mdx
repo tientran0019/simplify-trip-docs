@@ -7,6 +7,9 @@ import ReactJson from 'src/components/ObjectDisplay'
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
 
 # API truy xuất thông tin
+
+Mọi endpoint yêu cầu `Authorization: Bearer <secretKey>` và `X-Api-Key: <publicKey>`. Mọi POST còn yêu cầu `Content-Type: application/json` và `X-Signature`, tính từ toàn bộ request body bằng `checksumKey`. Phải tính lại chữ ký khi thay đổi body. Xem [cách tạo chữ ký](/developers/signature). GET không yêu cầu `X-Signature`. Dữ liệu được giới hạn theo tổ chức và chế độ test/live của API key.
+
 ## Api truy xuất trạng thái eSim đã mua thông qua ICCID
 Api lấy thông tin eSim, bao gồm Trạng thái, lịch sử hoạt động, lượng dữ liệu đã sử dụng...
  

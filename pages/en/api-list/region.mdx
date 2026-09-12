@@ -7,6 +7,9 @@ import ReactJson from 'src/components/ObjectDisplay'
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>API list</a>
 
 # Region API
+
+All endpoints require `Authorization: Bearer <secretKey>` and `X-Api-Key: <publicKey>`. Every POST also requires `Content-Type: application/json` and `X-Signature`, calculated from the complete request body using your `checksumKey`. Recalculate the signature whenever the body changes. See [signature generation](/developers/signature). GET requests do not require `X-Signature`. Data is scoped to your institution and the API key’s test/live mode.
+
 ## Get region list API
 Returns the list of regions with eSIM products provided by SimplifyTrip.
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
