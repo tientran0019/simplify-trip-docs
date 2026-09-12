@@ -9,3 +9,11 @@ Với đơn hàng đã thành công `SUCCESS` và đủ điều kiện trong vò
 Yêu cầu thường đi qua `REQUESTED → REFUNDING → COMPLETED`. Yêu cầu chờ xử lý có thể bị `REJECTED`, hoặc hủy qua `/return-requests/cancel` khi còn `REQUESTED`. Chờ hoàn tất trước khi yêu cầu hoàn tiếp phần còn đủ điều kiện của cùng đơn.
 
 Đơn giữ `SUCCESS`. Khi hoàn tất, `returnStatus` chuyển thành `PARTIAL` hoặc `FULL`, `quantityReturned` và `refundAmount` tăng, `total` giảm. Xem [Order API](/api-list/order), [Return Request API](/api-list/return-request) và [webhook](/developers/webhooks) để biết payload và phí cụ thể.
+
+## Flow hoàn trả
+
+1. Tra cứu [chi tiết đơn](/api-list/order), chọn item đủ điều kiện trong đơn `SUCCESS`.
+2. Tạo yêu cầu với `returnTrackId` mới và danh sách `items` cụ thể.
+3. Yêu cầu xử lý thủ công bắt đầu ở `REQUESTED`; yêu cầu tự động đủ điều kiện có thể bắt đầu ở `REFUNDING`.
+4. Tra cứu chi tiết yêu cầu hoặc xử lý [webhook](/developers/webhooks) `RETURN_ORDER_UPDATE`. `REFUNDING` là đang xử lý; `COMPLETED` là đã hoàn tất yêu cầu.
+5. Tra cứu lại đơn để lấy số lượng đã hoàn, tổng tiền hoàn và tổng tiền còn lại.
