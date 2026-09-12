@@ -16,12 +16,6 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
-	'webhooks': {
-		title: 'Webhooks',
-		// theme: {
-		// 	typesetting: 'article',
-		// },
-	},
 	'signature': {
 		title: 'Signature',
 		// theme: {

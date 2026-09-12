@@ -14,10 +14,10 @@ Mọi endpoint yêu cầu `Authorization: Bearer <secretKey>` và `X-Api-Key: <p
 
 **Flow hoàn trả**
 
-1. Tra cứu [chi tiết đơn](/api-list/order), chọn item đủ điều kiện trong đơn `SUCCESS`.
+1. Tra cứu [chi tiết đơn](/api-list/order#get-order-details-api), chọn item đủ điều kiện trong đơn `SUCCESS`.
 2. Tạo yêu cầu với `returnTrackId` mới và danh sách `items` cụ thể.
 3. Yêu cầu xử lý thủ công bắt đầu ở `REQUESTED`;  
-4. Tra cứu chi tiết yêu cầu hoặc xử lý [webhook](/developers/webhooks) `RETURN_ORDER_UPDATE`. `REFUNDING` là đang xử lý; `COMPLETED` là đã hoàn tất yêu cầu.
+4. Tra cứu chi tiết yêu cầu hoặc xử lý [webhook](/webhooks#return-request-payload) `RETURN_ORDER_UPDATE`. `REFUNDING` là đang xử lý; `COMPLETED` là đã hoàn tất yêu cầu.
 5. Tra cứu lại đơn để lấy số lượng đã hoàn, tổng tiền hoàn và tổng tiền còn lại.
 
 <br />
@@ -145,7 +145,7 @@ Mảng bắt buộc, có ít nhất một item. Mỗi item của đơn chỉ g�
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
@@ -356,7 +356,7 @@ Danh sách item.
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
@@ -925,7 +925,7 @@ Danh sách item.
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
@@ -1431,7 +1431,7 @@ Danh sách item.
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>

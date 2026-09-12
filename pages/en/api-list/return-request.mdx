@@ -14,10 +14,10 @@ All endpoints require `Authorization: Bearer <secretKey>` and `X-Api-Key: <publi
 
 **Return flow**
 
-1. Read the [order details](/api-list/order) and select eligible items from a `SUCCESS` order.
+1. Read the [order details](/api-list/order#get-order-details-api) and select eligible items from a `SUCCESS` order.
 2. Create a return with a new `returnTrackId` and explicit `items`.
 3. A manual request starts at `REQUESTED`; 
-4. Poll the return details or process `RETURN_ORDER_UPDATE` [webhooks](/developers/webhooks). `REFUNDING` means processing; `COMPLETED` means the return has completed.
+4. Poll the return details or process `RETURN_ORDER_UPDATE` [webhooks](/webhooks#return-request-payload). `REFUNDING` means processing; `COMPLETED` means the return has completed.
 5. Refresh order details to obtain cumulative returned quantities, refund amount and remaining total.
 
 
@@ -149,7 +149,7 @@ Required array with at least one item. Include each order item once; do not subm
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
@@ -360,7 +360,7 @@ Item list.
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
@@ -929,7 +929,7 @@ Item list.
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
@@ -1435,7 +1435,7 @@ Item list.
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="border-0">
+<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
 <tbody>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>

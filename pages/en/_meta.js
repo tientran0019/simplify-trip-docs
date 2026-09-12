@@ -41,6 +41,9 @@ export default {
 			// "sidebar": false
 		}
 	},
+	'webhooks': {
+		title: 'Webhooks',
+	},
 	'---': {
 		type: 'separator',
 		//  title: 'Khác',
