@@ -1,4 +1,5 @@
 import { CopyToClipboard, Link, Table, Td, Th, Tr, Callout } from 'nextra/components'
+import styles from '../../src/components/ApiReference/properties.module.css'
 
 # Webhook
 
@@ -62,8 +63,8 @@ Giữ an toàn cho Endpoint của bạn là điều quan trọng để bảo v�
 ## Danh sách webhook
 ### Dữ liệu đơn hàng eSim
 Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm môt mã signature và một object chứa thông tin đơn hàng và danh sách eSim bạn đã đặt hàng.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
 	##### Request Headers
 
 	<div className="mt-3">
@@ -75,61 +76,74 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 
 	</div>
 	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Mã định danh cho webhook này
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Loại sự kiện của webhook `PURCHASE_ORDER_SUCCESS` | `PURCHASE_ORDER_FAIL`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Thời gian sự kiện webhook được tạo
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Thời gian sự kiện webhook được gửi đi
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`object`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
+
 
 				Chứa thông tin đơn hàng của bạn, bao gồm danh sách eSim đã mua, các mã định danh...
 			</Td>
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 <CH.Code>
 ```json BodyData
 {
@@ -179,8 +193,8 @@ Event data khi đơn hàng mua eSim của bạn đã hoàn thành. Bao gồm mô
 
 ### Dữ liệu đơn hàng SIM vật lý
 Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của đơn hàng. Bao gồm môt mã signature và một object chứa thông tin trạng thái đơn hàng.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
 	##### Request Headers
 
 	<div className="mt-3">
@@ -192,52 +206,64 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 
 	</div>
 	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Mã định danh cho webhook này
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Loại sự kiện của webhook `PURCHASE_ORDER_UPDATE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Thời gian sự kiện webhook được tạo
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Thời gian sự kiện webhook được gửi đi
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`object`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
+
 
 				Chứa thông tin đơn hàng của bạn, bao gồm trạng thái đơn hàng `NEW` | `CONFIRMED` | `DELIVERING` | `SUCCESS` | `CANCELED`
 
@@ -245,9 +271,10 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 <CH.Code>
 ```json BodyData
 {
@@ -285,8 +312,8 @@ Event data khi đơn hàng mua SIM vật lý có thay đổi trạng thái của
 
 ### Dữ liệu yêu cầu trả hàng
 Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm môt mã signature và một object chứa thông tin trạng thái yêu cầu.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
 	##### Request Headers
 
 	<div className="mt-3">
@@ -298,52 +325,64 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 
 	</div>
 	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Mã định danh cho webhook này
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Loại sự kiện của webhook `RETURN_ORDER_UPDATE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Thời gian sự kiện webhook được tạo
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Thời gian sự kiện webhook được gửi đi
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Chế độ thử nghiệm hoặc thực tế `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`object`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
+
 
 				Chứa tiến độ hoàn trả. Sự kiện hoàn tất dùng `status: COMPLETED`; không coi `REFUNDING` là đã hoàn tất. Ghép `returnId`/`returnTrackId` với yêu cầu và `orderId`/`orderTrackId` với đơn gốc. Xem toàn bộ flow trạng thái tại [Return Request API](/api-list/return-request).
 
@@ -351,9 +390,10 @@ Event data khi yêu cầu trả hàng có thay đổi trạng thái. Bao gồm m
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 <CH.Code>
 ```json BodyData
 {

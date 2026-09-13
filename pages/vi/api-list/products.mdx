@@ -2,6 +2,7 @@
 title: Api Products
 ---
 import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
+import styles from '../../../src/components/ApiReference/properties.module.css'
 import ReactJson from 'src/components/ObjectDisplay'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
@@ -12,61 +13,74 @@ Mọi endpoint yêu cầu `Authorization: Bearer <secretKey>` và `X-Api-Key: <p
 
 ## Api lấy danh sách các mặt hàng
 Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-0 order-2 2xl:order-1'>
 	##### Query Parameters
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>type</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
+			<Td className='border-0'><code>type</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code></Td>
+<Td className="border-0">
+
 
 				Loại sản phẩm mà bạn muốn lọc, bỏ trống để lấy tất cả
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>query</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Từ khoá tìm kiếm theo tên, id, quốc gia hoặc khu vực...
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>countryId</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				ID của quốc gia
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>regionId</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				ID của khu vực
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>take</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`number`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 
 				Số lượng kết quả trả về cho một trang
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>skip</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`number`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 
 				Chỉ mục ban đầu để trả về kết quả.
 			</Td>
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	##### Responses
 	<div className="flex gap-2 items-center py-4">
@@ -74,29 +88,38 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 		<code>application/json</code>
 		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 	</div>
-<Table rules="none" border={0} width="100%" className='border-0'>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>total - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`number`</code>
+			<Td className='border-0'><code>total - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>take - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`number`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>skip - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`number`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0 json-custom'>
+			<Td className='border-0 json-custom' colSpan={2}>
 				<ReactJson displayDataTypes={false} displayObjectSize={false} name="product[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
 				collapsed={true} src={{  
       "spu": "string",
@@ -165,43 +188,55 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 		</Tr>
 	</tbody>
 </Table>
+</div>
 <div className="border-t dark:border-gray-100/10 mt-5">
 		<div className="flex gap-2 items-center py-4">
 			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
 			<code>application/json</code>
 			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
+		<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
+					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`timestamp`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 			</tbody>
 		</Table>
+</div>
 	</div>
 	</div>
-	<div className='flex-1 min-w-1'>
+	<div className='flex-1 min-w-0 order-1 2xl:order-2'>
 		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
@@ -514,20 +549,28 @@ curl -X 'GET' \
 
 ## Api lấy thông tin một mặt hàng
 Api lấy thông tin chi tiết một mặt hàng của SimplifyTrip thông qua slug hoặc spu
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-0 order-2 2xl:order-1'>
 	##### Path Parameters
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>spu</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code>spu</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 				slug hoặc spu lấy từ API get danh sách
 			</Td>
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	##### Responses
 	<div className="flex gap-2 items-center py-4">
@@ -614,37 +657,48 @@ Api lấy thông tin chi tiết một mặt hàng của SimplifyTrip thông qua 
 			<code>application/json</code>
 			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
+		<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
+					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`timestamp`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 			</tbody>
 		</Table>
+</div>
 	</div>
 	</div>
-	<div className='flex-1 min-w-1'>
+	<div className='flex-1 min-w-0 order-1 2xl:order-2'>
 		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
@@ -932,19 +986,27 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
 
 ## Api lấy thông tin một variation
 Api lấy thông tin chi tiết một mẫu mã của mặt hàng thông qua sku
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-0 order-2 2xl:order-1'>
 	##### Path Parameters
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 			</Td>
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	##### Responses
 	<div className="flex gap-2 items-center py-4">
@@ -988,37 +1050,48 @@ Api lấy thông tin chi tiết một mẫu mã của mặt hàng thông qua sku
 			<code>application/json</code>
 			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
+		<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 			<tbody>
 				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
+					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`timestamp`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 				<Tr className='border-0 !bg-inherit'>
 					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 					</Td>
 				</Tr>
 			</tbody>
 		</Table>
+</div>
 	</div>
 	</div>
-	<div className='flex-1 min-w-1'>
+	<div className='flex-1 min-w-0 order-1 2xl:order-2'>
 		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
@@ -1182,4 +1255,3 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/variation/EHKXY01G
 
 	</div>
 </div>
- 

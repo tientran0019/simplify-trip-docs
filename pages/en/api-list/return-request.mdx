@@ -2,6 +2,7 @@
 title: Return request API
 ---
 import { CopyToClipboard, Table, Td, Tr } from 'nextra/components'
+import styles from '../../../src/components/ApiReference/properties.module.css'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>API list</a>
 # Return request API
@@ -28,7 +29,7 @@ All endpoints require `Authorization: Bearer <secretKey>` and `X-Api-Key: <publi
 <Table rules="none" border={0} width="100%" className="border-0">
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>REQUESTED</code></Td>
+<Td className="border-0 w-[220px]"><code>`REQUESTED`</code></Td>
 <Td className="border-0"> 
 
 Waiting for review; may be canceled.
@@ -36,7 +37,7 @@ Waiting for review; may be canceled.
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>REFUNDING</code></Td>
+<Td className="border-0 w-[220px]"><code>`REFUNDING`</code></Td>
 <Td className="border-0"> 
 
 Refund processing; cannot be canceled.
@@ -44,7 +45,7 @@ Refund processing; cannot be canceled.
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>COMPLETED</code></Td>
+<Td className="border-0 w-[220px]"><code>`COMPLETED`</code></Td>
 <Td className="border-0"> 
 
 Return completed. A positive refund creates a wallet credit transaction, processed asynchronously.
@@ -52,7 +53,7 @@ Return completed. A positive refund creates a wallet credit transaction, process
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>REJECTED</code></Td>
+<Td className="border-0 w-[220px]"><code>`REJECTED`</code></Td>
 <Td className="border-0"> 
 
 Rejected; inspect `rejectionReason`.
@@ -60,7 +61,7 @@ Rejected; inspect `rejectionReason`.
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>CANCELED</code></Td>
+<Td className="border-0 w-[220px]"><code>`CANCELED`</code></Td>
 <Td className="border-0"> 
 
 Canceled while awaiting review.
@@ -87,18 +88,25 @@ The current base fee is 15,000 VND per returned eSIM or physical SIM; SIM rechar
 
 The example returns one of two eSIMs priced at 100,000 VND each: base fee 15,000 VND, refund 85,000 VND. 
 ## Create return request API
- 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Request Headers
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 HMAC_SHA256 signature of the complete request body using checksumKey. See [signature generation](/developers/signature).
 
@@ -106,73 +114,92 @@ HMAC_SHA256 signature of the complete request body using checksumKey. See [signa
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Request Body
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>returnTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Required non-empty string, unique per institution and mode. It is separate from the original order’s `trackId`.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Required non-empty string: SimplifyTrip order ID or original order `trackId`.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Optional string.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 
 Required array with at least one item. Include each order item once; do not submit both its ID and its tracking reference as separate entries.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>subOrderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Required: `subOrderId` from creation, `items[].id` from order details, or the item’s `subTrackId`. Prefer the SimplifyTrip item ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 For physical `SIM`: positive integer, no more than the remaining eligible quantity.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code></Td>
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
+
 
 For `eSIM` or `SIM_RECHARGE`: non-empty array of unique ICCID strings belonging to the item and still eligible. The server derives quantity from this array. For physical SIM, send quantity instead.
 
@@ -185,6 +212,7 @@ For `eSIM` or `SIM_RECHARGE`: non-empty array of unique ICCID strings belonging 
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Responses
 
@@ -194,241 +222,278 @@ For `eSIM` or `SIM_RECHARGE`: non-empty array of unique ICCID strings belonging 
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnId</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip return request ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnTrackId</code></Td>
+<Td className="border-0"><code>returnTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Your return tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code></Td>
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip order ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderTrackId</code></Td>
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>createdAt</code></Td>
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundingAt</code></Td>
+<Td className="border-0"><code>refundingAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>completedAt</code></Td>
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>canceledAt</code></Td>
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectedAt</code></Td>
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Request or cancellation reason; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectionReason</code></Td>
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Rejection reason; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Processing status. See the flow and conditions for this endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 FULL or PARTIAL, calculated by the server against remaining eligible units.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundFee</code></Td>
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Base return fee (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFee</code></Td>
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Extra fee (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Extra fee explanation; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Refund amount (VND); on an order, the cumulative amount of completed refunds.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 
 Item list.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order item ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order item tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>spu</code></Td>
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product SKU.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product type: eSIM, SIM or SIM_RECHARGE.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 FULL or PARTIAL, calculated by the server against remaining eligible units.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code></Td>
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
+
 
 ICCID list. Empty for physical SIM returns.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Quantity.
 
@@ -441,6 +506,7 @@ Quantity.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -449,39 +515,49 @@ Quantity.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 
@@ -491,7 +567,8 @@ Quantity.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -669,7 +746,7 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/return-requests' \
 <CH.Code>
 ```json Success
 {
-  "returnId": "6741ae68e65369e169a70757",
+  "id": "6741ae68e65369e169a70757",
   "returnTrackId": "partner-return-001",
   "orderId": "658441501843542",
   "orderTrackId": "partner-order-001",
@@ -718,17 +795,24 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/return-requests' \
 
 Send required string `returnId`, containing either the SimplifyTrip return ID or your `returnTrackId`. Only `REQUESTED` can be canceled. This endpoint also requires a signature of the cancel body.
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Request Headers
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 HMAC_SHA256 signature of the complete request body using checksumKey. See [signature generation](/developers/signature).
 
@@ -736,15 +820,23 @@ HMAC_SHA256 signature of the complete request body using checksumKey. See [signa
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Request Body
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>returnId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip return ID or your returnTrackId.
 
@@ -752,6 +844,7 @@ SimplifyTrip return ID or your returnTrackId.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 Returns the same response schema with `status: CANCELED` and `canceledAt` populated. It clears the order’s pending/refunding flags and releases the selected eSIMs for later requests. It does not cancel the original order or complete a refund.
 
@@ -763,241 +856,278 @@ Returns the same response schema with `status: CANCELED` and `canceledAt` popula
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnId</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip return request ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnTrackId</code></Td>
+<Td className="border-0"><code>returnTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Your return tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code></Td>
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip order ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderTrackId</code></Td>
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>createdAt</code></Td>
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundingAt</code></Td>
+<Td className="border-0"><code>refundingAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>completedAt</code></Td>
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>canceledAt</code></Td>
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectedAt</code></Td>
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Request or cancellation reason; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectionReason</code></Td>
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Rejection reason; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Processing status. See the flow and conditions for this endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 FULL or PARTIAL, calculated by the server against remaining eligible units.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundFee</code></Td>
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Base return fee (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFee</code></Td>
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Extra fee (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Extra fee explanation; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Refund amount (VND); on an order, the cumulative amount of completed refunds.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 
 Item list.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order item ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order item tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>spu</code></Td>
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product SKU.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product type: eSIM, SIM or SIM_RECHARGE.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 FULL or PARTIAL, calculated by the server against remaining eligible units.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code></Td>
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
+
 
 ICCID list. Empty for physical SIM returns.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Quantity.
 
@@ -1010,6 +1140,7 @@ Quantity.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -1018,39 +1149,49 @@ Quantity.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 
@@ -1060,7 +1201,8 @@ Quantity.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -1087,7 +1229,7 @@ const response = await axios.request({
   "content-type": "application/json",
   "x-signature": "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY"
 },
-  data: {
+data: {
   "returnId": "6741ae68e65369e169a70757"
 }
 });
@@ -1191,7 +1333,7 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/return-requests/ca
 <CH.Code>
 ```json Success
 {
-  "returnId": "6741ae68e65369e169a70757",
+  "id": "6741ae68e65369e169a70757",
   "returnTrackId": "partner-return-001",
   "orderId": "658441501843542",
   "orderTrackId": "partner-order-001",
@@ -1240,17 +1382,24 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/return-requests/ca
 
 Use `returnId` or `returnTrackId`. Returns the same schema as creation, with the latest status, fees and timestamps. After a create timeout or duplicate-reference error, query this endpoint using the existing reference before deciding to create another request.
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Path Parameters
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 The request’s returnId or returnTrackId.
 
@@ -1258,6 +1407,7 @@ The request’s returnId or returnTrackId.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 
 
@@ -1269,241 +1419,278 @@ The request’s returnId or returnTrackId.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnId</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip return request ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnTrackId</code></Td>
+<Td className="border-0"><code>returnTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Your return tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code></Td>
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 SimplifyTrip order ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderTrackId</code></Td>
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>createdAt</code></Td>
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundingAt</code></Td>
+<Td className="border-0"><code>refundingAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>completedAt</code></Td>
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>canceledAt</code></Td>
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectedAt</code></Td>
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 ISO timestamp; may be null if the event has not occurred.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Request or cancellation reason; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectionReason</code></Td>
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Rejection reason; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Processing status. See the flow and conditions for this endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 FULL or PARTIAL, calculated by the server against remaining eligible units.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundFee</code></Td>
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Base return fee (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFee</code></Td>
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Extra fee (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Extra fee explanation; may be null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Refund amount (VND); on an order, the cumulative amount of completed refunds.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 
 Item list.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order item ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Original order item tracking reference.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>spu</code></Td>
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product ID.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product SKU.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 Product type: eSIM, SIM or SIM_RECHARGE.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 FULL or PARTIAL, calculated by the server against remaining eligible units.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code></Td>
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
+
 
 ICCID list. Empty for physical SIM returns.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 Quantity.
 
@@ -1516,6 +1703,7 @@ Quantity.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -1524,39 +1712,49 @@ Quantity.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 
@@ -1566,7 +1764,8 @@ Quantity.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
@@ -1672,7 +1871,7 @@ curl --request GET 'https://merchant.simplifytrip.com/api/v1/return-requests/674
 <CH.Code>
 ```json Success
 {
-  "returnId": "6741ae68e65369e169a70757",
+  "id": "6741ae68e65369e169a70757",
   "returnTrackId": "partner-return-001",
   "orderId": "658441501843542",
   "orderTrackId": "partner-order-001",
