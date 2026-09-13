@@ -2,7 +2,7 @@
 System change log
 
 ##### Version 1.4.0 (September 12, 2026)
-
+- ✅ Added an API to retrieve the organization's [payment account](/api-list/accounts) information.
 - ✅ Updated the [Return Request API](/api-list/return-request): use a separate `returnTrackId` for each return and select individual items by physical SIM quantity or eSIM/data-plan ICCIDs. The system determines whether the return is full (`FULL`) or partial (`PARTIAL`).
 - ✅ Updated the return flow to `REQUESTED → REFUNDING → COMPLETED`, with `REJECTED` and `CANCELED` outcomes. Only `REQUESTED` requests can be canceled; each order can have only one pending or refunding request at a time.
 - ✅ Separated return progress from order status. Successfully fulfilled orders remain `SUCCESS`; the [Order API](/api-list/order) provides tracking through `returnStatus`, `hasPendingReturn`, `hasRefundingReturn`, `quantityReturned`, `refundAmount`, `totalBeforeRefund` and the `returns` history.
