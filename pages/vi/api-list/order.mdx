@@ -2,6 +2,7 @@
 title: Api Đơn hàng
 ---
 import { CopyToClipboard, Table, Td, Tr } from 'nextra/components'
+import styles from '../../../src/components/ApiReference/order-properties.module.css'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
 # Api Đơn hàng
@@ -20,116 +21,152 @@ Tạo đơn eSIM hoặc SIM vật lý bằng `POST /api/v1/orders`; dùng `/orde
 
 
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 `NEW`, `PROCESSING`, `CONFIRMED`, `DELIVERING`, `SUCCESS`, `ERROR`, `CANCELED`.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items[].status</code></Td>
+<Td className="border-0"><code>items[].status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Các giá trị như trạng thái đơn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnStatus</code></Td>
+<Td className="border-0"><code>returnStatus</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 `NONE`: Không hoàn trả; `PARTIAL`: đã hoàn một phần; `FULL`: đã hoàn hết số lượng còn lại.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>hasPendingReturn</code></Td>
+<Td className="border-0"><code>hasPendingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code>
+
 Có yêu cầu hoàn trả đang chờ xử lý.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>hasRefundingReturn</code></Td>
+<Td className="border-0"><code>hasRefundingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code>
+
 Có yêu cầu đang xử lý hoàn tiền.
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ## Api tạo đơn hàng
 
 Ví phải đủ điều kiện và khả năng thanh toán. Đơn SIM vật lý yêu cầu tổ chức đã cấu hình địa chỉ và số điện thoại. Thông tin giao hàng lấy từ hồ sơ này.
 
 <div className="grid grid-cols-1 2xl:grid-cols-2  gap-5 w-full">
-<div className="flex-1 min-w-1 order-2 2xl:order-1">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Request Headers
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Request Body
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Chuỗi bắt buộc, duy nhất theo tổ chức và mode. Gửi lại ID đã dùng sẽ bị từ chối; sau timeout hãy tra cứu đơn trước khi thử lại.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code> Mảng bắt buộc, ít nhất một item. Các item phải cùng loại sản phẩm (`eSIM` hoặc `SIM`).
+Mảng bắt buộc, ít nhất một item. Các item phải cùng loại sản phẩm (`eSIM` hoặc `SIM`).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Chuỗi bắt buộc, không trùng trong request.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 SKU sản phẩm đang hoạt động, bắt buộc và không trùng trong request.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số nguyên bắt buộc từ 1 đến 500.
 
 </Td>
@@ -140,31 +177,35 @@ Số nguyên bắt buộc từ 1 đến 500.
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>deliveryType</code></Td>
+<Td className="border-0"><code>deliveryType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Tùy chọn: `WEBHOOK` (mặc định) hoặc `EMAIL`. Giao eSIM qua email yêu cầu cả hai trường khách hàng bên dưới.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>customerEmail</code></Td>
+<Td className="border-0"><code>customerEmail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Email hợp lệ; bắt buộc khi giao eSIM qua `EMAIL`.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>customerName</code></Td>
+<Td className="border-0"><code>customerName</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Tên khách hàng; bắt buộc khi giao eSIM qua `EMAIL`.
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Responses
 
@@ -174,95 +215,117 @@ Tên khách hàng; bắt buộc khi giao eSIM qua `EMAIL`.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>success</code></Td>
+<Td className="border-0"><code>success</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code>
+
 Xác nhận tạo đơn thành công; chưa xác nhận giao hàng hoàn tất.
 `success: true` xác nhận tạo đơn, chưa xác nhận giao hàng thành công. eSIM trả trạng thái ban đầu `PROCESSING`; SIM vật lý trả `NEW`. Response không chứa QR eSIM. Lấy dữ liệu từ chi tiết đơn hoặc webhook giao hàng. 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code></Td>
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID đơn hàng SimplifyTrip.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code></Td>
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>  Danh sách item.
+Danh sách item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID item SimplifyTrip; dùng làm orderItemId khi hoàn trả.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu item của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 SKU sản phẩm.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số lượng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 
 </Td>
@@ -274,6 +337,7 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -282,36 +346,46 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
@@ -320,7 +394,8 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1 order-1 2xl:order-2">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -505,67 +580,91 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders' \
 Gửi `trackId` duy nhất và đúng một item gồm `subTrackId`, SKU loại `SIM_RECHARGE` và `iccids` chứa 1–50 ICCID không trùng. Số lượng được tính từ ICCID; không gửi `quantity`. Gói China Telecom chỉ hỗ trợ một ICCID. Response thành công có cấu trúc như tạo đơn, với `status: SUCCESS` ở đơn/item và `type: SIM_RECHARGE`.
 
 <div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1 order-2 2xl:order-1">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Request Headers
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Request Body
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã đơn duy nhất theo tổ chức và mode.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code> 
+
 Đúng một item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 SKU loại SIM_RECHARGE.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>iccids</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code> 
+
 1–50 ICCID không trùng; gói China Telecom chỉ cho một ICCID.
 
 Trong chế độ `TEST_MODE` hãy thử với những iccid sau:
@@ -580,6 +679,7 @@ Trong chế độ `TEST_MODE` hãy thử với những iccid sau:
 </Tr>
 </tbody>
 </Table>
+</div>
 
 
 
@@ -591,96 +691,118 @@ Trong chế độ `TEST_MODE` hãy thử với những iccid sau:
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>success</code></Td>
+<Td className="border-0"><code>success</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code> 
+
 Xác nhận tạo đơn thành công; chưa xác nhận giao hàng hoàn tất.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code></Td>
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID đơn hàng SimplifyTrip.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code></Td>
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 Danh sách item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID item SimplifyTrip; dùng làm orderItemId khi hoàn trả.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu item của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 SKU sản phẩm.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số lượng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 
 </Td>
@@ -692,6 +814,7 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -700,36 +823,46 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
@@ -738,7 +871,8 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1 order-1 2xl:order-2">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -929,45 +1063,62 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/recharge' \
 Chỉ hủy được đơn SIM vật lý có trạng thái đơn `NEW`, mọi item đều là `SIM` và có trạng thái `NEW`. `orderId` là ID đơn của SimplifyTrip hoặc `trackId`. `reason` là tùy chọn. Hủy đơn chuyển đơn và item sang `CANCELED`, đồng thời hoàn tổng tiền đơn vào ví. Đơn không đủ điều kiện trả 404.
 
 <div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1 order-2 2xl:order-1">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Request Headers
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
 
 ##### Request Body
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID đơn SimplifyTrip hoặc trackId.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Lý do hủy (tùy chọn).
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
  
 
 ##### Responses
@@ -978,114 +1129,138 @@ Lý do hủy (tùy chọn).
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code></Td>
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>createdAt</code></Td>
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>updatedAt</code></Td>
+<Td className="border-0"><code>updatedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Lý do yêu cầu/hủy; có thể null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 Danh sách item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu item của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 SKU sản phẩm.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số lượng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Loại sản phẩm: `SIM_RECHARGE`.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -1097,6 +1272,7 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -1105,36 +1281,46 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
@@ -1143,7 +1329,8 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1 order-1 2xl:order-2">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -1312,22 +1499,30 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/cancel' \
 Dùng ID đơn hoặc `trackId` duy nhất. 
 
 <div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1 order-2 2xl:order-1">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
 ##### Path Parameters
 
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID đơn hoặc trackId duy nhất.
 
 </Td>
 </Tr>
 </tbody>
 </Table>
+</div>
  
 ##### Responses
 
@@ -1337,296 +1532,347 @@ ID đơn hoặc trackId duy nhất.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code></Td>
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>createdAt</code></Td>
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>confirmedAt</code></Td>
+<Td className="border-0"><code>confirmedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>deliveringAt</code></Td>
+<Td className="border-0"><code>deliveringAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>canceledAt</code></Td>
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>succeededAt</code></Td>
+<Td className="border-0"><code>succeededAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnStatus</code></Td>
+<Td className="border-0"><code>returnStatus</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 NONE, PARTIAL hoặc FULL; tách biệt với status đơn hàng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>hasPendingReturn</code></Td>
+<Td className="border-0"><code>hasPendingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code>
+
 Có yêu cầu hoàn trả đang chờ xử lý.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>hasRefundingReturn</code></Td>
+<Td className="border-0"><code>hasRefundingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code>
+
 Có yêu cầu đang xử lý hoàn tiền.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>totalBeforeRefund</code></Td>
+<Td className="border-0"><code>totalBeforeRefund</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Tổng tiền trước hoàn trả (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>total</code></Td>
+<Td className="border-0"><code>total</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Tổng tiền còn lại sau hoàn trả (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>error</code></Td>
+<Td className="border-0"><code>error</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
-
-
-</Td>
-</Tr>
-<Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>shippingAddress</code></Td>
-<Td className="border-0">
-<code className="text-red-500 text-xs">object &#124; null</code>
 
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>shippingAddress</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
 Danh sách item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu item của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số lượng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantityReturned</code></Td>
+<Td className="border-0"><code>quantityReturned</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số lượng đã hoàn trả thành công.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code></Td>
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
+
 Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>price</code></Td>
+<Td className="border-0"><code>price</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Đơn giá (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>type</code></Td>
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>spu</code></Td>
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code> 
+
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code> Thông tin kích hoạt eSIM.
+Thông tin kích hoạt eSIM.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccid</code></Td>
+<Td className="border-0"><code>iccid</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>planAPN</code></Td>
+<Td className="border-0"><code>planAPN</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>smdpAddress</code></Td>
+<Td className="border-0"><code>smdpAddress</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>pin</code></Td>
+<Td className="border-0"><code>pin</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>puk</code></Td>
+<Td className="border-0"><code>puk</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>activationCode</code></Td>
+<Td className="border-0"><code>activationCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>qrCodeContent</code></Td>
+<Td className="border-0"><code>qrCodeContent</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>qrCodeImg</code></Td>
+<Td className="border-0"><code>qrCodeImg</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
@@ -1642,237 +1888,275 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returns</code></Td>
+<Td className="border-0"><code>returns</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 Lịch sử hoàn trả, mới nhất trước.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>trackId</code></Td>
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderId</code></Td>
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID đơn hàng SimplifyTrip.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderTrackId</code></Td>
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu đơn gốc.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>createdAt</code></Td>
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectedAt</code></Td>
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>completedAt</code></Td>
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>canceledAt</code></Td>
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">datetime &#124; null</code>
+
 
 Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>status</code></Td>
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>reason</code></Td>
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Lý do yêu cầu/hủy; có thể null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>rejectionReason</code></Td>
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Lý do từ chối; có thể null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundFee</code></Td>
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Phí hoàn cơ bản (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFee</code></Td>
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Phụ phí (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Ghi chú phụ phí; có thể null.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>items</code></Td>
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
+
 Danh sách item.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 p-0 pl-9" colSpan={2}>
-<Table rules="none" border={0} width="100%" className="w-full border-0 border-l">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>id</code></Td>
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>orderItemId</code></Td>
+<Td className="border-0"><code>orderItemId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 ID item của đơn gốc.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã tham chiếu item của đơn gốc.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>spu</code></Td>
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Mã sản phẩm (spu ở API return-request).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>sku</code></Td>
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 SKU (sku ở API return-request).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>productType</code></Td>
+<Td className="border-0"><code>productType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 Loại sản phẩm (type ở API return-request).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>returnType</code></Td>
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>iccids</code></Td>
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
+
 Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>originalPrice</code></Td>
+<Td className="border-0"><code>originalPrice</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Đơn giá gốc (VND).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>quantity</code></Td>
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 Số lượng.
 
 </Td>
@@ -1889,6 +2173,7 @@ Số lượng.
 </Tr>
 </tbody>
 </Table>
+</div>
 
 </div>
 <div className="border-t dark:border-gray-100/10 mt-5">
@@ -1897,36 +2182,46 @@ Số lượng.
 <code>application/json</code>
 <div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
 </div>
-<Table rules="none" border={0} width="100%" className="border-0">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 <tbody>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>timestamp</code></Td>
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>statusCode</code></Td>
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">number</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>errorCode</code></Td>
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>message</code></Td>
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string</code>
+
 
 
 </Td>
@@ -1935,7 +2230,8 @@ Số lượng.
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1 order-1 2xl:order-2">
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
