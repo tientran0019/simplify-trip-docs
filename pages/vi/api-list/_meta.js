@@ -35,6 +35,9 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
+	'accounts': {
+		title: 'Tài khoản thanh toán',
+	},
 	'retrieve': {
 		title: 'Try xuất thông tin',
 		// theme: {

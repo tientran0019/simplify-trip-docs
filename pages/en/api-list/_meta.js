@@ -35,6 +35,9 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
+	'accounts': {
+		title: 'Payment accounts',
+	},
 	'retrieve': {
 		title: 'Retrieve information',
 		// theme: {
