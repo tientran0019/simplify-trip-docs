@@ -26,7 +26,6 @@ Tạo đơn eSIM hoặc SIM vật lý bằng `POST /api/v1/orders`; dùng `/orde
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 `NEW`, `PROCESSING`, `CONFIRMED`, `DELIVERING`, `SUCCESS`, `ERROR`, `CANCELED`.
 
 </Td>
@@ -35,7 +34,6 @@ Tạo đơn eSIM hoặc SIM vật lý bằng `POST /api/v1/orders`; dùng `/orde
 <Td className="border-0 w-[220px]"><code>items[].status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Các giá trị như trạng thái đơn.
 
 </Td>
@@ -44,7 +42,6 @@ Các giá trị như trạng thái đơn.
 <Td className="border-0 w-[220px]"><code>returnStatus</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 `NONE`: Không hoàn trả; `PARTIAL`: đã hoàn một phần; `FULL`: đã hoàn hết số lượng còn lại.
 
 </Td>
@@ -53,7 +50,6 @@ Các giá trị như trạng thái đơn.
 <Td className="border-0 w-[220px]"><code>hasPendingReturn</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">boolean</code>
-
 Có yêu cầu hoàn trả đang chờ xử lý.
 
 </Td>
@@ -62,7 +58,6 @@ Có yêu cầu hoàn trả đang chờ xử lý.
 <Td className="border-0 w-[220px]"><code>hasRefundingReturn</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">boolean</code>
-
 Có yêu cầu đang xử lý hoàn tiền.
 
 </Td>
@@ -74,8 +69,8 @@ Có yêu cầu đang xử lý hoàn tiền.
 
 Ví phải đủ điều kiện và khả năng thanh toán. Đơn SIM vật lý yêu cầu tổ chức đã cấu hình địa chỉ và số điện thoại. Thông tin giao hàng lấy từ hồ sơ này.
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+<div className="grid grid-cols-1 2xl:grid-cols-2  gap-5 w-full">
+<div className="flex-1 min-w-1 order-2 2xl:order-1">
 
 ##### Request Headers
 
@@ -85,7 +80,6 @@ Ví phải đủ điều kiện và khả năng thanh toán. Đơn SIM vật lý
 <Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
 </Td>
@@ -101,7 +95,6 @@ Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [các
 <Td className="border-0 w-[220px]"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Chuỗi bắt buộc, duy nhất theo tổ chức và mode. Gửi lại ID đã dùng sẽ bị từ chối; sau timeout hãy tra cứu đơn trước khi thử lại.
 
 </Td>
@@ -121,7 +114,6 @@ Chuỗi bắt buộc, duy nhất theo tổ chức và mode. Gửi lại ID đã 
 <Td className="border-0 w-[220px]"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Chuỗi bắt buộc, không trùng trong request.
 
 </Td>
@@ -130,7 +122,6 @@ Chuỗi bắt buộc, không trùng trong request.
 <Td className="border-0 w-[220px]"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 SKU sản phẩm đang hoạt động, bắt buộc và không trùng trong request.
 
 </Td>
@@ -139,7 +130,6 @@ SKU sản phẩm đang hoạt động, bắt buộc và không trùng trong requ
 <Td className="border-0 w-[220px]"><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số nguyên bắt buộc từ 1 đến 500.
 
 </Td>
@@ -153,7 +143,6 @@ Số nguyên bắt buộc từ 1 đến 500.
 <Td className="border-0 w-[220px]"><code>deliveryType</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Tùy chọn: `WEBHOOK` (mặc định) hoặc `EMAIL`. Giao eSIM qua email yêu cầu cả hai trường khách hàng bên dưới.
 
 </Td>
@@ -162,7 +151,6 @@ Tùy chọn: `WEBHOOK` (mặc định) hoặc `EMAIL`. Giao eSIM qua email yêu 
 <Td className="border-0 w-[220px]"><code>customerEmail</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Email hợp lệ; bắt buộc khi giao eSIM qua `EMAIL`.
 
 </Td>
@@ -171,15 +159,12 @@ Email hợp lệ; bắt buộc khi giao eSIM qua `EMAIL`.
 <Td className="border-0 w-[220px]"><code>customerName</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Tên khách hàng; bắt buộc khi giao eSIM qua `EMAIL`.
 
 </Td>
 </Tr>
 </tbody>
 </Table>
-
-`success: true` xác nhận tạo đơn, chưa xác nhận giao hàng thành công. eSIM trả trạng thái ban đầu `PROCESSING`; SIM vật lý trả `NEW`. Response không chứa QR eSIM. Lấy dữ liệu từ chi tiết đơn hoặc webhook giao hàng. 
 
 ##### Responses
 
@@ -195,16 +180,14 @@ Tên khách hàng; bắt buộc khi giao eSIM qua `EMAIL`.
 <Td className="border-0 w-[220px]"><code>success</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">boolean</code>
-
 Xác nhận tạo đơn thành công; chưa xác nhận giao hàng hoàn tất.
-
+`success: true` xác nhận tạo đơn, chưa xác nhận giao hàng thành công. eSIM trả trạng thái ban đầu `PROCESSING`; SIM vật lý trả `NEW`. Response không chứa QR eSIM. Lấy dữ liệu từ chi tiết đơn hoặc webhook giao hàng. 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>orderId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID đơn hàng SimplifyTrip.
 
 </Td>
@@ -213,7 +196,6 @@ ID đơn hàng SimplifyTrip.
 <Td className="border-0 w-[220px]"><code>trackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
@@ -222,7 +204,6 @@ Mã tham chiếu đơn hàng của bạn.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -230,9 +211,7 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>items</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
-
-Danh sách item.
+<code className="text-red-500 text-xs">object[]</code>  Danh sách item.
 
 </Td>
 </Tr>
@@ -244,7 +223,6 @@ Danh sách item.
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID item SimplifyTrip; dùng làm orderItemId khi hoàn trả.
 
 </Td>
@@ -253,7 +231,6 @@ ID item SimplifyTrip; dùng làm orderItemId khi hoàn trả.
 <Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu item của bạn.
 
 </Td>
@@ -262,7 +239,6 @@ Mã tham chiếu item của bạn.
 <Td className="border-0 w-[220px]"><code>sku</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 SKU sản phẩm.
 
 </Td>
@@ -271,7 +247,6 @@ SKU sản phẩm.
 <Td className="border-0 w-[220px]"><code>quantity</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số lượng.
 
 </Td>
@@ -280,7 +255,6 @@ Số lượng.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -289,7 +263,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>type</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 
 </Td>
@@ -317,14 +290,12 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">number</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>statusCode</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 
 
 </Td>
@@ -335,7 +306,6 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
@@ -344,14 +314,13 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 </tbody>
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+<div className="flex-1 min-w-1 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -535,8 +504,8 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders' \
 
 Gửi `trackId` duy nhất và đúng một item gồm `subTrackId`, SKU loại `SIM_RECHARGE` và `iccids` chứa 1–50 ICCID không trùng. Số lượng được tính từ ICCID; không gửi `quantity`. Gói China Telecom chỉ hỗ trợ một ICCID. Response thành công có cấu trúc như tạo đơn, với `status: SUCCESS` ở đơn/item và `type: SIM_RECHARGE`.
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-1 order-2 2xl:order-1">
 
 ##### Request Headers
 
@@ -546,7 +515,6 @@ Gửi `trackId` duy nhất và đúng một item gồm `subTrackId`, SKU loại 
 <Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
 </Td>
@@ -562,7 +530,6 @@ Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [các
 <Td className="border-0 w-[220px]"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã đơn duy nhất theo tổ chức và mode.
 
 </Td>
@@ -570,8 +537,7 @@ Mã đơn duy nhất theo tổ chức và mode.
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">object[]</code>
-
+<code className="text-red-500 text-xs">object[]</code> 
 Đúng một item.
 
 </Td>
@@ -584,7 +550,6 @@ Mã đơn duy nhất theo tổ chức và mode.
 <Td className="border-0 w-[220px]"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu item.
 
 </Td>
@@ -593,7 +558,6 @@ Mã tham chiếu item.
 <Td className="border-0 w-[220px]"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 SKU loại SIM_RECHARGE.
 
 </Td>
@@ -601,8 +565,7 @@ SKU loại SIM_RECHARGE.
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>iccids</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">string[]</code>
-
+<code className="text-red-500 text-xs">string[]</code> 
 1–50 ICCID không trùng; gói China Telecom chỉ cho một ICCID.
 
 Trong chế độ `TEST_MODE` hãy thử với những iccid sau:
@@ -633,8 +596,7 @@ Trong chế độ `TEST_MODE` hãy thử với những iccid sau:
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>success</code></Td>
 <Td className="border-0">
-<code className="text-red-500 text-xs">boolean</code>
-
+<code className="text-red-500 text-xs">boolean</code> 
 Xác nhận tạo đơn thành công; chưa xác nhận giao hàng hoàn tất.
 
 </Td>
@@ -643,7 +605,6 @@ Xác nhận tạo đơn thành công; chưa xác nhận giao hàng hoàn tất.
 <Td className="border-0 w-[220px]"><code>orderId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID đơn hàng SimplifyTrip.
 
 </Td>
@@ -652,7 +613,6 @@ ID đơn hàng SimplifyTrip.
 <Td className="border-0 w-[220px]"><code>trackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
@@ -661,7 +621,6 @@ Mã tham chiếu đơn hàng của bạn.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -670,7 +629,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>items</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">object[]</code>
-
 Danh sách item.
 
 </Td>
@@ -683,7 +641,6 @@ Danh sách item.
 <Td className="border-0 w-[220px]"><code>subOrderId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID item SimplifyTrip; dùng làm orderItemId khi hoàn trả.
 
 </Td>
@@ -692,7 +649,6 @@ ID item SimplifyTrip; dùng làm orderItemId khi hoàn trả.
 <Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu item của bạn.
 
 </Td>
@@ -701,7 +657,6 @@ Mã tham chiếu item của bạn.
 <Td className="border-0 w-[220px]"><code>sku</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 SKU sản phẩm.
 
 </Td>
@@ -710,7 +665,6 @@ SKU sản phẩm.
 <Td className="border-0 w-[220px]"><code>quantity</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số lượng.
 
 </Td>
@@ -719,7 +673,6 @@ Số lượng.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -728,7 +681,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>type</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 
 </Td>
@@ -756,14 +708,12 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">number</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>statusCode</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 
 
 </Td>
@@ -774,7 +724,6 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
@@ -783,14 +732,13 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 </tbody>
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+<div className="flex-1 min-w-1 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -980,8 +928,8 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/recharge' \
 
 Chỉ hủy được đơn SIM vật lý có trạng thái đơn `NEW`, mọi item đều là `SIM` và có trạng thái `NEW`. `orderId` là ID đơn của SimplifyTrip hoặc `trackId`. `reason` là tùy chọn. Hủy đơn chuyển đơn và item sang `CANCELED`, đồng thời hoàn tổng tiền đơn vào ví. Đơn không đủ điều kiện trả 404.
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-1 order-2 2xl:order-1">
 
 ##### Request Headers
 
@@ -991,7 +939,6 @@ Chỉ hủy được đơn SIM vật lý có trạng thái đơn `NEW`, mọi it
 <Td className="border-0 w-[220px]"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
 </Td>
@@ -1007,7 +954,6 @@ Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [các
 <Td className="border-0 w-[220px]"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID đơn SimplifyTrip hoặc trackId.
 
 </Td>
@@ -1016,7 +962,6 @@ ID đơn SimplifyTrip hoặc trackId.
 <Td className="border-0 w-[220px]"><code>reason</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Lý do hủy (tùy chọn).
 
 </Td>
@@ -1041,14 +986,12 @@ Lý do hủy (tùy chọn).
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>trackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
@@ -1075,7 +1018,6 @@ Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -1084,7 +1026,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>reason</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Lý do yêu cầu/hủy; có thể null.
 
 </Td>
@@ -1093,7 +1034,6 @@ Lý do yêu cầu/hủy; có thể null.
 <Td className="border-0 w-[220px]"><code>items</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">object[]</code>
-
 Danh sách item.
 
 </Td>
@@ -1108,14 +1048,12 @@ Danh sách item.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu item của bạn.
 
 </Td>
@@ -1124,7 +1062,6 @@ Mã tham chiếu item của bạn.
 <Td className="border-0 w-[220px]"><code>sku</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 SKU sản phẩm.
 
 </Td>
@@ -1133,7 +1070,6 @@ SKU sản phẩm.
 <Td className="border-0 w-[220px]"><code>quantity</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số lượng.
 
 </Td>
@@ -1142,7 +1078,6 @@ Số lượng.
 <Td className="border-0 w-[220px]"><code>type</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Loại sản phẩm: `SIM_RECHARGE`.
 
 </Td>
@@ -1151,7 +1086,6 @@ Loại sản phẩm: `SIM_RECHARGE`.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -1179,14 +1113,12 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <code className="text-red-500 text-xs">number</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>statusCode</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 
 
 </Td>
@@ -1197,7 +1129,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
@@ -1206,14 +1137,13 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 </tbody>
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+<div className="flex-1 min-w-1 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
@@ -1379,10 +1309,10 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/cancel' \
 
 ## Api chi tiết đơn hàng
 
-Dùng ID đơn hoặc `trackId` duy nhất. Response được cache 5 giây.
+Dùng ID đơn hoặc `trackId` duy nhất. 
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-<div className="flex-1 min-w-1">
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-1 order-2 2xl:order-1">
 
 ##### Path Parameters
 
@@ -1392,7 +1322,6 @@ Dùng ID đơn hoặc `trackId` duy nhất. Response được cache 5 giây.
 <Td className="border-0 w-[220px]"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID đơn hoặc trackId duy nhất.
 
 </Td>
@@ -1416,14 +1345,12 @@ ID đơn hoặc trackId duy nhất.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>trackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
@@ -1477,7 +1404,6 @@ Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -1486,7 +1412,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>returnStatus</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 NONE, PARTIAL hoặc FULL; tách biệt với status đơn hàng.
 
 </Td>
@@ -1495,7 +1420,6 @@ NONE, PARTIAL hoặc FULL; tách biệt với status đơn hàng.
 <Td className="border-0 w-[220px]"><code>hasPendingReturn</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">boolean</code>
-
 Có yêu cầu hoàn trả đang chờ xử lý.
 
 </Td>
@@ -1504,7 +1428,6 @@ Có yêu cầu hoàn trả đang chờ xử lý.
 <Td className="border-0 w-[220px]"><code>hasRefundingReturn</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">boolean</code>
-
 Có yêu cầu đang xử lý hoàn tiền.
 
 </Td>
@@ -1513,7 +1436,6 @@ Có yêu cầu đang xử lý hoàn tiền.
 <Td className="border-0 w-[220px]"><code>totalBeforeRefund</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Tổng tiền trước hoàn trả (VND).
 
 </Td>
@@ -1522,7 +1444,6 @@ Tổng tiền trước hoàn trả (VND).
 <Td className="border-0 w-[220px]"><code>total</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Tổng tiền còn lại sau hoàn trả (VND).
 
 </Td>
@@ -1531,7 +1452,6 @@ Tổng tiền còn lại sau hoàn trả (VND).
 <Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 
 </Td>
@@ -1540,7 +1460,6 @@ Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 <Td className="border-0 w-[220px]"><code>error</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 
 
 </Td>
@@ -1558,7 +1477,6 @@ Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 <Td className="border-0 w-[220px]"><code>items</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">object[]</code>
-
 Danh sách item.
 
 </Td>
@@ -1573,14 +1491,12 @@ Danh sách item.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>subTrackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu item của bạn.
 
 </Td>
@@ -1589,7 +1505,6 @@ Mã tham chiếu item của bạn.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -1598,7 +1513,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>quantity</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số lượng.
 
 </Td>
@@ -1607,7 +1521,6 @@ Số lượng.
 <Td className="border-0 w-[220px]"><code>quantityReturned</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số lượng đã hoàn trả thành công.
 
 </Td>
@@ -1616,7 +1529,6 @@ Số lượng đã hoàn trả thành công.
 <Td className="border-0 w-[220px]"><code>iccids</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string[]</code>
-
 Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 
 </Td>
@@ -1625,7 +1537,6 @@ Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 <Td className="border-0 w-[220px]"><code>price</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Đơn giá (VND).
 
 </Td>
@@ -1634,20 +1545,19 @@ Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 <Td className="border-0 w-[220px]"><code>type</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>productId</code></Td>
+<Td className="border-0 w-[220px]"><code>spu</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code> 
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>productVariationId</code></Td>
+<Td className="border-0 w-[220px]"><code>sku</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code> Thông tin kích hoạt eSIM.
 
@@ -1663,14 +1573,12 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>planAPN</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 
 
 </Td>
@@ -1681,14 +1589,12 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>pin</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 
 
 </Td>
@@ -1699,14 +1605,12 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>activationCode</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 
 
 </Td>
@@ -1717,14 +1621,12 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>qrCodeImg</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 
 
 </Td>
@@ -1743,7 +1645,6 @@ Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
 <Td className="border-0 w-[220px]"><code>returns</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">object[]</code>
-
 Lịch sử hoàn trả, mới nhất trước.
 
 </Td>
@@ -1758,14 +1659,12 @@ Lịch sử hoàn trả, mới nhất trước.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>trackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu đơn hàng của bạn.
 
 </Td>
@@ -1774,7 +1673,6 @@ Mã tham chiếu đơn hàng của bạn.
 <Td className="border-0 w-[220px]"><code>orderId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID đơn hàng SimplifyTrip.
 
 </Td>
@@ -1783,7 +1681,6 @@ ID đơn hàng SimplifyTrip.
 <Td className="border-0 w-[220px]"><code>orderTrackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu đơn gốc.
 
 </Td>
@@ -1828,7 +1725,6 @@ Mốc thời gian ISO; có thể null nếu chưa xảy ra.
 <Td className="border-0 w-[220px]"><code>status</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 
 </Td>
@@ -1837,7 +1733,6 @@ Trạng thái xử lý. Xem flow và điều kiện của endpoint.
 <Td className="border-0 w-[220px]"><code>reason</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Lý do yêu cầu/hủy; có thể null.
 
 </Td>
@@ -1846,7 +1741,6 @@ Lý do yêu cầu/hủy; có thể null.
 <Td className="border-0 w-[220px]"><code>rejectionReason</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Lý do từ chối; có thể null.
 
 </Td>
@@ -1855,7 +1749,6 @@ Lý do từ chối; có thể null.
 <Td className="border-0 w-[220px]"><code>returnType</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
 
 </Td>
@@ -1864,7 +1757,6 @@ FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều
 <Td className="border-0 w-[220px]"><code>refundFee</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Phí hoàn cơ bản (VND).
 
 </Td>
@@ -1873,7 +1765,6 @@ Phí hoàn cơ bản (VND).
 <Td className="border-0 w-[220px]"><code>extraFee</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Phụ phí (VND).
 
 </Td>
@@ -1882,7 +1773,6 @@ Phụ phí (VND).
 <Td className="border-0 w-[220px]"><code>extraFeeNote</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Ghi chú phụ phí; có thể null.
 
 </Td>
@@ -1891,7 +1781,6 @@ Ghi chú phụ phí; có thể null.
 <Td className="border-0 w-[220px]"><code>refundAmount</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 
 </Td>
@@ -1900,7 +1789,6 @@ Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
 <Td className="border-0 w-[220px]"><code>items</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">object[]</code>
-
 Danh sách item.
 
 </Td>
@@ -1915,14 +1803,12 @@ Danh sách item.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>orderItemId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 ID item của đơn gốc.
 
 </Td>
@@ -1931,25 +1817,22 @@ ID item của đơn gốc.
 <Td className="border-0 w-[220px]"><code>subOrderTrackId</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã tham chiếu item của đơn gốc.
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>productId</code></Td>
+<Td className="border-0 w-[220px]"><code>spu</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Mã sản phẩm (spu ở API return-request).
 
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
-<Td className="border-0 w-[220px]"><code>productVariationId</code></Td>
+<Td className="border-0 w-[220px]"><code>sku</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 SKU (sku ở API return-request).
 
 </Td>
@@ -1958,7 +1841,6 @@ SKU (sku ở API return-request).
 <Td className="border-0 w-[220px]"><code>productType</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 Loại sản phẩm (type ở API return-request).
 
 </Td>
@@ -1967,7 +1849,6 @@ Loại sản phẩm (type ở API return-request).
 <Td className="border-0 w-[220px]"><code>returnType</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string</code>
-
 FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
 
 </Td>
@@ -1976,7 +1857,6 @@ FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều
 <Td className="border-0 w-[220px]"><code>iccids</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">string[]</code>
-
 Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 
 </Td>
@@ -1985,7 +1865,6 @@ Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 <Td className="border-0 w-[220px]"><code>originalPrice</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Đơn giá gốc (VND).
 
 </Td>
@@ -1994,7 +1873,6 @@ Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
 <Td className="border-0 w-[220px]"><code>quantity</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 Số lượng.
 
 </Td>
@@ -2027,14 +1905,12 @@ Số lượng.
 <code className="text-red-500 text-xs">number</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
 <Td className="border-0 w-[220px]"><code>statusCode</code></Td>
 <Td className="border-0">
 <code className="text-red-500 text-xs">number</code>
-
 
 
 </Td>
@@ -2045,7 +1921,6 @@ Số lượng.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 <Tr className="border-0 !bg-inherit">
@@ -2054,14 +1929,13 @@ Số lượng.
 <code className="text-red-500 text-xs">string</code>
 
 
-
 </Td>
 </Tr>
 </tbody>
 </Table>
 </div>
 </div>
-<div className="flex-1 min-w-1">
+<div className="flex-1 min-w-1 order-1 2xl:order-2">
 <div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
@@ -2193,8 +2067,8 @@ curl --request GET 'https://merchant.simplifytrip.com/api/v1/orders/658441501843
       "iccids": [],
       "price": 100000,
       "type": "eSIM",
-      "productId": "example-product",
-      "productVariationId": "E23XY06GB08DFX",
+      "spu": "example-product",
+      "sku": "E23XY06GB08DFX",
       "eSims": [
         {
           "iccid": "8985200000000000001",
@@ -2204,7 +2078,8 @@ curl --request GET 'https://merchant.simplifytrip.com/api/v1/orders/658441501843
           "puk": "",
           "activationCode": "EXAMPLE-1",
           "qrCodeContent": "LPA:1$example.smdp.com$EXAMPLE-1",
-          "qrCodeImg": "https://example.com/qr-1.png"
+          "qrCodeImg": "https://example.com/qr-1.png",
+          "returnStatus": "NONE"
         },
         {
           "iccid": "8985200000000000002",
@@ -2214,12 +2089,46 @@ curl --request GET 'https://merchant.simplifytrip.com/api/v1/orders/658441501843
           "puk": "",
           "activationCode": "EXAMPLE-2",
           "qrCodeContent": "LPA:1$example.smdp.com$EXAMPLE-2",
-          "qrCodeImg": "https://example.com/qr-2.png"
+          "qrCodeImg": "https://example.com/qr-2.png",
+          "returnStatus": "NONE"
         }
       ]
     }
   ],
-  "returns": []
+  "returns": [
+    {
+      "id": "6aa577e10a519efcfb0e8755",
+      "returnTrackId": "partner-return-id",
+      "orderId": "658441501843542",
+      "orderTrackId": "partner-order-001",
+      "createdAt": "2026-09-12T16:03:45.714Z",
+      "completedAt": null,
+      "canceledAt": null,
+      "rejectedAt": null,
+      "reason": "string",
+      "rejectionReason": null,
+      "status": "REQUESTED",
+      "returnType": "PARTIAL",
+      "refundFee": 15000,
+      "extraFee": 0,
+      "extraFeeNote": null,
+      "refundAmount": 85000,
+      "items": [
+        {
+          "subOrderId": "6aa51f9be25063893dc033fd",
+          "subOrderTrackId": "11",
+          "spu": "example-product",
+          "sku": "E23XY06GB08DFX",
+          "type": "eSIM",
+          "returnType": "PARTIAL",
+          "iccids": [
+            "8985200000000000001"
+          ],
+          "quantity": 1
+        }
+      ]
+    }
+  ]
 }
 ```
 ```json Error
