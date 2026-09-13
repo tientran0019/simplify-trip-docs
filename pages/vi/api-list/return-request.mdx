@@ -1,239 +1,571 @@
 ---
 title: Api Trả hàng
 ---
-import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
-import ReactJson from 'src/components/ObjectDisplay'
+import { CopyToClipboard, Table, Td, Tr } from 'nextra/components'
+import styles from '../../../src/components/ApiReference/properties.module.css'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
 # Api Trả hàng
 
+
+
+Mọi endpoint yêu cầu `Authorization: Bearer <secretKey>` và `X-Api-Key: <publicKey>`. Mọi POST còn yêu cầu `Content-Type: application/json` và `X-Signature`, tính từ toàn bộ request body bằng `checksumKey`. Phải tính lại chữ ký khi thay đổi body. Xem [cách tạo chữ ký](/developers/signature). GET không yêu cầu `X-Signature`. Dữ liệu được giới hạn theo tổ chức và chế độ test/live của API key.
+
+<br />
+
+**Flow hoàn trả**
+
+1. Tra cứu [chi tiết đơn](/api-list/order#get-order-details-api), chọn item đủ điều kiện trong đơn `SUCCESS`.
+2. Tạo yêu cầu với `returnTrackId` mới và danh sách `items` cụ thể.
+3. Yêu cầu xử lý thủ công bắt đầu ở `REQUESTED`;  
+4. Tra cứu chi tiết yêu cầu hoặc xử lý [webhook](/webhooks#return-request-payload) `RETURN_ORDER_UPDATE`. `REFUNDING` là đang xử lý; `COMPLETED` là đã hoàn tất yêu cầu.
+5. Tra cứu lại đơn để lấy số lượng đã hoàn, tổng tiền hoàn và tổng tiền còn lại.
+
+<br />
+
+**Các trạng thái của yêu cầu trả hàng:**
+
+<Table rules="none" border={0} width="100%" className="border-0">
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0 w-[220px]"><code>`REQUESTED`</code></Td>
+<Td className="border-0"> 
+Chờ xử lý; có thể hủy.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0 w-[220px]"><code>`REFUNDING`</code></Td>
+<Td className="border-0"> 
+Đang hoàn tiền; không thể hủy.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0 w-[220px]"><code>`COMPLETED`</code></Td>
+<Td className="border-0"> 
+Yêu cầu hoàn tất. Khoản hoàn dương tạo giao dịch cộng ví, được xử lý bất đồng bộ.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0 w-[220px]"><code>`REJECTED`</code></Td>
+<Td className="border-0"> 
+Bị từ chối; xem `rejectionReason`.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0 w-[220px]"><code>`CANCELED`</code></Td>
+<Td className="border-0"> 
+Đã hủy khi còn chờ xử lý.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+<br />
+
+**Điều kiện hoàn trả**
+
+- Đơn và item được chọn phải là `SUCCESS`, trong vòng 6 tháng từ ngày tạo đơn, thuộc cùng tổ chức/mode.
+- Mỗi đơn chỉ có một yêu cầu đang chờ hoặc đang hoàn tiền tại một thời điểm. Có thể tạo yêu cầu mới khi yêu cầu trước đó đã hoàn thành `COMPLETED` hoặc `CANCELED`/`REJECTED`.
+- Loại bỏ số lượng/ICCID đã được giữ chỗ hoặc hoàn bởi các yêu cầu khác, trừ yêu cầu `CANCELED`/`REJECTED`. eSIM còn phải có trạng thái hoàn trả `NONE`.
+- Để hoàn toàn bộ, phải gửi đủ số lượng/ICCID còn đủ điều kiện. Server tự tính `FULL` hay `PARTIAL` dựa trên số lượng còn lại.
+
+<br />
+
+**Phí và xử lý**
+
+Phí cơ bản hiện tại là 15.000 VND cho mỗi eSIM hoặc SIM vật lý được hoàn; nạp SIM không có phí hoàn cơ bản. Tiền hoàn ban đầu của từng item là `max(đơn giá × số lượng hoàn − phí hoàn, 0)`. Yêu cầu cộng các khoản này; nếu tổng tiền đơn không dương thì phí và tiền hoàn cấp yêu cầu bằng 0. Khi xử lý có thể phát sinh `extraFee` cùng `extraFeeNote`; dùng `refundAmount` cuối cùng từ API để đối soát.
+
+Ví dụ hoàn một trong hai eSIM có đơn giá 100.000 VND: phí cơ bản 15.000 VND, tiền hoàn 85.000 VND. 
+
+
 ## Api tạo yêu cầu trả hàng
-Tạo yêu cầu trả hàng sau khi đơn hàng đã thành công
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Request Headers
 
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> 
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
-				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+##### Request Headers
 
-	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-				Id hệ thống của bạn tạo ra, dùng để định danh yêu cầu trả hàng, ví dụ trong trường hợp nhận được dữ liệu từ webhook, trackId sẽ giúp bạn nhận ra hệ thống cần xử lý yêu cầu nào
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
-				orderId của SimplifyTrip, bạn nhận được sau khi tạo đơn hàng thành công.
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>reason</code> </Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
-				Lý do bạn trả hàng (không bắt buộc)
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>returnType</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`FULL` | `PARTIAL`</code>
 
-				Trả lại toàn bộ đơn hàng hoặc chỉ trả một phần. Nếu là dạng trả toàn bộ đơn hàng, bạn sẽ không cần cung cấp `items`
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>items</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`Item[]`</code>
-				Danh sách các mặt hàng trong đơn hàng bạn muốn trả lại
-			</Td>
-		</Tr>
+Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-				<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-				<tbody>
-					<Tr className='border-0 !bg-inherit'>
-						<Td className='border-0 w-[calc(220px_-_36px)]'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
-						<Td className='border-0'>
-							<code className='text-red-500 text-xs'>`string`</code>
-							SKU của mặt hàng trong đơn hàng của bạn
-						</Td>
-					</Tr>
-					<Tr className='border-0 !bg-inherit'>
-						<Td className='border-0'><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
-						<Td className='border-0'>
-							<code className='text-red-500 text-xs'>`number`</code>
-							Số lượng hàng sẽ trả (phải bé hơn hoặc bằng với số lượng đã mua)
-						</Td>
-					</Tr>
-				</tbody>
-				</Table>
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>id</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-						Id của yêu cầu trả hàng
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>orderId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-						Id của đơn hàng bạn đã mua
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>trackId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-						Id hệ thống của bạn đã truyền lên
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>createdAt</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`datetime`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>reason</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-						Lý do trả hàng
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>status</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`REQUESTED`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>returnType</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`FULL` | `PARTIAL`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>refundAmount</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
- 						Số tiền sẽ được nhận lại khi trả hàng thành công
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>items</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`Item[]`</code>
-					</Td>
-				</Tr>
+##### Request Body
 
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-						<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-						<tbody>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0  pt-4   w-[calc(220px_-_36px)]'><code>productName</code></Td>
-								<Td className='border-0  pt-4'>
-									<code className='text-red-500 text-xs'>`string`</code>
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0'><code>sku</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`string`</code>
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0'><code>quantity</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`number`</code>
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0'><code>type</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
-								</Td>
-							</Tr>
-						</tbody>
-						</Table>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Chuỗi bắt buộc, không rỗng, duy nhất theo tổ chức và mode. Khác với `trackId` của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Chuỗi bắt buộc, không rỗng: ID đơn SimplifyTrip hoặc `trackId` đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Chuỗi tùy chọn.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+
+Mảng bắt buộc, có ít nhất một item. Mỗi item của đơn chỉ gửi một lần; không gửi ID và mã tham chiếu của cùng item thành hai dòng.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Bắt buộc: `subOrderId` từ tạo đơn, `items[].id` từ chi tiết đơn, hoặc `subTrackId` của item. Nên dùng ID item SimplifyTrip.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Với `SIM` vật lý: số nguyên dương, không vượt số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+
+Với `eSIM` hoặc `SIM_RECHARGE`: mảng ICCID không rỗng, là chuỗi không trùng, thuộc item và còn đủ điều kiện. Server tính số lượng từ mảng này. Với SIM vật lý, gửi quantity.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+##### Responses
+
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">201 Created</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID yêu cầu hoàn trả SimplifyTrip.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu yêu cầu hoàn trả của bạn.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID đơn hàng SimplifyTrip.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundingAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Lý do yêu cầu/hủy; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Lý do từ chối; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Trạng thái xử lý. Xem flow và điều kiện của endpoint.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+`FULL` hoặc `PARTIAL`, được server tính theo số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Phí hoàn cơ bản (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Phụ phí (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Ghi chú phụ phí; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+
+Danh sách item.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID item của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu item của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã sản phẩm.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+SKU sản phẩm.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+
+Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Số lượng.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
 				<code>/api/v1/return-requests</code>
@@ -243,391 +575,631 @@ Tạo yêu cầu trả hàng sau khi đơn hàng đã thành công
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Return%20Requests/ReturnRequestController_orderReturn`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Return%20Requests/ReturnRequestController_orderReturn`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'POST',
-			url: 'https://merchant.simplifytrip.com/api/v1/return-requests',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			}
-			data: {
-				'trackId': 'b4b08205-836e-4296-a054-52462089edf6',
-				"orderId": "52462089edf6",
-				"returnType": "PARTIAL",
-				"reason": "",
-				'items': [
-					{
-						'sku': 'E23XY06GB08DFX',
-						'quantity': 2
-					}
-				]
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/return-requests';
-		const options = {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			}
-			body: JSON.stringify({
-				"trackId": "b4b08205-836e-4296-a054-52462089edf6",
-				"orderId": "52462089edf6",
-				"returnType": "PARTIAL",
-				"reason": "",
-				"items": [
-					{
-						"sku": "E23XY06GB08DFX",
-						"quantity": 2
-					}
-				]
-			}),
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-			.catch(err => console.error(err));
+const response = await axios.request({
+  method: "POST",
+  url: "https://merchant.simplifytrip.com/api/v1/return-requests",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",
+  "content-type": "application/json",
+  "x-signature": "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY"
+},
+  data: {
+  "returnTrackId": "partner-return-001",
+  "orderId": "658441501843542",
+  "reason": "Customer requested a return",
+  "items": [
+    {
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "iccids": [
+        "8985200000000000001"
+      ]
+    }
+  ]
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
 $response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/return-requests', [
-	'body' => '{
-			"trackId": "b4b08205-836e-4296-a054-52462089edf6",
-			"orderId": "52462089edf6",
-			"returnType": "PARTIAL",
-			"reason": "",
-			"items": [
-				{
-					"sku": "E23XY06GB08DFX",
-					"quantity": 2
-				}
-			]
-	}',
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-		'x-signature' => '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-	],
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+    'content-type' => 'application/json',
+    'x-signature' => 'REPLACE_WITH_SIGNATURE_FOR_THIS_BODY',
+  ],
+  'body' => <<<'JSON'
+{
+  "returnTrackId": "partner-return-001",
+  "orderId": "658441501843542",
+  "reason": "Customer requested a return",
+  "items": [
+    {
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "iccids": [
+        "8985200000000000001"
+      ]
+    }
+  ]
+}
+JSON
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/return-requests");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/return-requests");
+var request = new RestRequest("", Method.Post);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03");,
-request.AddJsonBody("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }", false);
-
-var response = await client.PostAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY");
+request.AddStringBody("{\"returnTrackId\": \"partner-return-001\", \"orderId\": \"658441501843542\", \"reason\": \"Customer requested a return\", \"items\": [{\"subOrderId\": \"6740ce7f9d04259159bc6401\", \"iccids\": [\"8985200000000000001\"]}]}", DataFormat.Json);
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/return-requests"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-    .method("POST",  HttpRequest.BodyPublishers.ofString("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"orderId\": \"52462089edf6\", \"returnType\": \"PARTIAL\", \"reason\": \"\", \"items\": [ { \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }"))
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/return-requests"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .header("content-type", "application/json")
+      .header("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+      .method("POST", HttpRequest.BodyPublishers.ofString("{\"returnTrackId\": \"partner-return-001\", \"orderId\": \"658441501843542\", \"reason\": \"Customer requested a return\", \"items\": [{\"subOrderId\": \"6740ce7f9d04259159bc6401\", \"iccids\": [\"8985200000000000001\"]}]}"))
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
+  "strings"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/return-requests"
-
-	payload := strings.NewReader("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"orderId\": \"52462089edf6\", \"returnType\": \"PARTIAL\", \"reason\": \"\", \"items\": [ { \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("POST", "https://merchant.simplifytrip.com/api/v1/return-requests", strings.NewReader(`{"returnTrackId": "partner-return-001", "orderId": "658441501843542", "reason": "Customer requested a return", "items": [{"subOrderId": "6740ce7f9d04259159bc6401", "iccids": ["8985200000000000001"]}]}`))
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("content-type", "application/json")
+  req.Header.Set("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X 'POST' \
-  'https://merchant.simplifytrip.com/api/v1/return-requests' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-signature: 412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+curl --request POST 'https://merchant.simplifytrip.com/api/v1/return-requests' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Signature: REPLACE_WITH_SIGNATURE_FOR_THIS_BODY' \
+  --data '{
+  "returnTrackId": "partner-return-001",
+  "orderId": "658441501843542",
+  "reason": "Customer requested a return",
   "items": [
     {
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-      "sku": "E23XY06GB08DFX",
-      "quantity": 2
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "iccids": [
+        "8985200000000000001"
+      ]
     }
   ]
 }'
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Body cho SIM vật lý
+
+<CH.Code>
+```json SIM
+{
+  "returnTrackId": "partner-return-sim-001",
+  "orderId": "658441501843542",
+  "items": [
+    {
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "quantity": 1
+    }
+  ]
+}
+```
+</CH.Code>
+
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
-  "id": "52462089edf6",
-  "createdAt": "2025-12-01 09:25:03",
-  "reason": "",
+  "id": "6741ae68e65369e169a70757",
+  "returnTrackId": "partner-return-001",
+  "orderId": "658441501843542",
+  "orderTrackId": "partner-order-001",
+  "createdAt": "2026-09-12T08:00:00.000Z",
+  "refundingAt": null,
+  "completedAt": null,
+  "canceledAt": null,
+  "rejectedAt": null,
+  "reason": "Customer requested a return",
+  "rejectionReason": null,
   "status": "REQUESTED",
   "returnType": "PARTIAL",
-  "refundAmount": 100000,
-  "orderId": "658441501843542",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "refundFee": 15000,
+  "extraFee": 0,
+  "extraFeeNote": null,
+  "refundAmount": 85000,
   "items": [
     {
-      "productName": "SIM Đông Nam Á (7 nước) chỉ có data (Unlimited Data/ngày - 3 ngày)",
-      "sku": "AS7BCUNL03DPY",
-      "quantity": 2,
-	  "type": "SIM"
-	}
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "subOrderTrackId": "partner-item-001",
+      "spu": "example-product",
+      "sku": "E23XY06GB08DFX",
+      "type": "eSIM",
+      "returnType": "PARTIAL",
+      "iccids": [
+        "8985200000000000001"
+      ],
+      "quantity": 1
+    }
   ]
 }
-		```
+```
 ```json Error
 {
-  "timestamp": 1732328902280,
-  "statusCode": 400,
-  "errorCode": "BAD_REQUEST",
-  "message": "Vui lòng không để trống: trackId"
+  "timestamp": 1789200000000,
+  "statusCode": 404,
+  "errorCode": "NOT_FOUND",
+  "message": "Không tìm thấy đơn hàng hoặc yêu cầu đủ điều kiện"
 }
-		```
-		</CH.Code>
-
-	</div>
+```
+</CH.Code>
+</div>
 </div>
 
-
 ## Api huỷ yêu cầu hoàn tiền
-Huỷ của một yêu cầu hoàn tiền theo ID được cung cấp
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Request Headers
 
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> 
+Gửi chuỗi bắt buộc `returnId`, chứa ID yêu cầu SimplifyTrip hoặc `returnTrackId` của bạn. Chỉ hủy được trạng thái `REQUESTED`. Endpoint này cũng yêu cầu chữ ký của body hủy.
 
-				Signature là một chuỗi ký tự dùng để kiểm tra tính toàn vẹn dữ liệu trong việc truyền dữ liệu giữa hệ thống của bạn và SimplifyTrip. Bạn cần dùng `checksumKey` từ Api Key và `HMAC_SHA256` để tạo signature với data theo định dạng được sort theo alphabet. Tham khảo [Kiểm tra dữ liệu với signature](/developers/signature).
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
-	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>returnId -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> Id của yêu cầu trả hàng muốn huỷ
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+##### Request Headers
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-		<tbody>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 w-[220px]'><code>id</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-					Id yêu cầu trả hàng do SimplifyTrip tạo ra
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>trackId</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
 
-					Id hệ thống của bạn tạo
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>createdAt</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`datetime`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>returnType</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>` FULL | PARTIAL`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>status</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`CANCELED`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>reason</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>refundAmount</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`number`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>items</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`Item[]`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-					<tbody>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4   w-[calc(220px_-_36px)]'><code>productName</code></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>sku</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>quantity</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`number`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>type</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
+Chữ ký HMAC_SHA256 của toàn bộ request body với checksumKey. Xem [cách tạo chữ ký](/developers/signature).
 
-								Chủng loại của sản phẩm
-							</Td>
-						</Tr>
-					</tbody>
-					</Table>
-				</Td>
-			</Tr>
-	</tbody>
+</Td>
+</Tr>
+</tbody>
 </Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+</div>
+
+##### Request Body
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID yêu cầu SimplifyTrip hoặc returnTrackId của bạn.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+Trả cùng cấu trúc response với `status: CANCELED` và `canceledAt` được cập nhật. Xóa cờ chờ/đang hoàn trên đơn và giải phóng eSIM được chọn để có thể yêu cầu lại. Thao tác không hủy đơn gốc hay hoàn tất khoản hoàn tiền.
+
+##### Responses
+
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">201 Created</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID yêu cầu hoàn trả SimplifyTrip.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu yêu cầu hoàn trả của bạn.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID đơn hàng SimplifyTrip.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundingAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Lý do yêu cầu/hủy; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Lý do từ chối; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Trạng thái xử lý. Xem flow và điều kiện của endpoint.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Phí hoàn cơ bản (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Phụ phí (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Ghi chú phụ phí; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+
+Danh sách item.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID item của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu item của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã sản phẩm.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+SKU sản phẩm.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+
+Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Số lượng.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
 				<code>/api/v1/return-requests/cancel</code>
@@ -637,336 +1209,560 @@ Huỷ của một yêu cầu hoàn tiền theo ID được cung cấp
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Return%20Requests/ReturnRequestController_orderReturnCancel`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Return%20Requests/ReturnRequestController_orderReturnCancel`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'POST',
-			url: 'https://merchant.simplifytrip.com/api/v1/return-requests/cancel',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-			},
-			data: {
-				'returnId': '52462089edf6'
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/return-requests/cancel';
-		const options = {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-			},
-			body: JSON.stringify({
-				"returnId": "52462089edf6"
-			}),
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-	.catch(err => console.error(err));
+const response = await axios.request({
+  method: "POST",
+  url: "https://merchant.simplifytrip.com/api/v1/return-requests/cancel",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",
+  "content-type": "application/json",
+  "x-signature": "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY"
+},
+data: {
+  "returnId": "6741ae68e65369e169a70757"
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
-$response = $client->request('POST', 'https://merchant.simplifytrip.com/v1/return-requests/cancel', [
-	'body' => '{
-		"returnId": "52462089edf6"
-	}',
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-	],
+$response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/return-requests/cancel', [
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+    'content-type' => 'application/json',
+    'x-signature' => 'REPLACE_WITH_SIGNATURE_FOR_THIS_BODY',
+  ],
+  'body' => <<<'JSON'
+{
+  "returnId": "6741ae68e65369e169a70757"
+}
+JSON
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/return-requests/cancel");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/return-requests/cancel");
+var request = new RestRequest("", Method.Post);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddJsonBody("{\"returnId\": \"52462089edf6\" }", false);
-
-var response = await client.GetAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY");
+request.AddStringBody("{\"returnId\": \"6741ae68e65369e169a70757\"}", DataFormat.Json);
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/return-requests/cancel"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-   	.method("POST",  HttpRequest.BodyPublishers.ofString("{\"returnId\": \"52462089edf6\" }"))
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/return-requests/cancel"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .header("content-type", "application/json")
+      .header("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+      .method("POST", HttpRequest.BodyPublishers.ofString("{\"returnId\": \"6741ae68e65369e169a70757\"}"))
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
+  "strings"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/return-requests/cancel"
-
-	payload := strings.NewReader("{\"returnId\": \"52462089edf6\" }")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("POST", "https://merchant.simplifytrip.com/api/v1/return-requests/cancel", strings.NewReader(`{"returnId": "6741ae68e65369e169a70757"}`))
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("content-type", "application/json")
+  req.Header.Set("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X POST https://merchant.simplifytrip.com/api/v1/return-requests/cancel \
-	-H "Accept: application/json" \
-	-H "content-type: application/json" \
-	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
-	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
- 	-d '{
-  "returnId": "52462089edf6"
+curl --request POST 'https://merchant.simplifytrip.com/api/v1/return-requests/cancel' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Signature: REPLACE_WITH_SIGNATURE_FOR_THIS_BODY' \
+  --data '{
+  "returnId": "6741ae68e65369e169a70757"
 }'
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
-  "id": "6740ce7f9d04259159bc6401",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
-  "createdAt": "2024-11-22T18:33:35.127Z",
+  "id": "6741ae68e65369e169a70757",
+  "returnTrackId": "partner-return-001",
+  "orderId": "658441501843542",
+  "orderTrackId": "partner-order-001",
+  "createdAt": "2026-09-12T08:00:00.000Z",
+  "refundingAt": null,
+  "completedAt": null,
+  "canceledAt": "2026-09-12T08:01:00.000Z",
+  "rejectedAt": null,
+  "reason": "Customer requested a return",
+  "rejectionReason": null,
   "status": "CANCELED",
   "returnType": "PARTIAL",
-  "refundAmount": 840000,
-  "reason": null,
+  "refundFee": 15000,
+  "extraFee": 0,
+  "extraFeeNote": null,
+  "refundAmount": 85000,
   "items": [
     {
-      "productName": "SIM Đông Nam Á (7 nước) chỉ có data (Unlimited Data/ngày - 3 ngày)",
-      "quantity": 2,
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "subOrderTrackId": "partner-item-001",
+      "spu": "example-product",
       "sku": "E23XY06GB08DFX",
-      "type": "eSIM"
+      "type": "eSIM",
+      "returnType": "PARTIAL",
+      "iccids": [
+        "8985200000000000001"
+      ],
+      "quantity": 1
     }
   ]
 }
 ```
 ```json Error
 {
-  "timestamp": 1732331961614,
+  "timestamp": 1789200000000,
   "statusCode": 404,
   "errorCode": "NOT_FOUND",
-  "message": "Không tìm thấy yêu cầu trả hàng phù hợp"
+  "message": "Không tìm thấy đơn hàng hoặc yêu cầu đủ điều kiện"
 }
 ```
-		</CH.Code>
+</CH.Code>
+</div>
+</div>
 
-	</div>
+## Api chi tiết yêu cầu hoàn tiền
+
+Dùng `returnId` hoặc `returnTrackId`. Trả cùng cấu trúc như tạo yêu cầu, với trạng thái, phí và thời gian mới nhất. Sau timeout tạo yêu cầu hoặc lỗi mã tham chiếu trùng, hãy tra cứu bằng mã đã dùng trước khi quyết định tạo yêu cầu khác.
+
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
+
+##### Path Parameters
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+returnId hoặc returnTrackId của yêu cầu.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
 </div>
 
 
-## Api chi tiết yêu cầu hoàn tiền
-Trả về thông tin chi tiết của một yêu cầu hoàn tiền theo ID được cung cấp
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Path Parameters
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>id -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
 
-				Id hoặc trrackId của yêu cầu trả hàng muốn tra cứu - Hãy đảm bảo bạn dùng trackId không bị trùng lặp
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+##### Responses
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-		<tbody>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 w-[220px]'><code>id</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">200 OK</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-					Id yêu cầu trả hàng do SimplifyTrip tạo ra
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>trackId</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
 
-					Id hệ thống của bạn tạo
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>createdAt</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`datetime`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>returnType</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>` FULL | PARTIAL`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>status</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>` REQUESTED | REVIEWING | APPROVED | REJECTED | CANCELED`</code>
-					Trạng thái cầu trả hàng
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>reason</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>refundAmount</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`number`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>items</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`Item[]`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-					<tbody>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4   w-[calc(220px_-_36px)]'><code>productName</code></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>sku</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>quantity</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`number`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>type</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
+ID yêu cầu hoàn trả SimplifyTrip.
 
-								Chủng loại của sản phẩm
-							</Td>
-						</Tr>
-					</tbody>
-					</Table>
-				</Td>
-			</Tr>
-	</tbody>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu yêu cầu hoàn trả của bạn.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID đơn hàng SimplifyTrip.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundingAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+Mốc thời gian ISO; có thể null nếu chưa xảy ra.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Lý do yêu cầu/hủy; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Lý do từ chối; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Trạng thái xử lý. Xem flow và điều kiện của endpoint.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Phí hoàn cơ bản (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Phụ phí (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Ghi chú phụ phí; có thể null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Tiền hoàn (VND); trên đơn hàng là tổng cộng các lần hoàn tất.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+
+Danh sách item.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+ID item của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã tham chiếu item của đơn gốc.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Mã sản phẩm.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+SKU sản phẩm.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+Loại sản phẩm: eSIM, SIM hoặc SIM_RECHARGE.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+FULL hoặc PARTIAL, được server tính theo số lượng còn đủ điều kiện.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+
+Danh sách ICCID. Với hoàn SIM vật lý, mảng này rỗng.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+Số lượng.
+
+</Td>
+</Tr>
+</tbody>
 </Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
 				<code>/api/v1/return-requests/:id</code>
@@ -976,163 +1772,146 @@ Trả về thông tin chi tiết của một yêu cầu hoàn tiền theo ID đ�
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Return%20Requests/ReturnRequestController_orderDetails`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Return%20Requests/ReturnRequestController_orderDetails`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'GET',
-			url: 'https://merchant.simplifytrip.com/api/v1/return-requests/658441501843542',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/return-requests/658441501843542';
-		const options = {
-			method: 'GET',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-			}
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-	.catch(err => console.error(err));
+const response = await axios.request({
+  method: "GET",
+  url: "https://merchant.simplifytrip.com/api/v1/return-requests/6741ae68e65369e169a70757",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
-$response = $client->request('GET', 'https://merchant.simplifytrip.com/v1/return-requests/658441501843542', [
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-	],
+$response = $client->request('GET', 'https://merchant.simplifytrip.com/api/v1/return-requests/6741ae68e65369e169a70757', [
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+  ],
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/return-requests/658441501843542");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/return-requests/6741ae68e65369e169a70757");
+var request = new RestRequest("", Method.Get);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-
-var response = await client.GetAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/return-requests/658441501843542"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-    .method("GET", HttpRequest.BodyPublishers.noBody())
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/return-requests/6741ae68e65369e169a70757"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .method("GET", HttpRequest.BodyPublishers.noBody())
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/return-requests/658441501843542"
-
-	req, _ := http.NewRequest("GET", url, nil)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("GET", "https://merchant.simplifytrip.com/api/v1/return-requests/6741ae68e65369e169a70757", nil)
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X GET https://merchant.simplifytrip.com/api/v1/return-requests/658441501843542 \
-	-H "Accept: application/json" \
-	-H "content-type: application/json" \
-	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
-	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
-
+curl --request GET 'https://merchant.simplifytrip.com/api/v1/return-requests/6741ae68e65369e169a70757' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx'
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
-  "id": "6740ce7f9d04259159bc6401",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
-  "createdAt": "2024-11-22T18:33:35.127Z",
+  "id": "6741ae68e65369e169a70757",
+  "returnTrackId": "partner-return-001",
+  "orderId": "658441501843542",
+  "orderTrackId": "partner-order-001",
+  "createdAt": "2026-09-12T08:00:00.000Z",
+  "refundingAt": null,
+  "completedAt": null,
+  "canceledAt": null,
+  "rejectedAt": null,
+  "reason": "Customer requested a return",
+  "rejectionReason": null,
   "status": "REQUESTED",
   "returnType": "PARTIAL",
-  "refundAmount": 840000,
-  "reason": null,
+  "refundFee": 15000,
+  "extraFee": 0,
+  "extraFeeNote": null,
+  "refundAmount": 85000,
   "items": [
     {
-      "productName": "SIM Đông Nam Á (7 nước) chỉ có data (Unlimited Data/ngày - 3 ngày)",
-      "quantity": 2,
+      "subOrderId": "6740ce7f9d04259159bc6401",
+      "subOrderTrackId": "partner-item-001",
+      "spu": "example-product",
       "sku": "E23XY06GB08DFX",
-      "type": "eSIM"
+      "type": "eSIM",
+      "returnType": "PARTIAL",
+      "iccids": [
+        "8985200000000000001"
+      ],
+      "quantity": 1
     }
   ]
 }
 ```
 ```json Error
 {
-  "timestamp": 1732331961614,
+  "timestamp": 1789200000000,
   "statusCode": 404,
   "errorCode": "NOT_FOUND",
-  "message": "Không tìm thấy yêu cầu trả hàng phù hợp"
+  "message": "Không tìm thấy đơn hàng hoặc yêu cầu đủ điều kiện"
 }
 ```
-		</CH.Code>
-
-	</div>
+</CH.Code>
+</div>
 </div>
 
+## Lỗi và HTTP status
+
+GET thành công trả HTTP 200; POST hiện dùng HTTP 201. Validation, `returnTrackId` trùng, item trùng, đơn quá hạn/đã hoàn hết, có yêu cầu đang xử lý, số lượng/ICCID không hợp lệ hoặc hủy yêu cầu khác `REQUESTED` trả 400. Đơn không tồn tại hoặc chưa `SUCCESS`, và yêu cầu hoàn trả không tồn tại trả 404.

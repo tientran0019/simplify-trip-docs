@@ -4,8 +4,11 @@ title: eSIM Order Processing Workflow
 
 # eSIM Order Processing Workflow
 
-Here is the sequence flow of the integration
+1. Create an order with `POST /api/v1/orders`, signed with `X-Signature`. Send a unique `trackId` and save the returned `orderId` and each `subOrderId`.
+2. Use only `eSIM` items. The create response starts at `PROCESSING`; `success: true` only confirms creation.
+3. In live mode, fulfillment runs asynchronously. Receive the delivery webhook (default `deliveryType: WEBHOOK`), or choose `EMAIL` and provide `customerEmail` and `customerName`.
+4. Query `GET /api/v1/orders/:id` using the order ID or `trackId`. After `SUCCESS`, read `items[].eSims` for ICCIDs and activation/QR data.
 
-<div className="my-2 mx-auto max-w-[900px]">
+ <div className="my-2 mx-auto max-w-[900px]">
 	<img src="/workflows/esim-order.png" width="100%" />
 </div>

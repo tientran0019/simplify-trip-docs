@@ -4,7 +4,10 @@ title: Physical SIM Order Processing Workflow
 
 # Physical SIM Order Processing Workflow
 
-Here is the sequence flow of the integration
+1. Create an order with `POST /api/v1/orders`, signed with `X-Signature`. Send a unique `trackId` and save the returned `orderId` and each `subOrderId`.
+2. Use only `SIM` items and configure the institution’s address and phone before ordering. The new order starts at `NEW`.
+3. Follow confirmation and delivery updates (`CONFIRMED`, `DELIVERING`) until `SUCCESS`. Query `GET /api/v1/orders/:id` or process order webhooks.
+4. Before processing starts, cancel with signed `POST /api/v1/orders/cancel`. The order and every item must still be `NEW`. 
 
 <div className="my-2 mx-auto max-w-[900px]">
 	<img src="/workflows/sim-order.png" width="100%" />

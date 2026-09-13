@@ -1,12 +1,14 @@
 ---
-title: Quy trình xử lý eSIM Order
+title: Quy trình xử lý đơn eSIM
 ---
 
-# Quy trình xử lý eSIM Order
+# Quy trình xử lý đơn eSIM
 
-Here is the sequence flow of the integration
+1. Tạo đơn bằng `POST /api/v1/orders`, ký bằng `X-Signature`. Gửi `trackId` duy nhất, lưu `orderId` và từng `subOrderId` trả về.
+2. Chỉ dùng item loại `eSIM`. Response tạo đơn bắt đầu ở `PROCESSING`; `success: true` chỉ xác nhận đã tạo.
+3. Trong live mode, việc cấp eSIM xử lý bất đồng bộ. Nhận webhook giao hàng (`deliveryType: WEBHOOK` mặc định), hoặc chọn `EMAIL` và cung cấp `customerEmail`, `customerName`.
+4. Tra cứu `GET /api/v1/orders/:id` bằng ID đơn hoặc `trackId`. Khi `SUCCESS`, đọc `items[].eSims` để lấy ICCID và thông tin kích hoạt/QR. Xử lý `ERROR` là lỗi cấp hàng. 
  
-<div className="my-2 mx-auto max-w-[900px]">
+ <div className="my-2 mx-auto max-w-[900px]">
 	<img src="/workflows/esim-order.png" width="100%" />
 </div>
- 

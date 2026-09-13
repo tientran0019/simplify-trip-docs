@@ -22,4 +22,10 @@ export default {
 		// 	typesetting: 'article',
 		// },
 	},
+	'return-request': {
+		title: 'Returns / Refunds',
+		// theme: {
+		// 	typesetting: 'article',
+		// },
+	},
 };

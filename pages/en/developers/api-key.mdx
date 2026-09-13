@@ -1,4 +1,5 @@
 import { Callout, Table, Td, Tr } from 'nextra/components'
+import styles from '../../../src/components/ApiReference/properties.module.css'
 
 # API Key Management
 SimplifyTrip API uses API keys to authenticate your requests. You can view and manage your keys in <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline" target='_blank'>API Keys Settings</a>.
@@ -24,38 +25,48 @@ Go to <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'}  target='_b
 </div>
 
 Enter required information for API key creation:
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 w-full">
-	<div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 mt-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
+		<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 		<tbody>
 			<Tr className='border-0 !bg-inherit'>
 				<Td className='border-0'><code>named</code> - <span className="text-[10px] text-red-500">required</span></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+				<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					API key name
 				</Td>
 			</Tr>
 			<Tr className='border-0 !bg-inherit'>
 				<Td className='border-0'><code>webhook</code> - <span className="text-[10px] text-red-500">required</span></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+				<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Webhook endpoint URL to receive data from SimplifyTrip
 				</Td>
 			</Tr>
 			<Tr className='border-0 !bg-inherit'>
 				<Td className='border-0'><code>ip</code> - <span className="text-[10px] text-red-500">required</span></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`object`</code>
+				<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
+
 
 					IP whitelist. Only IPs in this list can use this API key.
 				</Td>
 			</Tr>
 		</tbody>
 		</Table>
+</div>
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 		<div className="my-5">
 			<img src="/screenshots/api-key-form.png" width="100%" />
 		</div>
@@ -72,38 +83,48 @@ API key details include the required information to send requests to SimplifyTri
 
 Your API Key and Secret Key have broad privileges. Keep them secure and never expose them in public places such as GitHub or client-side code.
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 w-full">
-	<div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 mt-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
+		<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 		<tbody>
 			<Tr className='border-0 !bg-inherit'>
 				<Td className='border-0'><code>apiKey</code> - <span className="text-[10px] text-red-500">required</span></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+				<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					API key sent in the `X-Api-Key` header
 				</Td>
 			</Tr>
 			<Tr className='border-0 !bg-inherit'>
 				<Td className='border-0'><code>secretKey</code> - <span className="text-[10px] text-red-500">required</span></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+				<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Secret key sent in `Authorization: Bearer ...` header
 				</Td>
 			</Tr>
 			<Tr className='border-0 !bg-inherit'>
 				<Td className='border-0'><code>checksumKey</code> - <span className="text-[10px] text-red-500">required</span></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+				<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Key used for signature verification [details](/developers/signature)
 				</Td>
 			</Tr>
 		</tbody>
 		</Table>
+</div>
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 		<div className="my-5">
 			<img src="/screenshots/api-key-info.png" width="100%" />
 		</div>

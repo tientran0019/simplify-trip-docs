@@ -1,0 +1,19 @@
+---
+title: Quy trình xử lý trả hàng / hoàn tiền
+---
+ 
+# Quy trình xử lý trả hàng / hoàn tiền
+
+Với đơn hàng đã thành công `SUCCESS` và đủ điều kiện trong vòng 6 tháng từ ngày tạo, gọi `POST /api/v1/return-requests` có chữ ký, gửi `returnTrackId` duy nhất, `orderId` gốc và các item cụ thể. Với eSIM hoặc gói data, gửi `orderItemId` và `iccids` đủ điều kiện; số lượng được tính từ danh sách ICCID. Với SIM vật lý, gửi `orderItemId` và `quantity` nguyên dương.
+
+Yêu cầu thường đi qua `REQUESTED → REFUNDING → COMPLETED`. Yêu cầu chờ xử lý có thể bị `REJECTED`, hoặc hủy qua `/return-requests/cancel` khi còn `REQUESTED`. Chờ hoàn tất trước khi yêu cầu hoàn tiếp phần còn đủ điều kiện của cùng đơn.
+
+Đơn giữ `SUCCESS`. Khi hoàn tất, `returnStatus` chuyển thành `PARTIAL` hoặc `FULL`, `quantityReturned` và `refundAmount` tăng, `total` giảm. Xem [Order API](/api-list/order), [Return Request API](/api-list/return-request) và [webhook](/webhooks) để biết payload và phí cụ thể.
+
+## Flow hoàn trả
+
+1. Tra cứu [chi tiết đơn](/api-list/order#get-order-details-api), chọn item đủ điều kiện trong đơn `SUCCESS`.
+2. Tạo yêu cầu với `returnTrackId` mới và danh sách `items` cụ thể.
+3. Yêu cầu xử lý thủ công bắt đầu ở `REQUESTED`; yêu cầu tự động đủ điều kiện có thể bắt đầu ở `REFUNDING`.
+4. Tra cứu chi tiết yêu cầu hoặc xử lý [webhook](/webhooks#return-request-payload) `RETURN_ORDER_UPDATE`. `REFUNDING` là đang xử lý; `COMPLETED` là đã hoàn tất yêu cầu.
+5. Tra cứu lại đơn để lấy số lượng đã hoàn, tổng tiền hoàn và tổng tiền còn lại.

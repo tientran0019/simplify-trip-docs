@@ -1,12 +1,14 @@
 ---
-title: Quy trình xử lý đơn hàng SIM Vật Lý
+title: Quy trình xử lý đơn SIM vật lý
 ---
 
-# Quy trình xử lý đơn hàng SIM Vật Lý
+# Quy trình xử lý đơn SIM vật lý
 
-Here is the sequence flow of the integration
+1. Tạo đơn bằng `POST /api/v1/orders`, ký bằng `X-Signature`. Gửi `trackId` duy nhất, lưu `orderId` và từng `subOrderId` trả về.
+2. Chỉ dùng item loại `SIM`, cấu hình địa chỉ và số điện thoại tổ chức trước khi đặt. Đơn mới bắt đầu ở `NEW`.
+3. Theo dõi xác nhận và giao hàng (`CONFIRMED`, `DELIVERING`) đến `SUCCESS`. Tra cứu `GET /api/v1/orders/:id` hoặc xử lý webhook đơn hàng.
+4. Trước khi xử lý, có thể hủy bằng `POST /api/v1/orders/cancel` có chữ ký. Đơn và mọi item phải còn `NEW`. 
  
 <div className="my-2 mx-auto max-w-[900px]">
 	<img src="/workflows/sim-order.png" width="100%" />
 </div>
- 

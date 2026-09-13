@@ -1,4 +1,5 @@
 import { CopyToClipboard, Link, Table, Td, Th, Tr, Callout } from 'nextra/components'
+import styles from '../../src/components/ApiReference/properties.module.css'
 
 # Webhook
 
@@ -62,8 +63,8 @@ Securing your endpoint is important to protect customer information. SimplifyTri
 ## Webhook list
 ### eSIM order payload
 Event payload after your eSIM purchase order is completed. Includes signature and order object with purchased eSIM list.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
 	##### Request Headers
 
 	<div className="mt-3">
@@ -75,61 +76,74 @@ Event payload after your eSIM purchase order is completed. Includes signature an
 
 	</div>
 	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Unique identifier of this webhook
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event type `PURCHASE_ORDER_SUCCESS` | `PURCHASE_ORDER_FAIL`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event creation time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event sent time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Mode: test or live `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`object`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
+
 
 				Contains order information including purchased eSIM list and identifiers...
 			</Td>
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 <CH.Code>
 ```json BodyData
 {
@@ -179,8 +193,8 @@ Event payload after your eSIM purchase order is completed. Includes signature an
 
 ### Physical SIM order payload
 Event payload when physical SIM order status changes. Includes signature and order status object.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
 	##### Request Headers
 
 	<div className="mt-3">
@@ -192,52 +206,64 @@ Event payload when physical SIM order status changes. Includes signature and ord
 
 	</div>
 	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Unique identifier of this webhook
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event type `PURCHASE_ORDER_UPDATE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event creation time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event sent time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Mode: test or live `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`object`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
+
 
 				Contains order information, including status `NEW` | `CONFIRMED` | `DELIVERING` | `SUCCESS` | `CANCELED`
 
@@ -245,9 +271,10 @@ Event payload when physical SIM order status changes. Includes signature and ord
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 <CH.Code>
 ```json BodyData
 {
@@ -285,8 +312,8 @@ Event payload when physical SIM order status changes. Includes signature and ord
 
 ### Return request payload
 Event payload when return request status changes. Includes signature and return-status object.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className="min-w-0 order-2 2xl:order-1">
 	##### Request Headers
 
 	<div className="mt-3">
@@ -298,87 +325,110 @@ Event payload when return request status changes. Includes signature and return-
 
 	</div>
 	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 					Unique identifier of this webhook
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event type `RETURN_ORDER_UPDATE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>createdAt</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event creation time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>sentDate</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`datetime`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`datetime`</code></Td>
+<Td className="border-0">
+
 
 				Webhook event sent time
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>mode</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
 
 				Mode: test or live `TEST_MODE` | `LIVE_MODE`
 			</Td>
 		</Tr>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>data</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`object`</code>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`object`</code></Td>
+<Td className="border-0">
 
-				Contains return request information, including status `REVIEWING` | `APPROVED` | `REJECTED`
+
+				Contains return progress. The completion event uses `status: COMPLETED`; do not treat `REFUNDING` as completed. Match `returnId`/`returnTrackId` to the return and `orderId`/`orderTrackId` to the original order. See [Return Request API](/api-list/return-request) for the full status flow.
 
 			</Td>
 		</Tr>
 	</tbody>
 	</Table>
+</div>
 
 	</div>
-	<div>
+	<div className="min-w-0 order-1 2xl:order-2">
 <CH.Code>
 ```json BodyData
 {
   "id": "6741ae7de65369e169a70758",
-  "sentDate": "2024-11-23T10:29:17.887Z",
-  "createdAt": "2024-11-23T10:29:17.887Z",
+  "sentDate": "2026-09-12T08:05:00.000Z",
+  "createdAt": "2026-09-12T08:05:00.000Z",
   "mode": "TEST_MODE",
   "type": "RETURN_ORDER_UPDATE",
   "data": {
-    "id": "6741ae68e65369e169a70757",
-	"createdAt": "2024-11-23T10:29:17.887Z",
-    "orderId": "7258736707",
-    "trackId": "fd66829c-f768-43a7-b147-9e92d44c4e81",
-	"status": "REVIEWING",
-	"reason": "reason",
-	"returnType": "FULL",
-	"refundAmount": 205000,
+    "returnId": "6741ae68e65369e169a70757",
+    "returnTrackId": "partner-return-001",
+    "orderId": "658441501843542",
+    "orderTrackId": "partner-order-001",
+    "createdAt": "2026-09-12T08:00:00.000Z",
+    "reason": "Customer requested a return",
+    "returnType": "PARTIAL",
+    "refundFee": 15000,
+    "extraFee": 0,
+    "refundAmount": 85000,
     "items": [
       {
-        "productName": "Southeast Asia SIM (7 countries), data-only (Unlimited Data/day - 3 days)",
-        "sku": "AS7BCUNL03DPY",
-        "quantity": 3,
-		"type": "SIM",
+        "orderItemId": "6740ce7f9d04259159bc6401",
+        "subOrderTrackId": "partner-item-001",
+        "spu": "example-product",
+        "sku": "E23XY06GB08DFX",
+        "type": "eSIM",
+        "returnType": "PARTIAL",
+        "iccids": [
+          "8985200000000000001"
+        ],
+        "quantity": 1
       }
-    ]
+    ],
+    "status": "COMPLETED",
+    "mode": "TEST_MODE"
   }
 }
 ```

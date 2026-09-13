@@ -1,211 +1,402 @@
 ---
 title: Order API
 ---
-import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
-import ReactJson from 'src/components/ObjectDisplay'
+import { CopyToClipboard, Table, Td, Tr } from 'nextra/components'
+import styles from '../../../src/components/ApiReference/properties.module.css'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>API list</a>
 # Order API
 
+
+
+All endpoints require `Authorization: Bearer <secretKey>` and `X-Api-Key: <publicKey>`. Every POST also requires `Content-Type: application/json` and `X-Signature`, calculated from the entire request body using `checksumKey`. Recalculate the signature whenever the body changes. See [signature generation](/developers/signature). GET requests do not require `X-Signature`. Data is scoped to the institution and the API key's test/live mode.
+
+<br />
+
+**Order and return flow**
+
+Create an eSIM or physical SIM order using `POST /api/v1/orders`; use `/orders/recharge` for data recharges. Save `orderId`, `trackId`, and each `subOrderId`. Look up `GET /orders/:id` or receive [webhooks](/webhooks) to track updates.
+
+Order `status` is separate from return progress. Successfully delivered orders remain `SUCCESS` during and after returns. Track returns using `returnStatus`, `hasPendingReturn`, `hasRefundingReturn`, `refundAmount`, `items[].quantityReturned`, and `returns[]`. Only newly created physical SIM orders can be canceled; for successful orders, use the [Return Request API](/api-list/return-request).
+
+
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+`NEW`, `PROCESSING`, `CONFIRMED`, `DELIVERING`, `SUCCESS`, `ERROR`, `CANCELED`.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items[].status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Same values as the order status.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnStatus</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+`NONE`: No returns; `PARTIAL`: partially returned; `FULL`: all remaining quantities have been returned.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hasPendingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">
+
+There is a pending return request.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hasRefundingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">
+
+There is a return request with a refund in progress.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
 ## Create order API
-Create an eSIM purchase order from SimplifyTrip.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Request Headers
 
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> 
+The wallet must be eligible for payment and able to cover the order. Physical SIM orders require the institution to have an address and phone number configured. Shipping information is taken from this profile.
 
-				A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
+<div className="grid grid-cols-1 2xl:grid-cols-2  gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+##### Request Headers
 
-	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-				ID generated by your system to identify the order. For example, when receiving webhook data, `trackId` helps map the event to the correct order.
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`Item[]`</code>
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-					<Table rules="none" border={0} width="100%" className='w-full table border-0 border-l'>
-						<tbody>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
+HMAC_SHA256 signature of the entire request body using checksumKey. See [signature generation](/developers/signature).
 
-								Item ID
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0 w-[calc(220px_-_36px)]'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
 
-								Product SKU from the Products API list
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0 w-[calc(220px_-_36px)]'><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`number`</code>
+##### Request Body
 
-								Number of SIMs to purchase
-							</Td>
-						</Tr>
-						</tbody>
-				</Table>
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" width="100%" className=''>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>success</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`boolean`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>orderId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+Required string, unique per institution and mode. Reusing an ID is rejected; after a timeout, look up the order before retrying.
 
-						ID generated by SimplifyTrip, used to query order information on SimplifyTrip
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>trackId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+Required array containing at least one item. All items must have the same product type (`eSIM` or `SIM`).
 
-						ID provided by your system
-					</Td>
-				</Tr>
-				<Tr className='!bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>items</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`Item[]`</code>
-					</Td>
-				</Tr>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-						<Table rules="none" border={0} width="100%" className='w-full table border-0 border-l'>
-						<tbody>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subOrderId</code></Td>
-								<Td className='border-0  pt-4'>
-									<code className='text-red-500 text-xs'>`string`</code>
+Required string, unique within the request.
 
-									Item ID generated by SimplifyTrip
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0  pt-4 w-[calc(220px_-_36px)]'><code>subTrackId</code></Td>
-								<Td className='border-0  pt-4'>
-									<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-									Item ID provided by your system
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0 w-[calc(220px_-_36px)]'><code>sku</code> </Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`string`</code>
+Required SKU of an active product, unique within the request.
 
-									Product SKU purchased
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0 w-[calc(220px_-_36px)]'><code>quantity</code> </Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`number`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
 
-									Number of items purchased
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0 w-[calc(220px_-_36px)]'><code>type</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`eSIM | SIM`</code>
+Required integer from 1 to 500.
 
-									Product type
-								</Td>
-							</Tr>
-						</tbody>
-						</Table>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>deliveryType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Optional: `WEBHOOK` (default) or `EMAIL`. Email delivery of eSIMs requires both customer fields below.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>customerEmail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Valid email address; required for eSIM delivery via `EMAIL`.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>customerName</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Customer name; required for eSIM delivery via `EMAIL`.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+##### Responses
+
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">201 Created</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>success</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">
+
+Confirms successful order creation; does not confirm completed delivery.
+`success: true` confirms order creation, not successful delivery. The initial status is `PROCESSING` for eSIMs and `NEW` for physical SIMs. The response does not include eSIM QR codes. Retrieve this data from the order details or delivery webhook.
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+SimplifyTrip order ID.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your order reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+List of items.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+SimplifyTrip item ID; use as orderItemId when requesting a return.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your item reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product SKU.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Quantity.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product type: eSIM, SIM, or SIM_RECHARGE.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
 				<code>/api/v1/orders</code>
@@ -215,174 +406,134 @@ Create an eSIM purchase order from SimplifyTrip.
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_order`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_order`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'POST',
-			url: 'https://merchant.simplifytrip.com/api/v1/orders',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			}
-			data: {
-				'trackId': 'b4b08205-836e-4296-a054-52462089edf6',
-				'items': [
-					{
-						'subTrackId': '958acd57-182f-4b5c-b408-5e93f646ddde',
-						'sku': 'E23XY06GB08DFX',
-						'quantity': 2
-					}
-				]
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/orders';
-		const options = {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			}
-			body: JSON.stringify({
-				"trackId": "b4b08205-836e-4296-a054-52462089edf6",
-				"items": [
-					{
-						"subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-						"sku": "E23XY06GB08DFX",
-						"quantity": 2
-					}
-				]
-			}),
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-			.catch(err => console.error(err));
+const response = await axios.request({
+  method: "POST",
+  url: "https://merchant.simplifytrip.com/api/v1/orders",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",
+  "content-type": "application/json",
+  "x-signature": "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY"
+},
+  data: {
+  "trackId": "partner-order-001",
+  "items": [
+    {
+      "subTrackId": "partner-item-001",
+      "sku": "E23XY06GB08DFX",
+      "quantity": 2
+    }
+  ]
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
 $response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/orders', [
-	'body' => '{
-			"trackId": "b4b08205-836e-4296-a054-52462089edf6",
-			"items": [
-				{
-					"subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-					"sku": "E23XY06GB08DFX",
-					"quantity": 2
-				}
-			]
-	}',
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-		'x-signature' => '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-	],
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+    'content-type' => 'application/json',
+    'x-signature' => 'REPLACE_WITH_SIGNATURE_FOR_THIS_BODY',
+  ],
+  'body' => <<<'JSON'
+{
+  "trackId": "partner-order-001",
+  "items": [
+    {
+      "subTrackId": "partner-item-001",
+      "sku": "E23XY06GB08DFX",
+      "quantity": 2
+    }
+  ]
+}
+JSON
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/orders");
+var request = new RestRequest("", Method.Post);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03");,
-request.AddJsonBody("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }", false);
-
-var response = await client.PostAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY");
+request.AddStringBody("{\"trackId\": \"partner-order-001\", \"items\": [{\"subTrackId\": \"partner-item-001\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2}]}", DataFormat.Json);
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-    .method("POST",  HttpRequest.BodyPublishers.ofString("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }"))
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .header("content-type", "application/json")
+      .header("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+      .method("POST", HttpRequest.BodyPublishers.ofString("{\"trackId\": \"partner-order-001\", \"items\": [{\"subTrackId\": \"partner-item-001\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2}]}"))
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
+  "strings"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/orders"
-
-	payload := strings.NewReader("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"quantity\": 2 } ] }")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("POST", "https://merchant.simplifytrip.com/api/v1/orders", strings.NewReader(`{"trackId": "partner-order-001", "items": [{"subTrackId": "partner-item-001", "sku": "E23XY06GB08DFX", "quantity": 2}]}`))
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("content-type", "application/json")
+  req.Header.Set("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X 'POST' \
-  'https://merchant.simplifytrip.com/api/v1/orders' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-signature: 412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Signature: REPLACE_WITH_SIGNATURE_FOR_THIS_BODY' \
+  --data '{
+  "trackId": "partner-order-001",
   "items": [
     {
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+      "subTrackId": "partner-item-001",
       "sku": "E23XY06GB08DFX",
       "quantity": 2
     }
@@ -391,255 +542,338 @@ curl -X 'POST' \
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
   "success": true,
   "orderId": "658441501843542",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "trackId": "partner-order-001",
+  "status": "PROCESSING",
   "items": [
     {
       "subOrderId": "6740ce7f9d04259159bc6401",
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
+      "subTrackId": "partner-item-001",
       "sku": "E23XY06GB08DFX",
       "quantity": 2,
-	  "type": "eSIM"
-	}
+      "status": "PROCESSING",
+      "type": "eSIM"
+    }
   ]
 }
-		```
+```
 ```json Error
 {
-  "timestamp": 1732328902280,
-  "statusCode": 400,
-  "errorCode": "BAD_REQUEST",
-  "message": "Please do not leave blank: trackId"
+  "timestamp": 1789200000000,
+  "statusCode": 404,
+  "errorCode": "NOT_FOUND",
+  "message": "No eligible order or request found"
 }
-		```
-		</CH.Code>
+```
+</CH.Code>
+</div>
+</div>
 
-	</div>
+## SIM data recharge API
+
+Send a unique `trackId` and exactly one item containing `subTrackId`, a SKU of type `SIM_RECHARGE`, and `iccids` with 1–50 unique ICCIDs. Quantity is calculated from the ICCIDs; do not send `quantity`. China Telecom plans support only one ICCID. A successful response has the same structure as order creation, with `status: SUCCESS` for the order and item, and `type: SIM_RECHARGE`.
+
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
+
+##### Request Headers
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+HMAC_SHA256 signature of the entire request body using checksumKey. See [signature generation](/developers/signature).
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+##### Request Body
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Order reference, unique per institution and mode.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+Exactly one item.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Item reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+SKU of type SIM_RECHARGE.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+1–50 unique ICCIDs; China Telecom plans allow only one ICCID.
+
+In `TEST_MODE`, try the following ICCIDs:
+
+`89860012017201244064`, `89860012017201244085`, `89860012017201244086`, `89860012017201244087`, `89860012017201244088`, `89860012017201244092`, `89860012017201244093`, `89860012017201244094`, `89860012017201244095`, `89860012017201244096`
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
 </div>
 
 
-## Recharge data onto the SIM card
-Top-up a data package onto a blank SIM card purchased from SimplifyTrip.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Request Headers
 
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> 
+##### Responses
 
-				A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">201 Created</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>success</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">
 
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+Confirms successful order creation; does not confirm completed delivery.
 
-	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>trackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-				ID generated by your system to identify the order. For example, when receiving webhook data, `trackId` helps map the event to the correct order.
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>items</code> - <span className="text-[10px] text-red-500">required</span></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`Item[]`</code>
-			</Td>
-		</Tr>
+SimplifyTrip order ID.
 
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-				<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-				<tbody>
-					<Tr className='border-0 !bg-inherit'>
-						<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subTrackId</code> - <span className="text-[10px] text-red-500">required</span></Td>
-						<Td className='border-0  pt-4'>
-							<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-							Item ID
-						</Td>
-					</Tr>
-					<Tr className='border-0 !bg-inherit'>
-						<Td className='border-0'><code>sku</code> - <span className="text-[10px] text-red-500">required</span></Td>
-						<Td className='border-0'>
-							<code className='text-red-500 text-xs'>`string`</code>
+Your order reference.
 
-							Product SKU from the Products API list
-						</Td>
-					</Tr>
-					<Tr className='border-0 !bg-inherit'>
-						<Td className='border-0'><code>iccids</code> - <span className="text-[10px] text-red-500">required</span></Td>
-						<Td className='border-0'>
-							<code className='text-red-500 text-xs'>`string[]`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-							List of SIM codes you want to top up.
+Processing status. See the endpoint's flow and conditions.
 
-							In `TEST_MODE`, try the following ICCIDs:
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
 
-							<code className='text-red-500 text-xs'>
-								` 
-								'89860012017201244064',
-								'89860012017201244085',
-								'89860012017201244086',
-								'89860012017201244087',
-								'89860012017201244088',
-								'89860012017201244092',
-								'89860012017201244093',
-								'89860012017201244094',
-								'89860012017201244095',
-								'89860012017201244096',
-								` 
-							</code>
-						</Td>
-					</Tr>
-				</tbody>
-				</Table>
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+List of items.
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>success</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`boolean`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>orderId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-						ID generated by SimplifyTrip, used to query order information on SimplifyTrip
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>trackId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
+SimplifyTrip item ID; use as orderItemId when requesting a return.
 
-						ID provided by your system
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>items</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`Item[]`</code>
-					</Td>
-				</Tr>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-						<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-						<tbody>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subOrderId</code></Td>
-								<Td className='border-0  pt-4'>
-									<code className='text-red-500 text-xs'>`string`</code>
+Your item reference.
 
-									Item ID generated by SimplifyTrip
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subTrackId</code></Td>
-								<Td className='border-0  pt-4'>
-									<code className='text-red-500 text-xs'>`string`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-									Item ID provided by your system
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0'><code>sku</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`string`</code>
+Product SKU.
 
-									SKU of the topped up item
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0'><code>quantity</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`number`</code>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
 
-									Number of SIM cards that have been topped up
-								</Td>
-							</Tr>
-							<Tr className='border-0 !bg-inherit'>
-								<Td className='border-0'><code>type</code></Td>
-								<Td className='border-0'>
-									<code className='text-red-500 text-xs'>`SIM_RECHARGE`</code>
+Quantity.
 
-									Product type
-								</Td>
-							</Tr>
-						</tbody>
-						</Table>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product type: eSIM, SIM, or SIM_RECHARGE.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
 				<code>/api/v1/orders/recharge</code>
@@ -649,399 +883,455 @@ Top-up a data package onto a blank SIM card purchased from SimplifyTrip.
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_rechargeData`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_rechargeData`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'POST',
-			url: 'https://merchant.simplifytrip.com/api/v1/orders/recharge',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			}
-			data: {
-				'trackId': 'b4b08205-836e-4296-a054-52462089edf6',
-				'items': [
-					{
-						'subTrackId': '958acd57-182f-4b5c-b408-5e93f646ddde',
-						'sku': 'E23XY06GB08DFX',
-						'iccids': [
-							'89860012017201244064',
-							'89860012017201244085', 
-						],
-					}
-				]
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/orders/recharge';
-		const options = {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			}
-			body: JSON.stringify({
-				"trackId": "b4b08205-836e-4296-a054-52462089edf6",
-				"items": [
-					{
-						"subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-						"sku": "E23XY06GB08DFX",
-						"iccids": [
-							"89860012017201244064",
-							"89860012017201244085"
-						]
-					}
-				]
-			}),
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-			.catch(err => console.error(err));
+const response = await axios.request({
+  method: "POST",
+  url: "https://merchant.simplifytrip.com/api/v1/orders/recharge",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",
+  "content-type": "application/json",
+  "x-signature": "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY"
+},
+  data: {
+  "trackId": "partner-recharge-001",
+  "items": [
+    {
+      "subTrackId": "partner-recharge-item-001",
+      "sku": "REPLACE_WITH_RECHARGE_SKU",
+      "iccids": [
+        "8985200000000000001"
+      ]
+    }
+  ]
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
 $response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/orders/recharge', [
-	'body' => '{
-			"trackId": "b4b08205-836e-4296-a054-52462089edf6",
-			"items": [
-				{
-					"subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-					"sku": "E23XY06GB08DFX",
-					"iccids": [
-						"89860012017201244064",
-						"89860012017201244085"
-					]
-				}
-			]
-	}',
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-		'x-signature' => '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-	],
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+    'content-type' => 'application/json',
+    'x-signature' => 'REPLACE_WITH_SIGNATURE_FOR_THIS_BODY',
+  ],
+  'body' => <<<'JSON'
+{
+  "trackId": "partner-recharge-001",
+  "items": [
+    {
+      "subTrackId": "partner-recharge-item-001",
+      "sku": "REPLACE_WITH_RECHARGE_SKU",
+      "iccids": [
+        "8985200000000000001"
+      ]
+    }
+  ]
+}
+JSON
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders/recharge");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/orders/recharge");
+var request = new RestRequest("", Method.Post);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03");,
-request.AddJsonBody("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"iccids\": [\"89860012017201244064\", \"89860012017201244085\"] } ] }", false);
-
-var response = await client.PostAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY");
+request.AddStringBody("{\"trackId\": \"partner-recharge-001\", \"items\": [{\"subTrackId\": \"partner-recharge-item-001\", \"sku\": \"REPLACE_WITH_RECHARGE_SKU\", \"iccids\": [\"8985200000000000001\"]}]}", DataFormat.Json);
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/recharge"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-    .method("POST",  HttpRequest.BodyPublishers.ofString("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"iccids\": [\"89860012017201244064\", \"89860012017201244085\"] } ] }"))
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/recharge"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .header("content-type", "application/json")
+      .header("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+      .method("POST", HttpRequest.BodyPublishers.ofString("{\"trackId\": \"partner-recharge-001\", \"items\": [{\"subTrackId\": \"partner-recharge-item-001\", \"sku\": \"REPLACE_WITH_RECHARGE_SKU\", \"iccids\": [\"8985200000000000001\"]}]}"))
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
+  "strings"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/orders/recharge"
-
-	payload := strings.NewReader("{\"trackId\": \"b4b08205-836e-4296-a054-52462089edf6\", \"items\": [ { \"subTrackId\": \"958acd57-182f-4b5c-b408-5e93f646ddde\", \"sku\": \"E23XY06GB08DFX\", \"iccids\": [\"89860012017201244064\", \"89860012017201244085\"] } ] }")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("POST", "https://merchant.simplifytrip.com/api/v1/orders/recharge", strings.NewReader(`{"trackId": "partner-recharge-001", "items": [{"subTrackId": "partner-recharge-item-001", "sku": "REPLACE_WITH_RECHARGE_SKU", "iccids": ["8985200000000000001"]}]}`))
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("content-type", "application/json")
+  req.Header.Set("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X 'POST' \
-  'https://merchant.simplifytrip.com/api/v1/orders/recharge' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-signature: 412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/recharge' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Signature: REPLACE_WITH_SIGNATURE_FOR_THIS_BODY' \
+  --data '{
+  "trackId": "partner-recharge-001",
   "items": [
     {
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-      "sku": "E23XY06GB08DFX",
+      "subTrackId": "partner-recharge-item-001",
+      "sku": "REPLACE_WITH_RECHARGE_SKU",
       "iccids": [
-		"89860012017201244064",
-		"89860012017201244085"
-	  ]
+        "8985200000000000001"
+      ]
     }
   ]
 }'
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
   "success": true,
   "orderId": "658441501843542",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
+  "trackId": "partner-recharge-001",
+  "status": "SUCCESS",
   "items": [
     {
       "subOrderId": "6740ce7f9d04259159bc6401",
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-      "sku": "E23XY06GB08DFX",
-      "quantity": 2,
-	  "type": "SIM_RECHARGE"
-	}
+      "subTrackId": "partner-recharge-item-001",
+      "sku": "REPLACE_WITH_RECHARGE_SKU",
+      "quantity": 1,
+      "status": "SUCCESS",
+      "type": "SIM_RECHARGE"
+    }
   ]
 }
-		```
+```
 ```json Error
 {
-  "timestamp": 1732328902280,
-  "statusCode": 400,
-  "errorCode": "BAD_REQUEST",
-  "message": "Invalid SIM card"
+  "timestamp": 1789200000000,
+  "statusCode": 404,
+  "errorCode": "NOT_FOUND",
+  "message": "No eligible order or request found"
 }
-		```
-		</CH.Code>
+```
+</CH.Code>
+</div>
+</div>
 
-	</div>
+## Cancel order API
+
+Only physical SIM orders with order status `NEW`, where all items are of type `SIM` and have status `NEW`, can be canceled. `orderId` is the SimplifyTrip order ID or `trackId`. `reason` is optional. Cancellation changes the order and items to `CANCELED` and refunds the full order amount to the wallet. Ineligible orders return 404.
+
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
+
+##### Request Headers
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>X-Signature</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+HMAC_SHA256 signature of the entire request body using checksumKey. See [signature generation](/developers/signature).
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+##### Request Body
+
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+SimplifyTrip order ID or trackId.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Cancellation reason (optional).
+
+</Td>
+</Tr>
+</tbody>
+</Table>
 </div>
 
 
-## Cancel order API
-Cancel an order by the provided ID.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Request Headers
+##### Responses
 
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>X-Signature -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> 
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">201 Created</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-				A signature is a string used to verify data integrity between your system and SimplifyTrip. Use `checksumKey` from API Key and `HMAC_SHA256` to generate signature on alphabetically sorted data format. See [Verify data with signature](/developers/signature).
 
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
-	##### Request Body
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>orderId -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> ID of the order to cancel
-			</Td>
-		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>reason</code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code> Cancel reason (optional)
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>id</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>trackId</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>createdAt</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`datetime`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>updatedAt</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`datetime`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>status</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`CANCELED`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>reason</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>items</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`Item[]`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-					<tbody>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>id</code></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subTrackId</code></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>status</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`CANCELED`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>sku</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`string`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>quantity</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`number`</code>
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>type</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
-							</Td>
-						</Tr>
-					</tbody>
-					</Table>
-				</Td>
-			</Tr>
-			</tbody>
-		</Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your order reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>updatedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Request/cancellation reason; may be null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+List of items.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your item reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product SKU.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Quantity.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product type: `SIM_RECHARGE`.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-green-500 rounded-[4px]'>POST</div>
 			<div className='flex-1'>
 				<code>/api/v1/orders/cancel</code>
@@ -1051,398 +1341,898 @@ Cancel an order by the provided ID.
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_orderCancel`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_orderCancel`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'POST',
-			url: 'https://merchant.simplifytrip.com/api/v1/orders/cancel',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			},
-			data: {
-				'orderId': '658441501843542',
-				'reason': 'Order canceled by user'
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/orders/cancel';
-		const options = {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-				'x-signature': '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-			},
-			body: JSON.stringify({
-				"orderId": "658441501843542",
-				"reason": "Order canceled by user"
-			}),
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-			.catch(err => console.error(err));
+const response = await axios.request({
+  method: "POST",
+  url: "https://merchant.simplifytrip.com/api/v1/orders/cancel",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",
+  "content-type": "application/json",
+  "x-signature": "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY"
+},
+  data: {
+  "orderId": "658441501843542",
+  "reason": "Customer canceled"
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
 $response = $client->request('POST', 'https://merchant.simplifytrip.com/api/v1/orders/cancel', [
-	'body' => '{
-		"orderId": "658441501843542"
-	}',
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-		'x-signature' => '412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03',
-	],
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+    'content-type' => 'application/json',
+    'x-signature' => 'REPLACE_WITH_SIGNATURE_FOR_THIS_BODY',
+  ],
+  'body' => <<<'JSON'
+{
+  "orderId": "658441501843542",
+  "reason": "Customer canceled"
+}
+JSON
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders/cancel");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/orders/cancel");
+var request = new RestRequest("", Method.Post);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03");,
-request.AddJsonBody("{\"orderId\": \"658441501843542\" }", false);
-
-var response = await client.PostAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY");
+request.AddStringBody("{\"orderId\": \"658441501843542\", \"reason\": \"Customer canceled\"}", DataFormat.Json);
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/cancel"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-    .method("POST",  HttpRequest.BodyPublishers.ofString("{\"orderId\": \"658441501843542\" }"))
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/cancel"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .header("content-type", "application/json")
+      .header("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+      .method("POST", HttpRequest.BodyPublishers.ofString("{\"orderId\": \"658441501843542\", \"reason\": \"Customer canceled\"}"))
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
+  "strings"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/orders/cancel"
-
-	payload := strings.NewReader("{\"orderId\": \"658441501843542\" }")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-signature": "412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("POST", "https://merchant.simplifytrip.com/api/v1/orders/cancel", strings.NewReader(`{"orderId": "658441501843542", "reason": "Customer canceled"}`))
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("content-type", "application/json")
+  req.Header.Set("x-signature", "REPLACE_WITH_SIGNATURE_FOR_THIS_BODY")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X 'POST' \
-  'https://merchant.simplifytrip.com/api/v1/orders/cancel' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx' \
-  -H 'x-signature: 412e915d2871504ed31be63c8f62a149a4410d34c4c42affc9006ef9917eaa03' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "orderId": "658441501843542"
+curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/cancel' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Signature: REPLACE_WITH_SIGNATURE_FOR_THIS_BODY' \
+  --data '{
+  "orderId": "658441501843542",
+  "reason": "Customer canceled"
 }'
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
   "id": "658441501843542",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
-  "createdAt": "2024-11-22T18:33:35.127Z",
-  "updatedAt": "2024-11-22T18:33:35.577Z",
+  "trackId": "partner-order-001",
+  "createdAt": "2026-09-12T07:00:00.000Z",
+  "updatedAt": "2026-09-12T07:01:00.000Z",
   "status": "CANCELED",
-  "reason": "Order canceled by user",
+  "reason": "Customer canceled",
   "items": [
     {
       "id": "6740ce7f9d04259159bc6401",
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-	  "status": "CANCELED",
+      "subTrackId": "partner-item-001",
+      "sku": "REPLACE_WITH_PHYSICAL_SIM_SKU",
       "quantity": 2,
-      "sku": "E23XY06GB08DFX",
-      "type": "eSIM"
+      "type": "SIM",
+      "status": "CANCELED"
     }
   ]
 }
 ```
 ```json Error
 {
-  "timestamp": 1732331961614,
+  "timestamp": 1789200000000,
   "statusCode": 404,
   "errorCode": "NOT_FOUND",
-  "message": "No matching order found"
+  "message": "No eligible order or request found"
 }
 ```
-		</CH.Code>
-
-	</div>
+</CH.Code>
+</div>
 </div>
 
-
 ## Get order details API
-Returns detailed information of an order by the provided ID.
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-	<div className='flex-1 min-w-1'>
-	##### Path Parameters
-	<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0 w-[220px]'><code>id -  <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0'>
-				<code className='text-red-500 text-xs'>`string`</code>
 
-				Order ID or `trackId` to query. Make sure `trackId` is unique.
-			</Td>
-		</Tr>
-	</tbody>
-	</Table>
+Use the order ID or unique `trackId`.
 
-	##### Responses
-	<div>
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">200 OK </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-		<tbody>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 w-[220px]'><code>id</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+<div className="flex-1 min-w-0 order-2 2xl:order-1">
 
-					Order ID generated by SimplifyTrip
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>trackId</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+##### Path Parameters
 
-					System-generated ID
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>createdAt</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`datetime`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>updatedAt</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`datetime`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>status</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`NEW | PROCESSING | CONFIRMED | DELIVERING | SUCCESS | ERROR | CANCELED | REFUNDED | PARTIALLY_REFUNDED | REFUNDING`</code>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code> - <span className="text-[10px] text-red-500">required</span></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
 
-					Order status
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>error</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`string`</code>
+Order ID or unique trackId.
 
-					Order failure reason, present when `status = ERROR`
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>total</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`number`</code>
-
-					Total order value
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0'><code>items</code></Td>
-				<Td className='border-0'>
-					<code className='text-red-500 text-xs'>`Item[]`</code>
-				</Td>
-			</Tr>
-			<Tr className='border-0 !bg-inherit'>
-				<Td className='border-0 p-0 pl-9 ' colSpan={2}>
-					<Table rules="none" border={0} width="100%" className='w-full border-0 border-l'>
-					<tbody>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>id</code></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
-
-								Item ID
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0  pt-4  w-[calc(220px_-_36px)]'><code>subTrackId</code></Td>
-							<Td className='border-0  pt-4'>
-								<code className='text-red-500 text-xs'>`string`</code>
-
-								Track Item ID
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>status</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`NEW | PROCESSING | CONFIRMED | DELIVERING | SUCCESS | ERROR | CANCELED | REFUNDED | PARTIALLY_REFUNDED | REFUNDING`</code>
-
-								Item status
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>sku</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`string`</code>
-
-								Product SKU from product list API
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>quantity</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`number`</code>
-
-								Number of SIMs to purchase
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>price</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`number`</code>
-
-								Unit price after applicable discounts
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>type</code></Td>
-							<Td className='border-0'>
-								<code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code>
-
-								Product type
-							</Td>
-						</Tr>
-						<Tr className='border-0 !bg-inherit'>
-							<Td className='border-0'><code>eSims</code></Td>
-							<Td className='border-0 json-custom'>
-								<ReactJson displayDataTypes={false} displayObjectSize={false} name="eSim[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white" collapsed={true}
-								src={{
-									"qrCodeContent": "string",
-									"qrCodeImg": "string",
-									"iccid": "string",
-									"planAPN": "string",
-									"smdpAddress": "string",
-									"pin": "string",
-									"puk": "string",
-									"activationCode": "string"
-								}} />
-							</Td>
-						</Tr>
-					</tbody>
-					</Table>
-				</Td>
-			</Tr>
-	</tbody>
+</Td>
+</Tr>
+</tbody>
 </Table>
-	</div>
-	<div className="border-t dark:border-gray-100/10 mt-5">
-		<div className="flex gap-2 items-center py-4">
-			<div className="flex-1 text-lg font-medium">4xx/5xx Error </div>
-			<code>application/json</code>
-			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
-		</div>
-		<Table rules="none" border={0} width="100%" className='border-0'>
-			<tbody>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0 w-[220px]'><code>timestamp</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`timestamp`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>statusCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`number`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>errorCode</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-				<Tr className='border-0 !bg-inherit'>
-					<Td className='border-0'><code>message</code></Td>
-					<Td className='border-0'>
-						<code className='text-red-500 text-xs'>`string`</code>
-					</Td>
-				</Tr>
-			</tbody>
-		</Table>
-	</div>
-	</div>
-	<div className='flex-1 min-w-1 '>
-		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+</div>
+
+##### Responses
+
+<div>
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">200 OK</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your order reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>confirmedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>deliveringAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>succeededAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnStatus</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+NONE, PARTIAL, or FULL; separate from the order status.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hasPendingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">
+
+There is a pending return request.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hasRefundingReturn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">
+
+There is a return request with a refund in progress.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>totalBeforeRefund</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Total amount before returns (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>total</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Remaining total amount after returns (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Refund amount (VND); on the order, this is the sum of all completed refunds.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>error</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>shippingAddress</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object &#124; null</code></Td>
+<Td className="border-0">
+
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+List of items.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your item reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Quantity.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantityReturned</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Quantity successfully returned.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+List of ICCIDs. This array is empty for physical SIM returns.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>price</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Unit price (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product type: eSIM, SIM, or SIM_RECHARGE.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+eSIM activation information.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccid</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>planAPN</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>smdpAddress</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>pin</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>puk</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>activationCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>qrCodeContent</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>qrCodeImg</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returns</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+Return history, newest first.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>trackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Your order reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+SimplifyTrip order ID.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Original order reference.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>completedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>canceledAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">datetime &#124; null</code></Td>
+<Td className="border-0">
+
+
+ISO timestamp; may be null if the event has not occurred.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>status</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Processing status. See the endpoint's flow and conditions.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>reason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Request/cancellation reason; may be null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>rejectionReason</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Rejection reason; may be null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+FULL or PARTIAL, calculated by the server based on the remaining eligible quantity.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Base refund fee (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFee</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Additional fee (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>extraFeeNote</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Additional fee note; may be null.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>refundAmount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Refund amount (VND); on the order, this is the sum of all completed refunds.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">
+
+List of items.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>orderItemId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Item ID from the original order.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>subOrderTrackId</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Item reference from the original order.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product code (spu in the return-request API).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+SKU (sku in the return-request API).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>productType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+Product type (type in the return-request API).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>returnType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+FULL or PARTIAL, calculated by the server based on the remaining eligible quantity.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>iccids</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string[]</code></Td>
+<Td className="border-0">
+
+List of ICCIDs. This array is empty for physical SIM returns.
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>originalPrice</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Original unit price (VND).
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>quantity</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+Quantity.
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+<div className="flex gap-2 items-center pt-4">
+<div className="flex-1 text-md font-bold">4xx/5xx Error</div>
+<code>application/json</code>
+<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>timestamp</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>statusCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>errorCode</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>message</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">
+
+
+
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
+</div>
+</div>
+<div className="flex-1 min-w-0 order-1 2xl:order-2">
+<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
 			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
 			<div className='flex-1'>
 				<code>/api/v1/orders/:id</code>
@@ -1452,172 +2242,185 @@ Returns detailed information of an order by the provided ID.
 		<div className='flex items-center mt-8'>
 
 			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
-			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_orderDetails`}>Try it on Swagger</a>
+			<a  target="_blank" rel="noreferrer" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Orders/OrderController_orderDetails`}>Try it on Swagger</a>
 		</div>
 <CH.Code>
-		```js Nodejs
-// Using axios
-		import axios from 'axios';
+```js Nodejs
+import axios from "axios";
 
-		const options = {
-			method: 'GET',
-			url: 'https://merchant.simplifytrip.com/api/v1/orders/658441501843542',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-			}
-		};
-
-		axios
-			.request(options)
-			.then(res => console.log(res.data))
-			.catch(err => console.error(err));
-
-// Using fetch api
-const url = 'https://merchant.simplifytrip.com/api/v1/orders/658441501843542';
-		const options = {
-			method: 'GET',
-			headers: {
-				accept: 'application/json',
-				'content-type': 'application/json',
-				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
-			}
-		};
-
-		fetch(url, options)
-			.then(res => res.json())
-			.then(json => console.log(json))
-	.catch(err => console.error(err));
+const response = await axios.request({
+  method: "GET",
+  url: "https://merchant.simplifytrip.com/api/v1/orders/658441501843542",
+  headers: {
+  "accept": "application/json",
+  "authorization": "Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+  "x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"
+}
+});
+console.log(response.data);
 ```
 ```php PHP
 <?php
 require_once('vendor/autoload.php');
 
 $client = new \GuzzleHttp\Client();
-
-$response = $client->request('GET', 'https://merchant.simplifytrip.com/v1/orders/658441501843542', [
-	'headers' => [
-		'accept' => 'application/json',
-		'content-type' => 'application/json',
-		'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
-		'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
-	],
+$response = $client->request('GET', 'https://merchant.simplifytrip.com/api/v1/orders/658441501843542', [
+  'headers' => [
+    'accept' => 'application/json',
+    'authorization' => 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+    'x-api-key' => 'pk_live_xxxxxxxxxxxxxxxxxx',
+  ],
 ]);
-
 echo $response->getBody();
 ```
 ```c# C#
 using RestSharp;
 
-
-var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/orders/658441501843542");
-var client = new RestClient(options);
-var request = new RestRequest("");
-request.AddHeader("content-type", "application/json");
+var client = new RestClient("https://merchant.simplifytrip.com/api/v1/orders/658441501843542");
+var request = new RestRequest("", Method.Get);
 request.AddHeader("accept", "application/json");
-request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
-request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx");,
-
-var response = await client.GetAsync(request);
-
-Console.WriteLine("{0}", response.Content);
-
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");
+request.AddHeader("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx");
+var response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 ```
 ```java Java
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/658441501843542"))
-    .header("accept", "application/json")
-    .header("content-type", "application/json")
-    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-    .method("GET", HttpRequest.BodyPublishers.noBody())
-    .build();
+import java.net.URI;
+import java.net.http.*;
 
-HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+class Example {
+  public static void main(String[] args) throws Exception {
+    HttpRequest request = HttpRequest.newBuilder()
+      .uri(URI.create("https://merchant.simplifytrip.com/api/v1/orders/658441501843542"))
+      .header("accept", "application/json")
+      .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+      .header("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+      .method("GET", HttpRequest.BodyPublishers.noBody())
+      .build();
+    var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
+  }
+}
 ```
 ```go Go
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io"
+  "fmt"
+  "io"
+  "net/http"
 )
 
 func main() {
-
-	url := "https://merchant.simplifytrip.com/api/v1/orders/658441501843542"
-
-	req, _ := http.NewRequest("GET", url, nil)
-
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
-	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(body))
-
+  req, err := http.NewRequest("GET", "https://merchant.simplifytrip.com/api/v1/orders/658441501843542", nil)
+  if err != nil { panic(err) }
+  req.Header.Set("accept", "application/json")
+  req.Header.Set("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx")
+  req.Header.Set("x-api-key", "pk_live_xxxxxxxxxxxxxxxxxx")
+  res, err := http.DefaultClient.Do(req)
+  if err != nil { panic(err) }
+  defer res.Body.Close()
+  data, err := io.ReadAll(res.Body)
+  if err != nil { panic(err) }
+  fmt.Println(string(data))
 }
 ```
 ```bash Curl
-curl -X GET https://merchant.simplifytrip.com/api/v1/orders/658441501843542 \
-	-H "Accept: application/json" \
-	-H "content-type: application/json" \
-	-H "X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx" \
-	-H "Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx" \
-
+curl --request GET 'https://merchant.simplifytrip.com/api/v1/orders/658441501843542' \
+  --header 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  --header 'X-Api-Key: pk_live_xxxxxxxxxxxxxxxxxx'
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
+
 <CH.Code>
 ```json Success
 {
   "id": "658441501843542",
-  "trackId": "b4b08205-836e-4296-a054-52462089edf6",
-  "createdAt": "2024-11-22T18:33:35.127Z",
-  "updatedAt": "2024-11-22T18:33:35.577Z",
+  "trackId": "partner-order-001",
+  "createdAt": "2026-09-12T07:00:00.000Z",
+  "confirmedAt": null,
+  "deliveringAt": null,
+  "canceledAt": null,
+  "succeededAt": "2026-09-12T07:00:10.000Z",
   "status": "SUCCESS",
-  "total": 840000,
+  "returnStatus": "NONE",
+  "hasPendingReturn": false,
+  "hasRefundingReturn": false,
+  "totalBeforeRefund": 200000,
+  "total": 200000,
+  "refundAmount": 0,
   "error": null,
+  "shippingAddress": null,
   "items": [
     {
       "id": "6740ce7f9d04259159bc6401",
-      "subTrackId": "958acd57-182f-4b5c-b408-5e93f646ddde",
-	  "status": "SUCCESS",
+      "subTrackId": "partner-item-001",
+      "status": "SUCCESS",
       "quantity": 2,
-      "price": 420000,
-      "sku": "E23XY06GB08DFX",
+      "quantityReturned": 0,
+      "iccids": [],
+      "price": 100000,
       "type": "eSIM",
+      "spu": "example-product",
+      "sku": "E23XY06GB08DFX",
       "eSims": [
         {
-		  "qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E259916",
-          "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
-          "iccid": "89812003916820397854",
-          "planAPN": "plus.4g",
-          "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
-          "pin": "1234",
-          "puk": "15095300",
-          "activationCode": "502F97EF09144E0C9D62FD781E259916"
+          "iccid": "8985200000000000001",
+          "planAPN": "internet",
+          "smdpAddress": "example.smdp.com",
+          "pin": "",
+          "puk": "",
+          "activationCode": "EXAMPLE-1",
+          "qrCodeContent": "LPA:1$example.smdp.com$EXAMPLE-1",
+          "qrCodeImg": "https://example.com/qr-1.png",
+          "returnStatus": "NONE"
         },
         {
-		  "qrCodeContent": "LPA:1$SECSMSMINIAPP.EASTCOMPEACE.COM$502F97EF09144E0C9D62FD781E255011",
-          "qrCodeImg": "https://files.simplifytrip.com/a11dd3c438f38f5383fa17c8ea2de3ef.png",
-          "iccid": "89812003916820392108",
-          "planAPN": "plus.4g",
-          "smdpAddress": "SECSMSMINIAPP.EASTCOMPEACE.COM",
-          "pin": "1234",
-          "puk": "15095300",
-          "activationCode": "502F97EF09144E0C9D62FD781E255011"
+          "iccid": "8985200000000000002",
+          "planAPN": "internet",
+          "smdpAddress": "example.smdp.com",
+          "pin": "",
+          "puk": "",
+          "activationCode": "EXAMPLE-2",
+          "qrCodeContent": "LPA:1$example.smdp.com$EXAMPLE-2",
+          "qrCodeImg": "https://example.com/qr-2.png",
+          "returnStatus": "NONE"
+        }
+      ]
+    }
+  ],
+  "returns": [
+    {
+      "id": "6aa577e10a519efcfb0e8755",
+      "returnTrackId": "partner-return-id",
+      "orderId": "658441501843542",
+      "orderTrackId": "partner-order-001",
+      "createdAt": "2026-09-12T16:03:45.714Z",
+      "completedAt": null,
+      "canceledAt": null,
+      "rejectedAt": null,
+      "reason": "string",
+      "rejectionReason": null,
+      "status": "REQUESTED",
+      "returnType": "PARTIAL",
+      "refundFee": 15000,
+      "extraFee": 0,
+      "extraFeeNote": null,
+      "refundAmount": 85000,
+      "items": [
+        {
+          "subOrderId": "6aa51f9be25063893dc033fd",
+          "subOrderTrackId": "11",
+          "spu": "example-product",
+          "sku": "E23XY06GB08DFX",
+          "type": "eSIM",
+          "returnType": "PARTIAL",
+          "iccids": [
+            "8985200000000000001"
+          ],
+          "quantity": 1
         }
       ]
     }
@@ -1626,14 +2429,16 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/orders/658441501843542 \
 ```
 ```json Error
 {
-  "timestamp": 1732331961614,
+  "timestamp": 1789200000000,
   "statusCode": 404,
   "errorCode": "NOT_FOUND",
-  "message": "No matching order found"
+  "message": "No eligible order or request found"
 }
 ```
-		</CH.Code>
-
-	</div>
+</CH.Code>
+</div>
 </div>
 
+## Errors and HTTP status
+
+Successful GET requests return HTTP 200. POST requests currently return HTTP 201. Handle all successful 2xx responses. Validation errors or duplicate references may return 400; missing products/orders or orders ineligible for cancellation return 404; product, shipping, or wallet condition errors return 422; a busy system may return 503.
