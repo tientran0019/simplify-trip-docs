@@ -18,7 +18,7 @@ All endpoints require `Authorization: Bearer <secretKey>` and `X-Api-Key: <publi
 1. Read the [order details](/api-list/order#get-order-details-api) and select eligible items from a `SUCCESS` order.
 2. Create a return with a new `returnTrackId` and explicit `items`.
 3. A manual request starts at `REQUESTED`; 
-4. Poll the return details or process `RETURN_ORDER_UPDATE` [webhooks](/webhooks#return-request-payload). `REFUNDING` means processing; `COMPLETED` means the return has completed.
+4. Poll the return details or process `RETURN_ORDER_UPDATE` [webhooks](/en/webhooks#return-request-payload). `REFUNDING` means processing; `COMPLETED` means the return has completed.
 5. Refresh order details to obtain cumulative returned quantities, refund amount and remaining total.
 
 

@@ -13,7 +13,7 @@
 }
 
 .fieldColumn {
-  width: 220px;
+  width: 240px; 
 }
 
 .typeColumn {
@@ -76,4 +76,17 @@
 
 :global(.dark) .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
   background-color: #374151;
+}
+
+.nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan]) {
+  padding-left: 100px;
+}
+
+.nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
+  left: 70px;
+  box-shadow: -40px 0 #e5e7eb;
+}
+
+:global(.dark) .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
+  box-shadow: -30px 0 #374151;
 }
