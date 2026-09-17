@@ -17,6 +17,6 @@ export default {
 		title: 'Quản lý thành viên',
 	},
 	wallets: {
-		title: 'Tài khoản',
+		title: 'Tài khoản thanh toán',
 	},
 };
