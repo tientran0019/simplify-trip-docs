@@ -80,7 +80,7 @@ There is a return request with a refund in progress.
 
 ## Create order API
 
-The wallet must be eligible for payment and able to cover the order. Physical SIM orders require the institution to have an address and phone number configured. Shipping information is taken from this profile.
+The payment account must be eligible for payment and able to cover the order. Physical SIM orders require the institution to have an address and phone number configured. Shipping information is taken from this profile.
 
 <div className="grid grid-cols-1 2xl:grid-cols-2  gap-5 w-full">
 <div className="flex-1 min-w-0 order-2 2xl:order-1">
@@ -1060,7 +1060,7 @@ curl --request POST 'https://merchant.simplifytrip.com/api/v1/orders/recharge' \
 
 ## Cancel order API
 
-Only physical SIM orders with order status `NEW`, where all items are of type `SIM` and have status `NEW`, can be canceled. `orderId` is the SimplifyTrip order ID or `trackId`. `reason` is optional. Cancellation changes the order and items to `CANCELED` and refunds the full order amount to the wallet. Ineligible orders return 404.
+Only physical SIM orders with order status `NEW`, where all items are of type `SIM` and have status `NEW`, can be canceled. `orderId` is the SimplifyTrip order ID or `trackId`. `reason` is optional. Cancellation changes the order and items to `CANCELED` and refunds the full order amount to the payment account. Ineligible orders return 404.
 
 <div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
 <div className="flex-1 min-w-0 order-2 2xl:order-1">
@@ -2457,4 +2457,4 @@ curl --request GET 'https://merchant.simplifytrip.com/api/v1/orders/658441501843
 
 ## Errors and HTTP status
 
-Successful GET requests return HTTP 200. POST requests currently return HTTP 201. Handle all successful 2xx responses. Validation errors or duplicate references may return 400; missing products/orders or orders ineligible for cancellation return 404; product, shipping, or wallet condition errors return 422; a busy system may return 503.
+Successful GET requests return HTTP 200. POST requests currently return HTTP 201. Handle all successful 2xx responses. Validation errors or duplicate references may return 400; missing products/orders or orders ineligible for cancellation return 404; product, shipping, or payment account condition errors return 422; a busy system may return 503.

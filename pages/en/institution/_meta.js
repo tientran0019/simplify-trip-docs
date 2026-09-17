@@ -17,6 +17,6 @@ export default {
 		title: 'Team management',
 	},
 	wallets: {
-		title: 'Wallets',
+		title: 'Payment accounts',
 	},
 };

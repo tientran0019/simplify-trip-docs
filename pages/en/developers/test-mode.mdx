@@ -28,7 +28,7 @@ import { Callout, Table, Td, Th, Tr } from 'nextra/components'
 
 ### Test Mode vs Live Mode
 
-All SimplifyTrip API requests run in either Test Mode or Live Mode. Objects in one mode are not available in the other mode. For example, in Test Mode, wallets cannot make live payments.
+All SimplifyTrip API requests run in either Test Mode or Live Mode. Objects in one mode are not available in the other mode. For example, in Test Mode, payment accounts cannot make live payments.
 
 <Table className='my-5'>
   <thead>
@@ -42,14 +42,14 @@ All SimplifyTrip API requests run in either Test Mode or Live Mode. Objects in o
   <tbody>
     <Tr>
       <Td>Test Mode</Td>
-      <Td>Use Test Mode and corresponding test API keys while building integration. In this mode, transactions, wallet balances, and product data are simulated.</Td>
-      <Td>API calls return mock objects. For example, you can retrieve and use test eSIM and wallet objects.</Td>
-      <Td>Use Test Mode wallets for testing. You cannot accept real payments or work with real wallets.</Td>
+      <Td>Use Test Mode and corresponding test API keys while building integration. In this mode, transactions, payment account balances, and product data are simulated.</Td>
+      <Td>API calls return mock objects. For example, you can retrieve and use test eSIM and payment account objects.</Td>
+      <Td>Use Test Mode payment accounts for testing. You cannot accept real payments or work with real payment accounts.</Td>
     </Tr>
     <Tr>
       <Td>Live Mode</Td>
-      <Td>Use Live Mode and corresponding live API keys when you are ready to launch and accept real money. In this mode, all transactions are real and wallet balances are deducted for real.</Td>
-      <Td>API calls return real objects. For example, you can retrieve and use real eSIM and wallet objects.</Td>
+      <Td>Use Live Mode and corresponding live API keys when you are ready to launch and accept real money. In this mode, all transactions are real and payment account balances are deducted for real.</Td>
+      <Td>API calls return real objects. For example, you can retrieve and use real eSIM and payment account objects.</Td>
       <Td>Products returned by SimplifyTrip are live and can be delivered to your customers.</Td>
     </Tr>
   </tbody>

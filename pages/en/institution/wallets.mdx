@@ -1,31 +1,31 @@
 ---
-title: Wallets
+title: Payment accounts
 ---
 import { Callout } from 'nextra/components'
 
-# Institution wallets
+# Institution Payment accounts
 
-This section contains wallet information for your institution. Access it at <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/wallet'} className="underline" target='_blank'>Wallet management</a>.
+This section contains wallet information for your institution. Access it at <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/wallet'} className="underline" target='_blank'>Payment accounts management</a>.
 
-There are two wallet types:
+There are two account types:
 
-- **Top-up wallet:** Default wallet type for newly onboarded institutions. You must top up in advance before using services. Keep your wallet balance positive to avoid service interruption. When balance drops below the threshold, Owner receives an email reminder to top up. Each order deducts the corresponding amount from this wallet.
+- **Top-up account:** Default account type for newly onboarded institutions. You must top up in advance before using services. Keep your account balance positive to avoid service interruption. When balance drops below the threshold, Owner receives an email reminder to top up. Each order deducts the corresponding amount from this account.
 
-- **Credit wallet:** Available for eligible institutions. Contact SimplifyTrip for eligibility conditions. With a credit wallet, transactions can be made before top-up and charges are accumulated as debt. At month-end, SimplifyTrip issues a statement and sends debt notification to Owner. You have 10 days to settle debt; overdue debt may lock the wallet and interrupt services.
+- **Debit account:** Available for eligible institutions. Contact SimplifyTrip for eligibility conditions. With a debit account, transactions can be made before top-up and charges are accumulated as debt. At month-end, SimplifyTrip issues a statement and sends debt notification to Owner. You have 5 days to settle debt; overdue debt may lock the account and interrupt services.
 
 <Callout type="info">
- 	You can choose either wallet type as your default payment wallet. SimplifyTrip deducts transaction amounts from the default wallet.
+ 	You can choose either account type as your default payment account. SimplifyTrip deducts transaction amounts from the default account.
 </Callout>
 
-### Wallets in Test Mode
+### Payment accounts in Test Mode
 
 SimplifyTrip provides separate environments to support safe testing.
 
-In Test Mode, all transactions are simulated, so wallets in this mode are virtual. Funds are for testing only; you can top up freely without real cost. Credit-wallet debt in Test Mode does not require real settlement.
+In Test Mode, all transactions are simulated, so Payment accounts in this mode are virtual. Funds are for testing only; you can top up freely without real cost. Debit account debt in Test Mode does not require real settlement.
 
-## Activate wallet
+## Activate account
 
-Access at <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/wallet'} className="underline" target='_blank'>Wallet management</a>.
+Access at <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/wallet'} className="underline" target='_blank'>Payment accounts management</a>.
 
 <div className="my-5">
 	<img src="/screenshots/wallets.png" width="100%" />
