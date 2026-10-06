@@ -26,10 +26,10 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 	<tbody>
 		<Tr className='border-0 !bg-inherit'>
 			<Td className='border-0'><code>type</code></Td>
-			<Td className='border-0'><code className='text-red-500 text-xs'>`eSIM | SIM | SIM_RECHARGE`</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
 <Td className="border-0">
 
-
+				`eSIM | SIM | SIM_RECHARGE`
 				Loại sản phẩm mà bạn muốn lọc, bỏ trống để lấy tất cả
 			</Td>
 		</Tr>
@@ -478,64 +478,7 @@ curl -X 'GET' \
           "apn": "Auto",
           "pointContactType": null,
           "hotsPot": true
-        },
-        {
-          "sku": "EHKXY02GB06DPY",
-          "name": {
-            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
-            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
-          },
-          "price": 313000,
-          "priceFloor": 313000,
-          "discount": 0,
-          "highFlowSize": 2097152,
-          "days": 6,
-          "package": "DAILY",
-          "data": "2GB",
-          "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
-          "apn": "Auto",
-          "pointContactType": null,
-          "hotsPot": true
-        },
-        {
-          "sku": "EHKXY01GB01DPY",
-          "name": {
-            "vi": "eSIM HongKong tốc độ cao 4G, chỉ có data (1GB/ngày - 1 ngày)",
-            "en": "4G high-speed Hongkong travel eSIM, data only (1GB/day - 1 day)"
-          },
-          "price": 93000,
-          "priceFloor": 93000,
-          "discount": 0,
-          "highFlowSize": 1048576,
-          "days": 1,
-          "package": "DAILY",
-          "data": "1GB",
-          "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
-          "apn": "Auto",
-          "pointContactType": null,
-          "hotsPot": true
-        },
-        {
-          "sku": "EHKXY02GB04DPY",
-          "name": {
-            "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 4 ngày)",
-            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 4 days)"
-          },
-          "price": 230000,
-          "priceFloor": 230000,
-          "discount": 0,
-          "highFlowSize": 2097152,
-          "days": 4,
-          "package": "DAILY",
-          "data": "2GB",
-          "throttleSpeed": "128kpbs",
-          "smsCall": "Không dùng được Tiktok",
-          "apn": "Auto",
-          "pointContactType": null,
-          "hotsPot": true
-        }
+        } 
       ]
     },
 	...
@@ -918,64 +861,409 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
       "apn": "Auto",
       "pointContactType": null,
       "hotsPot": true
-    },
-    {
-      "sku": "EHKXY02GB06DPY",
-      "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 6 ngày)",
-        "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 6 days)"
-      },
-      "price": 313000,
-      "priceFloor": 313000,
-      "discount": 0,
-      "highFlowSize": 2097152,
-      "days": 6,
-      "package": "DAILY",
-      "data": "2GB",
-      "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
-      "apn": "Auto",
-      "pointContactType": null,
-      "hotsPot": true
-    },
-    {
-      "sku": "EHKXY01GB01DPY",
-      "name": {
-        "vi": "eSIM HongKong tốc độ cao 4G, chỉ có data (1GB/ngày - 1 ngày)",
-        "en": "4G high-speed Hongkong travel eSIM, data only (1GB/day - 1 day)"
-      },
-      "price": 93000,
-      "priceFloor": 93000,
-      "discount": 0,
-      "highFlowSize": 1048576,
-      "days": 1,
-      "package": "DAILY",
-      "data": "1GB",
-      "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
-      "apn": "Auto",
-      "pointContactType": null,
-      "hotsPot": true
-    },
-    {
-      "sku": "EHKXY02GB04DPY",
-      "name": {
-        "vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 4 ngày)",
-        "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 4 days)"
-      },
-      "price": 230000,
-      "priceFloor": 230000,
-      "discount": 0,
-      "highFlowSize": 2097152,
-      "days": 4,
-      "package": "DAILY",
-      "data": "2GB",
-      "throttleSpeed": "128kpbs",
-      "smsCall": "Không dùng được Tiktok",
-      "apn": "Auto",
-      "pointContactType": null,
-      "hotsPot": true
-    }
+    } 
+  ]
+}
+		```
+		</CH.Code>
+
+	</div>
+</div>
+
+## Api lấy danh sách varioations 
+Trả về danh sách tất cả các các variations do SimplifyTrip phân phối
+<div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
+	<div className='flex-1 min-w-0 order-2 2xl:order-1'>
+	##### Query Parameters
+	<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>type</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+				`eSIM | SIM | SIM_RECHARGE`
+				Loại sản phẩm mà bạn muốn lọc, bỏ trống để lấy tất cả
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>query</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+
+				Từ khoá tìm kiếm theo tên, id, quốc gia hoặc khu vực...
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>spu</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+
+				ID của sản phẩm (SPU)
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>countryId</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+
+				ID của quốc gia
+			</Td>
+		</Tr>
+		
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>regionId</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+
+				ID của khu vực
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>take</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
+
+				Số lượng kết quả trả về cho một trang
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>skip</code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
+
+				Chỉ mục ban đầu để trả về kết quả.
+			</Td>
+		</Tr>
+	</tbody>
+	</Table>
+</div>
+
+	##### Responses
+	<div className="flex gap-2 items-center pt-4">
+		<div className="flex-1 text-md font-bold">200 OK </div>
+		<code>application/json</code>
+		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
+	</div>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+	<tbody>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>total - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>take - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>skip - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
+			</Td>
+		</Tr>
+		<Tr className='border-0 !bg-inherit'>
+			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+			<Td className='border-0 json-custom' colSpan={2}>
+				<ReactJson displayDataTypes={false} displayObjectSize={false} name="variation[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
+				collapsed={true} src={{   
+          "sku": "string",
+          "name": {
+            "vi": "string",
+            "en": "string"
+          },
+          "price": 0,
+          "priceFloor": 0,
+          "discount": 0,
+          "highFlowSize": 0,
+          "days": 0,
+          "package": "DAILY",
+          "data": "string",
+          "throttleSpeed": "string",
+          "smsCall": "string",
+          "apn": "string",
+          "pointContactType": "string",
+          "hotsPot": true,
+		  "spu": "string"
+}} />
+			</Td>
+		</Tr>
+	</tbody>
+</Table>
+</div>
+<div className="border-t dark:border-gray-100/10 mt-5">
+		<div className="flex gap-2 items-center pt-4">
+			<div className="flex-1 text-md font-bold">4xx/5xx Error </div>
+			<code>application/json</code>
+			<div className="px-2.5 py-1 text-xs bg-red-500 text-white rounded-[3px]">Error</div>
+		</div>
+		<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+			<tbody>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>timestamp</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`timestamp`</code></Td>
+<Td className="border-0">
+
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>statusCode</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`number`</code></Td>
+<Td className="border-0">
+
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>errorCode</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+					</Td>
+				</Tr>
+				<Tr className='border-0 !bg-inherit'>
+					<Td className='border-0'><code>message</code></Td>
+					<Td className='border-0'><code className='text-red-500 text-xs'>`string`</code></Td>
+<Td className="border-0">
+
+					</Td>
+				</Tr>
+			</tbody>
+		</Table>
+</div>
+	</div>
+	</div>
+	<div className='flex-1 min-w-0 order-1 2xl:order-2'>
+		<div className="flex items-center gap-2 mt-5 border-gray-200 dark:border-gray-600 border p-1 rounded-md">
+			<div className='px-3 py-1.5 text-xs text-white duration-150 bg-blue-500 rounded-[4px]'>GET</div>
+			<div className='flex-1'>
+				<code>/api/v1/products/variations</code>
+			</div>
+			<CopyToClipboard getValue={() => `${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api/v1/products/variations`} />
+		</div>
+		<div className='flex items-center mt-8'>
+
+			<h5 className='_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 flex-1 _text-lg'>Sample Request</h5>
+			<a  target="_black" className="text-brand" href={`${process.env.NEXT_PUBLIC_PARTNERS_API_URL}/api#/Products/ProductsController_findAllVariations`}>Try it on Swagger</a>
+		</div>
+<CH.Code>
+		```js Nodejs
+// Using axios
+		import axios from 'axios';
+
+		const options = {
+			method: 'GET',
+			url: 'https://merchant.simplifytrip.com/api/v1/products/variations?take=10&skip=1',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		axios
+			.request(options)
+			.then(res => console.log(res.data))
+			.catch(err => console.error(err));
+
+// Using fetch api
+const url = 'https://merchant.simplifytrip.com/api/v1/products/variations?take=10&skip=1';
+		const options = {
+			method: 'GET',
+			headers: {
+				accept: 'application/json',
+				'content-type': 'application/json',
+				authorization: 'Bearer sk_live_xxxxxxxxxxxxxxxxxx',
+				'x-api-key': 'pk_live_xxxxxxxxxxxxxxxxxx',
+			}
+		};
+
+		fetch(url, options)
+			.then(res => res.json())
+			.then(json => console.log(json))
+			.catch(err => console.error(err));
+		```
+		```php PHP
+		<?php
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, [
+			CURLOPT_URL => "https://merchant.simplifytrip.com/api/v1/products/variations?take=10&skip=1",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_HTTPHEADER => [
+				"accept: application/json",
+				"content-type: application/json",
+				"authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx",
+				"x-api-key: pk_live_xxxxxxxxxxxxxxxxxx",
+			],
+		]);
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+			echo "cURL Error #:" . $err;
+		} else {
+			echo $response;
+		}
+```
+```c# C#
+using RestSharp;
+
+
+var options = new RestClientOptions("https://merchant.simplifytrip.com/api/v1/products/variations?take=10&skip=1");
+var client = new RestClient(options);
+var request = new RestRequest("");
+request.AddHeader("content-type", "application/json");
+request.AddHeader("accept", "application/json");
+request.AddHeader("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx");,
+request.AddHeader("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx",);,
+
+var response = await client.GetAsync(request);
+
+Console.WriteLine("{0}", response.Content);
+
+```
+```java Java
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://merchant.simplifytrip.com/api/v1/products/variations?take=10&skip=1"))
+    .header("accept", "application/json")
+    .header("content-type", "application/json")
+    .header("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+    .header("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+    .method("GET", HttpRequest.BodyPublishers.noBody())
+    .build();
+
+HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+System.out.println(response.body());
+```
+```go Go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://merchant.simplifytrip.com/api/v1/products/variations?take=10&skip=1"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer sk_live_xxxxxxxxxxxxxxxxxx"),
+	req.Header.Add("x-api-key": "pk_live_xxxxxxxxxxxxxxxxxx"),
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+```
+```bash Curl
+curl -X 'GET' \
+  'https://merchant.simplifytrip.com/api/v1/products/variations?skip=0&take=10' \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer sk_live_xxxxxxxxxxxxxxxxxx' \
+  -H 'x-api-key: pk_live_xxxxxxxxxxxxxxxxxx'
+
+```
+</CH.Code>
+
+		##### Sample Response
+<CH.Code>
+```json
+{
+  "total": 100,
+  "skip": 0,
+  "take": 10,
+  "items": [ 
+	{
+		"sku": "EHKXY02GB05DPY",
+		"name": {
+			"vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 5 ngày)",
+			"en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 5 days)"
+		},
+		"price": 270000,
+		"priceFloor": 270000,
+		"discount": 0,
+		"highFlowSize": 2097152,
+		"days": 5,
+		"package": "DAILY",
+		"data": "2GB",
+		"throttleSpeed": "128kpbs",
+		"smsCall": "Không dùng được Tiktok",
+		"apn": "Auto",
+		"pointContactType": null,
+		"hotsPot": true,
+		"spu": "EHKXY"
+	},
+	{
+		"sku": "EHKXY02GB07DPY",
+		"name": {
+			"vi": "eSIM HongKong, Macao tốc độ cao 4G, chỉ có data (2GB/ngày - 7 ngày)",
+			"en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 7 days)"
+		},
+		"price": 356000,
+		"priceFloor": 356000,
+		"discount": 0,
+		"highFlowSize": 2097152,
+		"days": 7,
+		"package": "DAILY",
+		"data": "2GB",
+		"throttleSpeed": "128kpbs",
+		"smsCall": "Không dùng được Tiktok",
+		"apn": "Auto",
+		"pointContactType": null,
+		"hotsPot": true,
+		"spu": "EHKXY"
+	},
+	...
   ]
 }
 		```
