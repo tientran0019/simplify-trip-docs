@@ -77,6 +77,10 @@
   margin-bottom: 15px;
 }
 
+.nestedCell>.table .table { 
+  margin-bottom: 0;
+}
+
 .nestedCell>.table>tbody>tr>td:first-child:not([colspan]) {
   position: relative;
   padding-left: 60px;
@@ -107,4 +111,30 @@
 
 :global(.dark) .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
   box-shadow: -40px 0 #374151;
+}
+
+.nestedCell .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan]) {
+  padding-left: 140px;
+}
+
+.nestedCell .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
+  left: 110px;
+  box-shadow: -40px 0 #e5e7eb, -80px 0 #e5e7eb;
+}
+
+:global(.dark) .nestedCell .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
+  box-shadow: -40px 0 #374151, -80px 0 #374151;
+}
+
+.nestedCell .nestedCell .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan]) {
+  padding-left: 180px;
+}
+
+.nestedCell .nestedCell .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
+  left: 150px;
+  box-shadow: -40px 0 #e5e7eb, -80px 0 #e5e7eb, -120px 0 #e5e7eb;
+}
+
+:global(.dark) .nestedCell .nestedCell .nestedCell .nestedCell>.table>tbody>tr>td:first-child:not([colspan])::before {
+  box-shadow: -40px 0 #374151, -80px 0 #374151, -120px 0 #374151;
 }

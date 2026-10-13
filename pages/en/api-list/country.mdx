@@ -3,7 +3,6 @@ title: Country API
 ---
 import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
 import styles from '../../../src/components/ApiReference/properties.module.css'
-import ReactJson from 'src/components/ObjectDisplay'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>API list</a>
 
@@ -90,25 +89,87 @@ Returns the list of countries with eSIM products provided by SimplifyTrip.
 
 			</Td>
 		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0 json-custom' colSpan={2}>
-				<ReactJson displayDataTypes={false} displayObjectSize={false} name="countryItem[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white" collapsed={true}
-	src={{
-      "name": {
-        "vi": "string",
-        "en": "string"
-      },
-      "id": "string",
-      "createdAt": "datetime",
-      "updatedAt": "datetime",
-      "continent": "datetime",
-      "thumbnail": "datetime",
-      "mcc3": "datetime",
-      "mcc": "string"
-    }} />
-			</Td>
-		</Tr>
+		<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Items returned for the requested page.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Localized name.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Vietnamese value.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">English value.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Identifier.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Creation time in ISO 8601 format.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>updatedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Last update time in ISO 8601 format.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>continent</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Continent associated with the country.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thumbnail URL.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>mcc3</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Country MCC3 value.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>mcc</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Country MCC value.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
 	</tbody>
 </Table>
 </div>

@@ -3,7 +3,6 @@ title: Api Products
 ---
 import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
 import styles from '../../../src/components/ApiReference/properties.module.css'
-import ReactJson from 'src/components/ObjectDisplay'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
 
@@ -117,54 +116,260 @@ Trả về danh sách tất cả các mặt hàng do SimplifyTrip phân phối
 
 			</Td>
 		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0 json-custom' colSpan={2}>
-				<ReactJson displayDataTypes={false} displayObjectSize={false} name="product[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
-				collapsed={true} src={{  
-      "spu": "string",
-      "createdAt": "2025-05-14T02:23:19.222Z",
-      "updatedAt": "2025-05-14T02:23:19.222Z",
-      "name": {
-        "vi": "string",
-        "en": "string"
-      }, 
-      "slug": {
-        "vi": "string",
-        "en": "string"
-      }, 
-      "metadata": {
-        "vi": "string",
-        "en": "string"
-      }, 
-      "type": "string",
-      "thumbnail": "string",
-      "regions": [
-        {
-          "id": "string",
-          "name": {
-            "vi": "string",
-            "en": "string"
-          },
-          "thumbnail": "string"
-        }
-      ],
-      "countries": [
-        {
-          "id": "string",
-          "name": {
-            "vi": "string",
-            "en": "string"
-          },
-          "mcc": "string",
-          "mcc3": "string",
-          "continent": "string",
-          "thumbnail": "string"
-        }
-      ] 
-}} />
-			</Td>
-		</Tr>
+		<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các phần tử trả về trong trang kết quả.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh mặt hàng (SPU).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thời điểm tạo, định dạng ISO 8601.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>updatedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thời điểm cập nhật gần nhất, định dạng ISO 8601.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>slug</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Slug mặt hàng theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>metadata</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Thông tin metadata của mặt hàng theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại mặt hàng: eSIM, SIM hoặc SIM_RECHARGE.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>regions</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các khu vực của mặt hàng.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>countries</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các quốc gia của mặt hàng.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>mcc</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị MCC của quốc gia.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>mcc3</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị MCC3 của quốc gia.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>continent</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Châu lục của quốc gia.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
 	</tbody>
 </Table>
 </div>
@@ -460,79 +665,364 @@ Api lấy thông tin chi tiết một mặt hàng của SimplifyTrip thông qua 
 		<code>application/json</code>
 		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 	</div>
-<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code></code></Td>
-			<Td className='border-0 json-custom'>
-				<ReactJson displayDataTypes={false} displayObjectSize={false} name="productInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
-				collapsed={true} src={{
-  "spu": "string",
-  "createdAt": "2025-05-14T02:38:30.207Z",
-  "updatedAt": "2025-05-14T02:38:30.207Z",
-  "name": {
-    "vi": "string",
-    "en": "string"
-  },
-  "slug": {
-    "vi": "string",
-    "en": "string"
-  },
-  "metadata": {
-    "vi": "string",
-    "en": "string"
-  },
-  "type": "string",
-  "thumbnail": "string",
-  "regions": [
-    {
-      "id": "string",
-      "name": {
-        "vi": "string",
-        "en": "string"
-      },
-      "thumbnail": "string"
-    }
-  ],
-  "countries": [
-    {
-      "id": "string",
-      "name": {
-        "vi": "string",
-        "en": "string"
-      },
-      "mcc": "string",
-      "mcc3": "string",
-      "continent": "string",
-      "thumbnail": "string"
-    }
-  ],
-  "variations": [
-    {
-      "sku": "string",
-      "name": {
-        "vi": "string",
-        "en": "string"
-      },
-      "price": 0,
-      "priceFloor": 0,
-      "discount": 0,
-      "highFlowSize": 0,
-      "days": 0,
-      "package": "DAILY",
-      "data": "string",
-      "throttleSpeed": "string",
-      "smsCall": "string",
-      "apn": "string",
-      "pointContactType": "string",
-      "hotsPot": true
-    }
-  ]
-}} />
-			</Td>
-		</Tr>
-	</tbody>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh mặt hàng (SPU).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thời điểm tạo, định dạng ISO 8601.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>updatedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thời điểm cập nhật gần nhất, định dạng ISO 8601.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
 </Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>slug</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Slug mặt hàng theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>metadata</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Thông tin metadata của mặt hàng theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>type</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại mặt hàng: eSIM, SIM hoặc SIM_RECHARGE.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>regions</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các khu vực của mặt hàng.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>countries</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các quốc gia của mặt hàng.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>mcc</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị MCC của quốc gia.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>mcc3</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị MCC3 của quốc gia.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>continent</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Châu lục của quốc gia.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>variations</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các biến thể của mặt hàng.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh biến thể (SKU).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>price</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá của biến thể.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>priceFloor</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá sàn.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>discount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá trị giảm giá.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>highFlowSize</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Dung lượng dữ liệu tốc độ cao.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>days</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Thời hạn gói tính theo ngày.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>package</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại gói, ví dụ DAILY.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>data</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mô tả dung lượng dữ liệu.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>throttleSpeed</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Tốc độ sau khi hết dung lượng tốc độ cao.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>smsCall</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thông tin SMS và cuộc gọi.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>apn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Tên điểm truy cập (APN).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>pointContactType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại điểm liên hệ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hotsPot</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">Có hỗ trợ chia sẻ hotspot hay không.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
 <div className="border-t dark:border-gray-100/10 mt-5">
 		<div className="flex gap-2 items-center pt-4">
 			<div className="flex-1 text-md font-bold">4xx/5xx Error </div>
@@ -925,32 +1415,122 @@ Trả về danh sách tất cả các các variations do SimplifyTrip phân ph�
 
 			</Td>
 		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0 json-custom' colSpan={2}>
-				<ReactJson displayDataTypes={false} displayObjectSize={false} name="variation[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
-				collapsed={true} src={{   
-          "sku": "string",
-          "name": {
-            "vi": "string",
-            "en": "string"
-          },
-          "price": 0,
-          "priceFloor": 0,
-          "discount": 0,
-          "highFlowSize": 0,
-          "days": 0,
-          "package": "DAILY",
-          "data": "string",
-          "throttleSpeed": "string",
-          "smsCall": "string",
-          "apn": "string",
-          "pointContactType": "string",
-          "hotsPot": true,
-		  "spu": "string"
-}} />
-			</Td>
-		</Tr>
+		<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các phần tử trả về trong trang kết quả.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh biến thể (SKU).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>price</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá của biến thể.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>priceFloor</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá sàn.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>discount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá trị giảm giá.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>highFlowSize</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Dung lượng dữ liệu tốc độ cao.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>days</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Thời hạn gói tính theo ngày.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>package</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại gói, ví dụ DAILY.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>data</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mô tả dung lượng dữ liệu.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>throttleSpeed</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Tốc độ sau khi hết dung lượng tốc độ cao.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>smsCall</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thông tin SMS và cuộc gọi.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>apn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Tên điểm truy cập (APN).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>pointContactType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại điểm liên hệ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hotsPot</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">Có hỗ trợ chia sẻ hotspot hay không.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh mặt hàng (SPU).</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
 	</tbody>
 </Table>
 </div>
@@ -1241,36 +1821,115 @@ Api lấy thông tin chi tiết một mẫu mã của mặt hàng thông qua sku
 		<code>application/json</code>
 		<div className="px-2.5 py-1 text-xs bg-green-500 text-white rounded-[3px]">Success</div>
 	</div>
-<Table rules="none" border={0} width="100%" className='border-0'>
-	<tbody>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code></code></Td>
-			<Td className='border-0 json-custom'>
-				<ReactJson displayDataTypes={false} displayObjectSize={false} name="variationInfo[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white"
-				collapsed={true} src={{
-	"sku": "string",
-	"name": {
-	"vi": "string",
-	"en": "string"
-	},
-	"price": 0,
-	"priceFloor": 0,
-	"discount": 0,
-	"highFlowSize": 0,
-	"days": 0,
-	"package": "DAILY",
-	"data": "string",
-	"throttleSpeed": "string",
-	"smsCall": "string",
-	"apn": "string",
-	"pointContactType": "string",
-	"hotsPot": true,
-	"spu": "string"
-}} />
-			</Td>
-		</Tr>
-	</tbody>
+<div className={styles.scroll}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>sku</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh biến thể (SKU).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
 </Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>price</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá của biến thể.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>priceFloor</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá sàn.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>discount</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Giá trị giảm giá.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>highFlowSize</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Dung lượng dữ liệu tốc độ cao.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>days</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">number</code></Td>
+<Td className="border-0">Thời hạn gói tính theo ngày.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>package</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại gói, ví dụ DAILY.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>data</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mô tả dung lượng dữ liệu.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>throttleSpeed</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Tốc độ sau khi hết dung lượng tốc độ cao.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>smsCall</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thông tin SMS và cuộc gọi.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>apn</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Tên điểm truy cập (APN).</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>pointContactType</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Loại điểm liên hệ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>hotsPot</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">boolean</code></Td>
+<Td className="border-0">Có hỗ trợ chia sẻ hotspot hay không.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>spu</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh mặt hàng (SPU).</Td>
+</Tr>
+</tbody>
+</Table>
+</div>
 <div className="border-t dark:border-gray-100/10 mt-5">
 		<div className="flex gap-2 items-center pt-4">
 			<div className="flex-1 text-md font-bold">4xx/5xx Error </div>

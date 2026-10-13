@@ -1,6 +1,7 @@
 import nextra from "nextra"
 import * as codeHike from "@code-hike/mdx"
 import remarkApiList from './src/remark-api-list.js'
+import path from 'node:path'
 
 /** @type {import('codehike/mdx').CodeHikeConfig} */
 const chConfig = {
@@ -33,6 +34,13 @@ const withNextra = nextra({
 })
 
 export default withNextra({
+	webpack(config) {
+		config.module.rules.push({
+			test: /pages[\\/](en|vi)[\\/]api-list\.mdx$/,
+			use: [path.resolve('src/api-list-dependencies.cjs')],
+		})
+		return config
+	},
 	i18n: {
 		locales: ['en', 'vi'],
 		defaultLocale: 'en',

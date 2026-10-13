@@ -3,7 +3,6 @@ title: Api Khu vực
 ---
 import { CopyToClipboard, Link, Table, Td, Th, Tr  } from 'nextra/components'
 import styles from '../../../src/components/ApiReference/properties.module.css'
-import ReactJson from 'src/components/ObjectDisplay'
 
 <a className='mt-5 block _whitespace-nowrap _transition-colors _font-medium _text-gray-700 contrast-more:_font-bold contrast-more:_text-current dark:_text-gray-100 contrast-more:dark:_text-current'>Danh sách APIs</a>
 
@@ -90,22 +89,72 @@ Trả về danh sách Khu vực có eSim được cung cấp bởi SimplifyTrip
 
 			</Td>
 		</Tr>
-		<Tr className='border-0 !bg-inherit'>
-			<Td className='border-0'><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
-			<Td className='border-0 json-custom' colSpan={2}>
-				<ReactJson displayDataTypes={false} displayObjectSize={false} name="countryItem[]" style={{ padding: 10, borderRadius: 4, fontSize: 12 }} enableClipboard={false} className="dark:text-white" collapsed={true}
-	src={{
-      "name": {
-        "vi": "string",
-        "en": "string"
-      },
-      "id": "string",
-      "thumbnail": "string",
-      "createdAt": "datetime",
-      "updatedAt": "datetime"
-    }} />
-			</Td>
-		</Tr>
+		<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>items - <span className="text-[10px] text-red-500">required</span></code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object[]</code></Td>
+<Td className="border-0">Các phần tử trả về trong trang kết quả.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>name</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">object</code></Td>
+<Td className="border-0">Tên theo ngôn ngữ.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className={styles.nestedCell} colSpan={3}>
+<Table rules="none" border={0} width="100%" className={styles.table}>
+<colgroup>
+<col className={styles.fieldColumn} />
+<col className={styles.typeColumn} />
+<col />
+</colgroup>
+<tbody>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>vi</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Việt.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>en</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Giá trị tiếng Anh.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>id</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Mã định danh.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>thumbnail</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">URL ảnh đại diện.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>createdAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thời điểm tạo, định dạng ISO 8601.</Td>
+</Tr>
+<Tr className="border-0 !bg-inherit">
+<Td className="border-0"><code>updatedAt</code></Td>
+<Td className="border-0"><code className="text-red-500 text-xs">string</code></Td>
+<Td className="border-0">Thời điểm cập nhật gần nhất, định dạng ISO 8601.</Td>
+</Tr>
+</tbody>
+</Table>
+</Td>
+</Tr>
 	</tbody>
 </Table>
 </div>
