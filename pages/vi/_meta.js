@@ -37,6 +37,8 @@ export default {
 		theme: {
 			"layout": "default",
 			breadcrumb: true,
+			toc: true,
+			sidebar: true,
 			// "toc": false,
 			// "sidebar": false
 		}

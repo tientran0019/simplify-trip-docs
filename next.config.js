@@ -1,5 +1,6 @@
 import nextra from "nextra"
 import * as codeHike from "@code-hike/mdx"
+import remarkApiList from './src/remark-api-list.js'
 
 /** @type {import('codehike/mdx').CodeHikeConfig} */
 const chConfig = {
@@ -22,6 +23,7 @@ const withNextra = nextra({
 	defaultShowCopyCode: true,
 	mdxOptions: {
 		remarkPlugins: [
+			remarkApiList,
 			[
 				codeHike.remarkCodeHike,
 				chConfig

@@ -1,7 +1,10 @@
 ---
 title: API list
 ---
-import { CopyToClipboard } from 'nextra/components'
+import { CopyToClipboard, Link, Table, Td, Th, Tr } from 'nextra/components'
+import styles from '../../src/components/ApiReference/properties.module.css'
+import ReactJson from 'src/components/ObjectDisplay'
+import TocActiveParent from 'src/components/ApiReference/TocActiveParent'
 
 # Supported SimplifyTrip APIs
 
@@ -9,7 +12,7 @@ SimplifyTrip APIs are built on [REST](https://en.wikipedia.org/wiki/REST). Endpo
 
 You can use SimplifyTrip APIs in **Test Mode** without affecting real data. The API key used in authentication determines whether the request runs in `LIVE_MODE` or `TEST_MODE`.
 
-#### Authentication
+## Authentication
 SimplifyTrip API uses API keys to authenticate requests. You can manage your API keys in <a href={process.env.NEXT_PUBLIC_PARTNERS_URL + '/developers'} className="underline" target='_blank'>API Keys Settings</a>.
 
 Test API keys start with `pk_test_`, live API keys start with `pk_live_`.
@@ -20,7 +23,7 @@ Keep keys secure. Do not expose API Key or Secret Key in public places such as G
 
 All API requests must be made over HTTPS.
 
-#### Base URL
+## Base URL
 
 All current web services start with the base path below (`BASE_URL`):
 
@@ -45,7 +48,7 @@ All current web services start with the base path below (`BASE_URL`):
 
 Try with Swagger: <a href={process.env.NEXT_PUBLIC_PARTNERS_API_URL + '/api'} className="underline" target='_blank'>SimplifyTrip Open API</a>.
 
-#### Requirements
+## Requirements
 - **Api Key and Secret Key**
 
 	Every request to SimplifyTrip API MUST include Api Key and Secret Key in headers.
@@ -70,3 +73,7 @@ Content-Type: "application/json"
 ```json
 X-Lang: "vi"
 ```
+
+API_REFERENCE_SECTIONS
+
+<TocActiveParent />

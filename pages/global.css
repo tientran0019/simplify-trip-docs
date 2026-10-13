@@ -33,3 +33,54 @@ a {
 table tr {
 	vertical-align: middle;
 }
+
+/* Keep the original API-page typography after nesting headings in the TOC. */
+.api-list-reference > h2 {
+	margin-top: 3rem;
+	padding-bottom: 0;
+	border-bottom: 0;
+	font-size: 2.25rem;
+	line-height: 2.5rem;
+	font-weight: 700;
+}
+
+.api-list-reference > h3 {
+	margin-top: 2.5rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid #e5e7eb;
+	font-size: 1.875rem;
+	line-height: 2.25rem;
+}
+
+.dark .api-list-reference > h3 {
+	border-bottom-color: #374151;
+}
+
+.api-list-reference {
+	min-width: 0;
+}
+
+.api-list-reference > .grid {
+	margin-top: 1.5rem;
+}
+
+/* Show sections and endpoints in the combined reference's right-hand TOC. */
+body:has(.api-list-reference) .nextra-toc li:has(> a:is(._ms-8, ._ms-12, ._ms-16)) {
+	display: none;
+}
+
+body:has(.api-list-reference) .nextra-toc a[data-active-parent='true'] {
+	color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 45%);
+}
+
+/* Nextra's route-based link state does not track fragment sections. */
+.nextra-sidebar-container a:has(.api-section-title[data-active='true']) {
+	color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 32%);
+	background-color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 95%);
+	font-weight: 600;
+}
+
+.dark .nextra-sidebar-container a:has(.api-section-title[data-active='true']) {
+	color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 60%);
+	background-color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 15%);
+}

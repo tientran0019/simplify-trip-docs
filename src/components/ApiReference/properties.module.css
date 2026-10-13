@@ -20,6 +20,24 @@
   width: 145px;
 }
 
+/* The combined reference shares its width with both navigation columns and
+   request examples. Reserve space for descriptions instead of fixed columns. */
+:global(.api-list-reference) .scroll {
+  overflow-x: auto;
+}
+
+:global(.api-list-reference) .scroll > .table {
+  min-width: 560px;
+}
+
+:global(.api-list-reference) .table .fieldColumn {
+  /* width: 36%; */
+}
+
+:global(.api-list-reference) .table .typeColumn {
+  width: 20%;
+}
+
 .table {
   margin-top: 20px;
 }
