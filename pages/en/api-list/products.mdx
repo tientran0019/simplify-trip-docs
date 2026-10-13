@@ -161,27 +161,6 @@ Returns all products distributed by SimplifyTrip.
           "continent": "string",
           "thumbnail": "string"
         }
-      ],
-      "variations": [
-        {
-          "sku": "string",
-          "name": {
-            "vi": "string",
-            "en": "string"
-          },
-          "price": 0,
-          "priceFloor": 0,
-          "discount": 0,
-          "highFlowSize": 0,
-          "days": 0,
-          "package": "DAILY",
-          "data": "string",
-          "throttleSpeed": "string",
-          "smsCall": "string",
-          "apn": "string",
-          "pointContactType": "string",
-          "hotsPot": true
-        }
       ] 
 }} />
 			</Td>
@@ -389,7 +368,7 @@ curl -X 'GET' \
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
 <CH.Code>
 ```json
 {
@@ -439,47 +418,7 @@ curl -X 'GET' \
           "mcc3": "MAC",
           "continent": "Asia"
         }
-      ],
-      "variations": [
-        {
-          "sku": "EHKXY02GB05DPY",
-          "name": {
-            "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 5 days)",
-            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 5 days)"
-          },
-          "price": 270000,
-          "priceFloor": 270000,
-          "discount": 0,
-          "highFlowSize": 2097152,
-          "days": 5,
-          "package": "DAILY",
-          "data": "2GB",
-          "throttleSpeed": "128kpbs",
-          "smsCall": "TikTok is not supported",
-          "apn": "Auto",
-          "pointContactType": null,
-          "hotsPot": true
-        },
-        {
-          "sku": "EHKXY02GB07DPY",
-          "name": {
-            "vi": "eSIM Hong Kong, Macau high-speed 4G, data-only (2GB/day - 7 days)",
-            "en": "eSIM for Hong Kong travel with unlimited 4G high-speed capacity, only data (2GB/day - 7 days)"
-          },
-          "price": 356000,
-          "priceFloor": 356000,
-          "discount": 0,
-          "highFlowSize": 2097152,
-          "days": 7,
-          "package": "DAILY",
-          "data": "2GB",
-          "throttleSpeed": "128kpbs",
-          "smsCall": "TikTok is not supported",
-          "apn": "Auto",
-          "pointContactType": null,
-          "hotsPot": true
-        } 
-      ]
+      ] 
     },
 	...
   ]
@@ -870,7 +809,7 @@ curl -X GET https://merchant.simplifytrip.com/api/v1/products/EHKXY \
 	</div>
 </div>
 
-## Get product list API
+## Get variation list API
 Returns all products distributed by SimplifyTrip.
 <div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 w-full">
 	<div className='flex-1 min-w-0 order-2 2xl:order-1'>
@@ -1214,7 +1153,7 @@ curl -X 'GET' \
 ```
 </CH.Code>
 
-		##### Sample Response
+##### Sample Response
 <CH.Code>
 ```json
 {
